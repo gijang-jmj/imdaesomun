@@ -6,11 +6,11 @@
 
 > 추후 스크린샷 추가 예정
 
-* ![홈 화면](image_home_placeholder)
+<!-- * ![홈 화면](image_home_placeholder)
 * ![공고 상세](image_detail_placeholder)
 * ![AI 요약 결과](image_summary_placeholder)
 * ![커뮤니티 화면](image_community_placeholder)
-* ![내정보 화면](image_profile_placeholder)
+* ![내정보 화면](image_profile_placeholder) -->
 
 ## 🚀 주요 기능
 
