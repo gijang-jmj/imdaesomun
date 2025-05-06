@@ -36,5 +36,5 @@
 
 ## 📬 문의
 
-이 프로젝트에 대한 개선 제안이나 문의는 Issues 또는 Pull Request로 자유롭게 남겨주세요!
+이 프로젝트에 대한 개선 제안이나 문의는 Issues 또는 Pull Request로 자유롭게 남겨주세요!  
 프로젝트의 상세 요구사항(PRD)은 [여기](https://github.com/gijang-jmj/imdaesomun/blob/main/PRD.md)에서 확인해주세요.
