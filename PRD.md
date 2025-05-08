@@ -9,7 +9,7 @@
 | 기능     | 구현 방식                                      |
 | ------ | ------------------------------------------ |
 | 공고 크롤링 | Firebase Cloud Functions + Cloud Scheduler |
-| AI 요약  | 사용자 요청 시 Cloud Function에서 OpenAI API 호출    |
+| AI 요약  | Cloud Function + OpenAI API    |
 | 데이터 저장 | Firebase Firestore (NoSQL DB)              |
 | 푸시 알림  | Firebase Cloud Messaging (FCM)             |
 | 로그인    | Firebase Auth (익명 또는 닉네임 기반)               |
@@ -185,9 +185,10 @@ admin.messaging().sendToTopic("all", {
 | 백엔드   | Firebase Cloud Functions        |
 | 인증    | Firebase Auth                   |
 | DB    | Firebase Firestore (NoSQL)      |
-| AI 요약 | OpenAI GPT API (Functions에서 호출) |
+| AI 요약 | OpenAI API (Functions에서 호출) |
 | 푸시 알림 | Firebase Cloud Messaging (FCM)  |
 | 주기 작업 | Firebase Cloud Scheduler        |
+| 키 관리 | Google Secret Manager        |
 
 ## 9. 🎨 디자인
 
