@@ -189,6 +189,15 @@ admin.messaging().sendToTopic("all", {
 | 푸시 알림 | Firebase Cloud Messaging (FCM)  |
 | 주기 작업 | Firebase Cloud Scheduler        |
 
+## 9. 🎨 디자인
+
+### 시드컬러
+* HEX: #2CB1A3
+* RGB: rgb(44, 177, 163)
+
+### 폰트
+* Pretendard
+
 ## ✅ 프로젝트 단계별 우선순위
 
 1. 공고 크롤링 + Firestore 저장 + 리스트 출력

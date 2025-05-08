@@ -1,22 +1,22 @@
 // The Cloud Functions for Firebase SDK to create Cloud Functions and triggers.
-const {logger} = require("firebase-functions");
-const {onRequest} = require("firebase-functions/v2/https");
+const { logger } = require('firebase-functions');
+const { onRequest } = require('firebase-functions/v2/https');
 
 // The Firebase Admin SDK to access Firestore.
-const {initializeApp} = require("firebase-admin/app");
-const {getFirestore,Timestamp} = require("firebase-admin/firestore");
+const { initializeApp } = require('firebase-admin/app');
+const { getFirestore, Timestamp } = require('firebase-admin/firestore');
 
 // Crawling libraries
-const axios = require("axios");
-const cheerio = require("cheerio");
+const axios = require('axios');
+const cheerio = require('cheerio');
 
 initializeApp();
 
 /**
  * Define SH scraping rules
- * 
+ *
  * url = https://www.i-sh.co.kr/app/lay2/program/S48T1581C563/www/brd/m_247/list.do?multi_itm_seq=2
- * 
+ *
  * [SH HTML 테이블 구조]
  * <div id="listTb" class="listTable colRm">
  *   <table>
@@ -61,7 +61,7 @@ initializeApp();
  *           관악주거안심종합센터
  *         </td>
  *         <!-- 부서명 -->
- *         <td class="num">	
+ *         <td class="num">
  *           2025-05-07
  *         </td>
  *         <!-- 작성일 -->
@@ -71,7 +71,7 @@ initializeApp();
  *     </tbody>
  *   </table>
  * </div>
- * 
+ *
  * [크롤링 후 DB 저장할 데이터]
  * id : SH287910 // SH + getDetailView(287910)
  * title : [골드타워] 당첨세대 주택공개 및 사전점검 안내
@@ -81,54 +81,55 @@ initializeApp();
  * department : 관악주거안심종합센터
  */
 const scrapeSh = async () => {
-    const url = "https://www.i-sh.co.kr/app/lay2/program/S48T1581C563/www/brd/m_247/list.do?multi_itm_seq=2";
-    const response = await axios.get(url);
-    const $ = cheerio.load(response.data);
+  const url =
+    'https://www.i-sh.co.kr/app/lay2/program/S48T1581C563/www/brd/m_247/list.do?multi_itm_seq=2';
+  const response = await axios.get(url);
+  const $ = cheerio.load(response.data);
 
-    const notices = [];
+  const notices = [];
 
-    // Select the table rows
-    $("#listTb table tbody tr").each((index, element) => {
-        const columns = $(element).find("td");
-        const seq = $(columns[1]).find("a").attr("onclick").match(/\d+/)[0];
-        const titleElement = $(columns[1]).clone();
-        titleElement.find(".icoNew").remove(); // Remove the NEW span
+  // Select the table rows
+  $('#listTb table tbody tr').each((index, element) => {
+    const columns = $(element).find('td');
+    const seq = $(columns[1]).find('a').attr('onclick').match(/\d+/)[0];
+    const titleElement = $(columns[1]).clone();
+    titleElement.find('.icoNew').remove(); // Remove the NEW span
 
-        // Convert regDate to Firestore Timestamp
-        // SH use date format => YYYY-MM-DD
-        const regDateText = $(columns[3]).text().trim();
-        const regDate = new Date(regDateText);
+    // Convert regDate to Firestore Timestamp
+    // SH use date format => YYYY-MM-DD
+    const regDateText = $(columns[3]).text().trim();
+    const regDate = new Date(regDateText);
 
-        const notice = {
-            seq,
-            id: `SH${seq}`,
-            title: titleElement.text().trim(),
-            organization: "SH",
-            regDate: Timestamp.fromDate(regDate),
-            hits: parseInt($(columns[4]).text().trim(), 10) || 0,
-            department: $(columns[2]).text().trim(),
-            createdAt: Timestamp.now(),
-        };
-        notices.push(notice);
-    });
+    const notice = {
+      seq,
+      id: `SH${seq}`,
+      title: titleElement.text().trim(),
+      organization: 'SH',
+      regDate: Timestamp.fromDate(regDate),
+      hits: parseInt($(columns[4]).text().trim(), 10) || 0,
+      department: $(columns[2]).text().trim(),
+      createdAt: Timestamp.now(),
+    };
+    notices.push(notice);
+  });
 
-    // Save to Firestore
-    const db = getFirestore();
-    const batch = db.batch();
-    notices.forEach((notice) => {
-        const docRef = db.collection("notices").doc(notice.id);
-        batch.set(docRef, notice);
-    });
-    await batch.commit();
+  // Save to Firestore
+  const db = getFirestore();
+  const batch = db.batch();
+  notices.forEach((notice) => {
+    const docRef = db.collection('notices').doc(notice.id);
+    batch.set(docRef, notice);
+  });
+  await batch.commit();
 
-    logger.log("SH notices scraped and saved:", notices);
+  logger.log('SH notices scraped and saved:', notices);
 };
 
 /**
  * Define GH scraping rules
- * 
+ *
  * url = https://gh.or.kr/gh/announcement-of-salerental001.do?mode=list&&articleLimit=10&srCategoryId=12&article.offset=0
- * 
+ *
  * [GH HTML 테이블 구조]
  * <div class="board-list-table-wrap">
  *   <table class="table board-list-table">
@@ -151,7 +152,7 @@ const scrapeSh = async () => {
  *         <!-- 구분 -->
  *         <td class="title">
  *           <div class="b-title-box">
- *             <a href="?mode=view&amp;articleNo=63563&amp;article.offset=0&amp;articleLimit=10&amp;srCategoryId=12" 
+ *             <a href="?mode=view&amp;articleNo=63563&amp;article.offset=0&amp;articleLimit=10&amp;srCategoryId=12"
  *                title="다산메트로3단지 국민임대주택(32B, 34A, 51A) 예비입주자 모집(2024.11.14.) 당첨자 발표 안내 자세히 보기">
  *               다산메트로3단지 국민임대주택(32B, 34A, 51A) 예비입주자 모집(2024.11.14.) 당첨자 발표 안내
  *             </a>
@@ -170,7 +171,7 @@ const scrapeSh = async () => {
  *     </tbody>
  *   </table>
  * </div>
- * 
+ *
  * [크롤링 후 DB 저장할 데이터 예시]
  * id : GH63563 // GH + articleNo
  * title : 다산메트로3단지 국민임대주택(32B, 34A, 51A) 예비입주자 모집(2024.11.14.) 당첨자 발표 안내
@@ -180,57 +181,77 @@ const scrapeSh = async () => {
  * department : 주택공급2부
  */
 const scrapeGh = async () => {
-    const url = "https://gh.or.kr/gh/announcement-of-salerental001.do?mode=list&&articleLimit=10&srCategoryId=12&article.offset=0";
-    const response = await axios.get(url);
-    const $ = cheerio.load(response.data);
+  const url =
+    'https://gh.or.kr/gh/announcement-of-salerental001.do?mode=list&&articleLimit=10&srCategoryId=12&article.offset=0';
+  const response = await axios.get(url);
+  const $ = cheerio.load(response.data);
 
-    const notices = [];
+  const notices = [];
 
-    // Select the table rows
-    $(".board-list-table-wrap table tbody tr").each((index, element) => {
-        const columns = $(element).find("td");
-        const seq = $(columns[2]).find("a").attr("href").match(/articleNo=(\d+)/)[1];
+  // Select the table rows
+  $('.board-list-table-wrap table tbody tr').each((index, element) => {
+    const columns = $(element).find('td');
+    const seq = $(columns[2])
+      .find('a')
+      .attr('href')
+      .match(/articleNo=(\d+)/)[1];
 
-        // Convert regDate to Firestore Timestamp
-        // GH use date format => YY.MM.DD
-        // Convert to format => YYYY-MM-DD
-        const regDateText = $(columns[4]).text().trim().replace(/\./g, "-").replace(/^(\d{2})-/, "20$1-");
-        const regDate = new Date(regDateText);
+    // Convert regDate to Firestore Timestamp
+    // GH use date format => YY.MM.DD
+    // Convert to format => YYYY-MM-DD
+    const regDateText = $(columns[4])
+      .text()
+      .trim()
+      .replace(/\./g, '-')
+      .replace(/^(\d{2})-/, '20$1-');
+    const regDate = new Date(regDateText);
 
-        const notice = {
-            seq,
-            id: `GH${seq}`,
-            title: $(columns[2]).text().trim(),
-            organization: "GH",
-            regDate: Timestamp.fromDate(regDate),
-            hits: parseInt($(columns[5]).text().trim(), 10) || 0,
-            department: $(columns[3]).text().trim(),
-            createdAt: Timestamp.now(),
-        };
-        notices.push(notice);
-    });
+    const notice = {
+      seq,
+      id: `GH${seq}`,
+      title: $(columns[2]).text().trim(),
+      organization: 'GH',
+      regDate: Timestamp.fromDate(regDate),
+      hits: parseInt($(columns[5]).text().trim(), 10) || 0,
+      department: $(columns[3]).text().trim(),
+      createdAt: Timestamp.now(),
+    };
+    notices.push(notice);
+  });
 
-    // Save to Firestore
-    const db = getFirestore();
-    const batch = db.batch();
-    notices.forEach((notice) => {
-        const docRef = db.collection("notices").doc(notice.id);
-        batch.set(docRef, notice);
-    });
-    await batch.commit();
+  // Save to Firestore
+  const db = getFirestore();
+  const batch = db.batch();
+  notices.forEach((notice) => {
+    const docRef = db.collection('notices').doc(notice.id);
+    batch.set(docRef, notice);
+  });
+  await batch.commit();
 
-    logger.log("GH notices scraped and saved:", notices);
+  logger.log('GH notices scraped and saved:', notices);
 };
 
-exports.scrapeNotices = onRequest(async (req, res) => {
-  try {
-    await scrapeSh();
-    await scrapeGh();
+exports.scrapeNotices = onRequest(
+  { secrets: ['IMDAESOMUN_API_KEY'] },
+  async (req, res) => {
+    try {
+      const apiKey = req.headers['x-imdaesomun-api-key'];
+      const SECRET_KEY = process.env.IMDAESOMUN_API_KEY;
 
-    res.status(200).send({ message: "Notices scraped and saved successfully!" });
-  } catch (error) {
-    res.status(500).send({ error: "Failed to scrape notices." });
+      if (apiKey !== SECRET_KEY) {
+        return res.status(401).send({ error: 'Unauthorized' });
+      }
 
-    logger.log("Scraped notices:", error);
-  }
-});
+      await scrapeSh();
+      await scrapeGh();
+
+      res
+        .status(200)
+        .send({ message: 'Notices scraped and saved successfully!' });
+    } catch (error) {
+      res.status(500).send({ error: 'Failed to scrape notices.' });
+
+      logger.log('Scraped notices:', error);
+    }
+  },
+);
