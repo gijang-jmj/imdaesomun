@@ -166,11 +166,11 @@ admin.messaging().sendToTopic("all", {
 ```
 
 ### 6.2 페이지 구조
-
-* **HomePage**: 최신 공고 리스트 표시 (Firestore 연동)
-* **NoticeDetailPage**: 상세내용 + 요약 확인 / 요약 요청 버튼
-* **CommunityPage**: 게시글 및 댓글 리스트 + 작성 기능
-* **ProfilePage**: 닉네임 설정, 내가 작성한 게시글 및 댓글 확인
+* **Home**: 최신 임대공고 리스트 표시 + 요약 보기
+* **Notice**: 임대공고 상세내용 표시
+* **Community**: 게시글 리스트 표시
+* **Post**: 게시글 상세 + 작성 및 수정
+* **Profile**: 내정보 표시(닉네임, 작성 게시글 및 댓글)
 
 ## 7. 🧪 보안 및 기타 고려 사항
 
