@@ -45,6 +45,6 @@ app.*.map.json
 /android/app/release
 
 # Exclude public repository files 
-/android
-/ios
-/lib/firebase_options.dart
+/android/
+/ios/
+lib/firebase_options.dart
