@@ -49,3 +49,7 @@ app.*.map.json
 /ios/
 firebase_options.dart
 firebase.json
+
+# ENV
+.env
+.env.*

@@ -150,6 +150,8 @@ admin.messaging().sendToTopic("all", {
 ### 6.1 프로젝트 구조
 
 ```bash
+/firebase
+ ├── functions           # API
 /lib
  ├── main.dart
  ├── features
