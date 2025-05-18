@@ -117,7 +117,7 @@ const scrapeSh = async () => {
   const db = getFirestore();
   const batch = db.batch();
   notices.forEach((notice) => {
-    const docRef = db.collection('notices').doc(notice.id);
+    const docRef = db.collection('sh').doc(notice.id);
     batch.set(docRef, notice);
   });
   await batch.commit();
@@ -223,7 +223,7 @@ const scrapeGh = async () => {
   const db = getFirestore();
   const batch = db.batch();
   notices.forEach((notice) => {
-    const docRef = db.collection('notices').doc(notice.id);
+    const docRef = db.collection('gh').doc(notice.id);
     batch.set(docRef, notice);
   });
   await batch.commit();
