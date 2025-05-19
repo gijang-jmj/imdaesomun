@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:imdaesomun/firebase_options.dart';
 import 'package:imdaesomun/src/core/router/app_router.dart';
+import 'package:imdaesomun/src/core/theme/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,6 +18,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(routerConfig: appRouter);
+    return MaterialApp.router(
+      title: 'Imdaesomun',
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
+      routerConfig: appRouter,
+    );
   }
 }
