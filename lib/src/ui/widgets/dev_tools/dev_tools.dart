@@ -24,6 +24,33 @@ class DevTools extends ConsumerWidget {
               style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
               onPressed: () {
                 context.pop();
+                context.push('/test');
+              },
+              child: Text('Flutter HTML'),
+            ),
+            SizedBox(height: 10),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
+              onPressed: () {
+                context.pop();
+                context.push(RouterPathConstant.ghViewer.path);
+              },
+              child: Text('GH Document Viewer'),
+            ),
+            SizedBox(height: 10),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
+              onPressed: () {
+                context.pop();
+                context.push(RouterPathConstant.shViewer.path);
+              },
+              child: Text('SH Document Viewer'),
+            ),
+            SizedBox(height: 10),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
+              onPressed: () {
+                context.pop();
                 context.push(RouterPathConstant.log.path);
               },
               child: Text('Log Page'),

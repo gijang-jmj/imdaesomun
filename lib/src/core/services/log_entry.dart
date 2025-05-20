@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:imdaesomun/src/core/enums/log_type_enum.dart';
+import 'package:imdaesomun/src/core/enums/log_enum.dart';
 
 part 'log_entry.freezed.dart';
 part 'log_entry.g.dart';

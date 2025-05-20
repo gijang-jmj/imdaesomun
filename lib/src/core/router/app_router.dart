@@ -6,6 +6,9 @@ import 'package:imdaesomun/src/ui/pages/community/community_page.dart';
 import 'package:imdaesomun/src/ui/pages/home/home_page.dart';
 import 'package:imdaesomun/src/ui/pages/log/log_page.dart';
 import 'package:imdaesomun/src/ui/pages/profile/profile_page.dart';
+import 'package:imdaesomun/src/ui/pages/webview/gh_document_viewer.dart';
+import 'package:imdaesomun/src/ui/pages/webview/sh_document_viewer.dart';
+import 'package:imdaesomun/src/ui/pages/webview/test.dart';
 import 'package:imdaesomun/src/ui/widgets/dev_tools/dev_tools_overlay.dart';
 import 'package:imdaesomun/src/ui/widgets/nav/bottom_nav.dart';
 
@@ -67,6 +70,26 @@ final appRouter = GoRouter(
                 GoRoute(
                   path: RouterPathConstant.log.path,
                   builder: (context, state) => const LogPage(),
+                ),
+                // GH 문서 뷰어
+                GoRoute(
+                  path: RouterPathConstant.ghViewer.path,
+                  builder:
+                      (context, state) => GhDocumentViewer(attachNo: '79544'),
+                ),
+                // SH 문서 뷰어
+                GoRoute(
+                  path: RouterPathConstant.shViewer.path,
+                  builder:
+                      (context, state) => ShDocumentViewer(
+                        url:
+                            'https://www.i-sh.co.kr/main/com/util/htmlConverter.do?brd_id=GS0401&seq=288587&data_tp=A&file_seq=4',
+                      ),
+                ),
+                // test
+                GoRoute(
+                  path: '/test',
+                  builder: (context, state) => const HtmlViewPage(),
                 ),
               ],
             ),

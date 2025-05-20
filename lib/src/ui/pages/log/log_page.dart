@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:imdaesomun/src/core/services/log_entry.dart';
 import 'package:imdaesomun/src/core/services/log_service.dart';
 import 'package:imdaesomun/src/core/theme/app_text_style.dart';
-import 'package:imdaesomun/src/core/enums/log_type_enum.dart';
+import 'package:imdaesomun/src/core/enums/log_enum.dart';
 import 'package:intl/intl.dart';
 
 class LogPage extends ConsumerWidget {

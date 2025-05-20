@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:imdaesomun/src/core/enums/notice_enum.dart';
 import 'package:imdaesomun/src/core/theme/app_color.dart';
 import 'package:imdaesomun/src/core/theme/app_icon.dart';
 import 'package:imdaesomun/src/core/theme/app_size.dart';
@@ -76,7 +77,7 @@ class HomePage extends ConsumerWidget {
                         ),
                         const SizedBox(width: AppMargin.extraSmall),
                         Text(
-                          '서울주택도시공사',
+                          CorporationType.sh.korean,
                           style: AppTextStyle.title1.copyWith(
                             color: AppColors.gray900,
                           ),
@@ -110,7 +111,7 @@ class HomePage extends ConsumerWidget {
                         ),
                         const SizedBox(width: AppMargin.extraSmall),
                         Text(
-                          '경기주택도시공사',
+                          CorporationType.gh.korean,
                           style: AppTextStyle.title1.copyWith(
                             color: AppColors.gray900,
                           ),

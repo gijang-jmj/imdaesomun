@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:imdaesomun/src/core/enums/log_type_enum.dart';
+import 'package:imdaesomun/src/core/enums/log_enum.dart';
 import 'package:imdaesomun/src/core/services/log_entry.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

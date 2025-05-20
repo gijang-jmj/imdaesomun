@@ -19,7 +19,6 @@ class BottomNav extends StatelessWidget {
         onTap: (index) => _onItemTapped(index, context),
         type: BottomNavigationBarType.fixed,
         backgroundColor: Colors.white,
-        elevation: 0,
         selectedItemColor: AppColors.teal500,
         unselectedItemColor: AppColors.gray400,
         selectedLabelStyle: AppTextStyle.caption1,
