@@ -49,4 +49,11 @@ class RouterPathConstant {
   ///
   /// description : 내정보 페이지
   static const profile = RouterPathConstant._('/profile');
+
+  /// page : log
+  ///
+  /// path : /log
+  ///
+  /// description : 로그 페이지
+  static const log = RouterPathConstant._('/log');
 }

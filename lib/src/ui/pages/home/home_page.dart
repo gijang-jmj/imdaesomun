@@ -6,17 +6,14 @@ import 'package:imdaesomun/src/core/theme/app_size.dart';
 import 'package:imdaesomun/src/core/theme/app_style.dart';
 import 'package:imdaesomun/src/core/theme/app_text_style.dart';
 import 'package:imdaesomun/src/core/utils/text_util.dart';
+import 'package:imdaesomun/src/ui/widgets/footer/copyright_footer.dart';
+import 'package:imdaesomun/src/ui/widgets/card/notice_card.dart';
 
-class HomePage extends ConsumerStatefulWidget {
+class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _HomePageState();
-}
-
-class _HomePageState extends ConsumerState<HomePage> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: AppColors.gray50,
       body: SafeArea(
@@ -86,86 +83,11 @@ class _HomePageState extends ConsumerState<HomePage> {
                         ),
                       ],
                     ),
-                    Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(AppRadius.medium),
-                        boxShadow: [AppBoxShadow.medium],
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(AppMargin.medium),
-                        child: Column(
-                          spacing: AppMargin.small,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  '2025년 공공임대주택 입주자 모집',
-                                  style: AppTextStyle.subTitle2.copyWith(
-                                    color: AppColors.gray900,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              spacing: AppMargin.small,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    AppIcon(
-                                      AppIcons.date,
-                                      color: AppColors.gray500,
-                                    ),
-                                    const SizedBox(width: AppMargin.extraSmall),
-                                    Text(
-                                      '2025.05.01',
-                                      style: AppTextStyle.subBody3.copyWith(
-                                        color: AppColors.gray500,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    AppIcon(
-                                      AppIcons.view,
-                                      color: AppColors.gray500,
-                                    ),
-                                    const SizedBox(width: AppMargin.extraSmall),
-                                    Text(
-                                      '1,234',
-                                      style: AppTextStyle.subBody3.copyWith(
-                                        color: AppColors.gray500,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    AppIcon(
-                                      AppIcons.department,
-                                      color: AppColors.gray500,
-                                    ),
-                                    const SizedBox(width: AppMargin.extraSmall),
-                                    Text(
-                                      '서울주택도시공사',
-                                      style: AppTextStyle.subBody3.copyWith(
-                                        color: AppColors.gray500,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
+                    NoticeCard(
+                      title: '2025년 공공임대주택 입주자 모집',
+                      date: '2025.05.01',
+                      views: '1,234',
+                      department: '서울주택도시공사',
                     ),
                   ],
                 ),
@@ -195,124 +117,17 @@ class _HomePageState extends ConsumerState<HomePage> {
                         ),
                       ],
                     ),
-                    Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(AppRadius.medium),
-                        boxShadow: [AppBoxShadow.medium],
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(AppMargin.medium),
-                        child: Column(
-                          spacing: AppMargin.small,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  '2025년 공공임대주택 입주자 모집',
-                                  style: AppTextStyle.subTitle2.copyWith(
-                                    color: AppColors.gray900,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              spacing: AppMargin.small,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    AppIcon(
-                                      AppIcons.date,
-                                      color: AppColors.gray500,
-                                    ),
-                                    const SizedBox(width: AppMargin.extraSmall),
-                                    Text(
-                                      '2025.05.01',
-                                      style: AppTextStyle.subBody3.copyWith(
-                                        color: AppColors.gray500,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    AppIcon(
-                                      AppIcons.view,
-                                      color: AppColors.gray500,
-                                    ),
-                                    const SizedBox(width: AppMargin.extraSmall),
-                                    Text(
-                                      '1,234',
-                                      style: AppTextStyle.subBody3.copyWith(
-                                        color: AppColors.gray500,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    AppIcon(
-                                      AppIcons.department,
-                                      color: AppColors.gray500,
-                                    ),
-                                    const SizedBox(width: AppMargin.extraSmall),
-                                    Text(
-                                      '서울주택도시공사',
-                                      style: AppTextStyle.subBody3.copyWith(
-                                        color: AppColors.gray500,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
+                    NoticeCard(
+                      title: '2025년 공공임대주택 입주자 모집',
+                      date: '2025.05.01',
+                      views: '1,234',
+                      department: '서울주택도시공사',
                     ),
                   ],
                 ),
               ),
-              SizedBox(height: AppMargin.extraLarge),
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border(top: BorderSide(color: AppColors.gray100)),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: AppMargin.large,
-                    horizontal: AppMargin.medium,
-                  ),
-                  child: Column(
-                    spacing: AppMargin.mediumLarge,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        TextUtil.keepWord(
-                          '임대소문은 서울주택도시공사(SH), 경기주택도시공사(GH)에서 제공하는 공고를 비상업적 목적에 따라 제공하며, 모든 공고의 저작권은 해당 공사에 귀속됩니다. 문의 : wnalsals1127@gmail.com',
-                        ),
-                        style: AppTextStyle.caption2.copyWith(
-                          color: AppColors.gray500,
-                        ),
-                      ),
-                      Text(
-                        'Copyright © 2025 Imdaesomun. All rights reserved.',
-                        style: AppTextStyle.caption2.copyWith(
-                          color: AppColors.gray400,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              const SizedBox(height: AppMargin.extraLarge),
+              const CopyrightFooter(),
             ],
           ),
         ),
