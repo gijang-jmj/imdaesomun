@@ -9,6 +9,7 @@ import 'package:imdaesomun/src/core/theme/app_text_style.dart';
 import 'package:imdaesomun/src/core/utils/text_util.dart';
 import 'package:imdaesomun/src/ui/widgets/footer/copyright_footer.dart';
 import 'package:imdaesomun/src/ui/widgets/card/notice_card.dart';
+import 'package:imdaesomun/src/ui/pages/home/home_page_view_model.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -84,11 +85,37 @@ class HomePage extends ConsumerWidget {
                         ),
                       ],
                     ),
-                    NoticeCard(
-                      title: '2025년 공공임대주택 입주자 모집',
-                      date: '2025.05.01',
-                      views: '1,234',
-                      department: '서울주택도시공사',
+                    Consumer(
+                      builder: (context, ref, _) {
+                        final shNotices = ref.watch(shNoticesProvider);
+                        return shNotices.when(
+                          loading:
+                              () => Column(
+                                spacing: AppMargin.small,
+                                children: const [
+                                  NoticeCardSkeleton(),
+                                  NoticeCardSkeleton(),
+                                  NoticeCardSkeleton(),
+                                ],
+                              ),
+                          error: (e, st) => Center(child: Text('오류: $e')),
+                          data:
+                              (notices) => Column(
+                                spacing: AppMargin.small,
+                                children:
+                                    notices
+                                        .map(
+                                          (notice) => NoticeCard(
+                                            title: notice.title,
+                                            regDate: notice.regDate,
+                                            hits: notice.hits,
+                                            department: notice.department,
+                                          ),
+                                        )
+                                        .toList(),
+                              ),
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -118,11 +145,37 @@ class HomePage extends ConsumerWidget {
                         ),
                       ],
                     ),
-                    NoticeCard(
-                      title: '2025년 공공임대주택 입주자 모집',
-                      date: '2025.05.01',
-                      views: '1,234',
-                      department: '서울주택도시공사',
+                    Consumer(
+                      builder: (context, ref, _) {
+                        final ghNotices = ref.watch(ghNoticesProvider);
+                        return ghNotices.when(
+                          loading:
+                              () => Column(
+                                spacing: AppMargin.small,
+                                children: const [
+                                  NoticeCardSkeleton(),
+                                  NoticeCardSkeleton(),
+                                  NoticeCardSkeleton(),
+                                ],
+                              ),
+                          error: (e, st) => Center(child: Text('오류: $e')),
+                          data:
+                              (notices) => Column(
+                                spacing: AppMargin.small,
+                                children:
+                                    notices
+                                        .map(
+                                          (notice) => NoticeCard(
+                                            title: notice.title,
+                                            regDate: notice.regDate,
+                                            hits: notice.hits,
+                                            department: notice.department,
+                                          ),
+                                        )
+                                        .toList(),
+                              ),
+                        );
+                      },
                     ),
                   ],
                 ),

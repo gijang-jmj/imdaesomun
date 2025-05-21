@@ -8,14 +8,14 @@ abstract class Notice with _$Notice {
   const factory Notice({
     required String id,
     required String seq,
+    required int no,
     required String title,
-    required String regDate,
-    required int hits,
     required String department,
-    required String corporation,
-    required String createAt,
-    String? content,
-    String? summary,
+    required int regDate,
+    required int hits,
+    required int createdAt,
+    required List<Map<String, String>> files,
+    required String html,
   }) = _Notice;
 
   factory Notice.fromJson(Map<String, dynamic> json) => _$NoticeFromJson(json);

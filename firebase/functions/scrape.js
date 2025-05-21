@@ -5,6 +5,8 @@ const { getFirestore } = require('firebase-admin/firestore');
 const axios = require('axios');
 const cheerio = require('cheerio');
 const dayjs = require('dayjs');
+const customParseFormat = require('dayjs/plugin/customParseFormat');
+dayjs.extend(customParseFormat);
 
 /**
  * Define SH scraping rules

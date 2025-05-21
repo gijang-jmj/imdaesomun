@@ -7,15 +7,15 @@ class NoticeSource {
   const NoticeSource(this._dio);
 
   Future<List<Notice>> getShNotices() async {
-    final response = await _dio.get(
-      '/getShNotices',
-      options: Options(
-        headers: {
-          'x-imdaesomun-api-key':
-              'U2FsdGVkX18Szkzvd4HgPj5wrSzD4WhlLbEOjc5Poww=',
-        },
-      ),
-    );
+    final response = await _dio.get('/getShNotices');
+
+    final results = response.data as List<dynamic>;
+
+    return results.map((notice) => Notice.fromJson(notice)).toList();
+  }
+
+  Future<List<Notice>> getGhNotices() async {
+    final response = await _dio.get('/getGhNotices');
 
     final results = response.data as List<dynamic>;
 
