@@ -105,13 +105,14 @@ const scrapeShNotices = async () => {
       const detail = await scrapeShNoticeDetail(seq);
 
       const notice = {
-        id: `SH${seq}`,
+        id: `sh${seq}`,
         seq,
         no,
         title: titleElement.text().trim(),
         regDate,
         hits,
         department,
+        corporation: 'sh',
         createdAt: Date.now(),
         ...detail,
       };
@@ -150,7 +151,7 @@ const scrapeShNoticeDetail = async (seq) => {
       if (fileName && previewLink) {
         files.push({
           fileName,
-          previewLink: `https://www.i-sh.co.kr${previewLink}`,
+          fileLink: `https://www.i-sh.co.kr${previewLink}`,
         });
       }
     });
@@ -253,13 +254,14 @@ const scrapeGhNotices = async () => {
       const detail = await scrapeGhNoticeDetail(seq);
 
       const notice = {
-        id: `GH${seq}`,
+        id: `gh${seq}`,
         seq,
         no,
         title,
         department,
         regDate,
         hits,
+        corporation: 'gh',
         createdAt: Date.now(),
         ...detail,
       };
@@ -296,6 +298,7 @@ const scrapeGhNoticeDetail = async (seq) => {
     if (fileName && fileId) {
       files.push({
         fileName,
+        fileLink: 'https://gh.or.kr/gh/conv.do',
         fileId,
       });
     }

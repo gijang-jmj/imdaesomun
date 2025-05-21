@@ -21,4 +21,12 @@ class NoticeSource {
 
     return results.map((notice) => Notice.fromJson(notice)).toList();
   }
+
+  Future<Notice> getNoticeById(String id) async {
+    final response = await _dio.get('/getNoticeById?id=$id');
+
+    final results = response.data as Map<String, dynamic>;
+
+    return Notice.fromJson(results);
+  }
 }

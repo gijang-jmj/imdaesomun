@@ -1,14 +1,14 @@
 import 'package:go_router/go_router.dart';
 import 'package:imdaesomun/src/core/constants/router_path_constant.dart';
+import 'package:imdaesomun/src/data/models/file.dart';
 import 'package:imdaesomun/src/ui/components/loading/global_loading.dart';
 import 'package:imdaesomun/src/ui/components/toast/global_toast.dart';
 import 'package:imdaesomun/src/ui/pages/community/community_page.dart';
 import 'package:imdaesomun/src/ui/pages/home/home_page.dart';
 import 'package:imdaesomun/src/ui/pages/log/log_page.dart';
+import 'package:imdaesomun/src/ui/pages/notice/notice_page.dart';
 import 'package:imdaesomun/src/ui/pages/profile/profile_page.dart';
-import 'package:imdaesomun/src/ui/pages/webview/gh_document_viewer.dart';
-import 'package:imdaesomun/src/ui/pages/webview/sh_document_viewer.dart';
-import 'package:imdaesomun/src/ui/pages/webview/test.dart';
+import 'package:imdaesomun/src/ui/pages/webview/document_viewer.dart';
 import 'package:imdaesomun/src/ui/widgets/dev_tools/dev_tools_overlay.dart';
 import 'package:imdaesomun/src/ui/widgets/nav/bottom_nav.dart';
 
@@ -71,25 +71,19 @@ final appRouter = GoRouter(
                   path: RouterPathConstant.log.path,
                   builder: (context, state) => const LogPage(),
                 ),
-                // GH 문서 뷰어
+                // 문서 뷰어
                 GoRoute(
-                  path: RouterPathConstant.ghViewer.path,
+                  path: RouterPathConstant.documentViewer.path,
                   builder:
-                      (context, state) => GhDocumentViewer(attachNo: '79544'),
+                      (context, state) =>
+                          DocumentViewer(file: state.extra as File),
                 ),
-                // SH 문서 뷰어
+                // 임대공고 상세 페이지
                 GoRoute(
-                  path: RouterPathConstant.shViewer.path,
+                  path: '/notice/:id',
                   builder:
-                      (context, state) => ShDocumentViewer(
-                        url:
-                            'https://www.i-sh.co.kr/main/com/util/htmlConverter.do?brd_id=GS0401&seq=288587&data_tp=A&file_seq=4',
-                      ),
-                ),
-                // test
-                GoRoute(
-                  path: '/test',
-                  builder: (context, state) => const HtmlViewPage(),
+                      (context, state) =>
+                          NoticePage(id: state.pathParameters['id']!),
                 ),
               ],
             ),

@@ -57,17 +57,10 @@ class RouterPathConstant {
   /// description : 로그 페이지
   static const log = RouterPathConstant._('/log');
 
-  /// page : ghViewer
+  /// page : documentViewer
   ///
-  /// path : /ghViewer
+  /// path : /documentViewer
   ///
-  /// description : GH 문서 뷰어 페이지
-  static const ghViewer = RouterPathConstant._('/ghViewer');
-
-  /// page : shViewer
-  ///
-  /// path : /shViewer
-  ///
-  /// description : SH 문서 뷰어 페이지
-  static const shViewer = RouterPathConstant._('/shViewer');
+  /// description : 문서 뷰어 페이지
+  static const documentViewer = RouterPathConstant._('/documentViewer');
 }

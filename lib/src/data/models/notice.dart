@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:imdaesomun/src/data/models/file.dart';
 
 part 'notice.freezed.dart';
 part 'notice.g.dart';
@@ -14,7 +15,8 @@ abstract class Notice with _$Notice {
     required int regDate,
     required int hits,
     required int createdAt,
-    required List<Map<String, String>> files,
+    required String corporation,
+    required List<File> files,
     required String html,
   }) = _Notice;
 
