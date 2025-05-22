@@ -140,7 +140,7 @@ const scrapeShNoticeDetail = async (seq) => {
   const response = await axios.get(url);
   const $ = cheerio.load(response.data);
 
-  // Select the file
+  // extract files
   const files = [];
   $('#fileControl')
     .closest('tr')
@@ -156,15 +156,25 @@ const scrapeShNoticeDetail = async (seq) => {
       }
     });
 
-  // Select the HTML content
-  const html = $('tr')
+  // extract contents
+  const contents = [];
+  $('tr')
     .filter((_, el) => $(el).find('td.cont').length > 0)
-    .html()
-    .trim();
+    .find('td.cont')
+    .find('p')
+    .each((_, el) => {
+      const text = $(el)
+        .text()
+        .replace(/\u00A0/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+      if (text) contents.push(text);
+    });
 
   return {
     files,
-    html,
+    contents,
+    link: `https://www.i-sh.co.kr/app/lay2/program/S48T1581C563/www/brd/m_247/view.do?seq=${seq}`,
   };
 };
 
@@ -289,7 +299,7 @@ const scrapeGhNoticeDetail = async (seq) => {
   const response = await axios.get(url);
   const $ = cheerio.load(response.data);
 
-  // Select the file
+  // extract files
   const files = [];
   $('.download-file-list-wrap ul li').each((index, element) => {
     const fileName = $(element).find('.fileNm').text().trim();
@@ -304,12 +314,24 @@ const scrapeGhNoticeDetail = async (seq) => {
     }
   });
 
-  // Select the HTML content
-  const html = $('.fr-view').html().trim();
+  // extract contents
+  const contents = [];
+  $('.fr-view')
+    .first()
+    .find('p')
+    .each((_, el) => {
+      const text = $(el)
+        .text()
+        .replace(/\u00A0/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+      if (text) contents.push(text);
+    });
 
   return {
     files,
-    html,
+    contents,
+    link: `https://gh.or.kr/gh/announcement-of-salerental001.do?mode=view&articleNo=${seq}`,
   };
 };
 

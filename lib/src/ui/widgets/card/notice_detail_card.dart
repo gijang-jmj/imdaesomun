@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:go_router/go_router.dart';
 import 'package:imdaesomun/src/core/constants/router_path_constant.dart';
 import 'package:imdaesomun/src/core/enums/notice_enum.dart';
@@ -202,19 +201,19 @@ class _NoticeDetailCardState extends State<NoticeDetailCard> {
             ),
             Padding(
               padding: EdgeInsets.symmetric(vertical: AppMargin.medium),
-              child: Html(
-                data: notice.html,
-                style: {
-                  '*': Style(
-                    color: AppColors.gray900,
-                    fontFamily: 'Pretendard',
-                    fontSize: FontSize(16.0),
-                    fontWeight: FontWeight.w400,
-                    lineHeight: LineHeight.normal,
-                    letterSpacing: -0.03,
-                    textAlign: TextAlign.start,
-                  ),
-                },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: AppMargin.extraLarge,
+                children: [
+                  ...notice.contents.map((content) {
+                    return Text(
+                      content,
+                      style: AppTextStyle.body2.copyWith(
+                        color: AppColors.gray900,
+                      ),
+                    );
+                  }),
+                ],
               ),
             ),
             Container(
@@ -230,8 +229,8 @@ class _NoticeDetailCardState extends State<NoticeDetailCard> {
   }
 }
 
-class NoticeCardSkeleton extends StatelessWidget {
-  const NoticeCardSkeleton({super.key});
+class NoticeDetailCardSkeleton extends StatelessWidget {
+  const NoticeDetailCardSkeleton({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -239,14 +238,28 @@ class NoticeCardSkeleton extends StatelessWidget {
       width: double.infinity,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(AppRadius.medium),
         boxShadow: [AppBoxShadow.medium],
+        borderRadius: BorderRadius.circular(AppRadius.medium),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(AppMargin.medium),
+        padding: EdgeInsets.all(AppMargin.medium),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // 상단: 부제목, 제목
+            Shimmer.fromColors(
+              baseColor: AppColors.gray100,
+              highlightColor: AppColors.gray200,
+              child: Container(
+                height: 18,
+                width: 80,
+                decoration: BoxDecoration(
+                  color: AppColors.gray100,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
             Shimmer.fromColors(
               baseColor: AppColors.gray100,
               highlightColor: AppColors.gray200,
@@ -260,48 +273,109 @@ class NoticeCardSkeleton extends StatelessWidget {
               ),
             ),
             const SizedBox(height: AppMargin.small),
+            // 날짜/조회수/부서
             Row(
-              children: [
-                Shimmer.fromColors(
-                  baseColor: AppColors.gray100,
-                  highlightColor: AppColors.gray200,
-                  child: Container(
-                    height: 20,
-                    width: 60,
-                    decoration: BoxDecoration(
-                      color: AppColors.gray100,
-                      borderRadius: BorderRadius.circular(4),
+              children: List.generate(
+                3,
+                (index) => Padding(
+                  padding: EdgeInsets.only(right: AppMargin.small),
+                  child: Shimmer.fromColors(
+                    baseColor: AppColors.gray100,
+                    highlightColor: AppColors.gray200,
+                    child: Container(
+                      height: 20,
+                      width: 60,
+                      decoration: BoxDecoration(
+                        color: AppColors.gray100,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
                     ),
                   ),
                 ),
-                const SizedBox(width: AppMargin.small),
-                Shimmer.fromColors(
-                  baseColor: AppColors.gray100,
-                  highlightColor: AppColors.gray200,
-                  child: Container(
-                    height: 20,
-                    width: 60,
-                    decoration: BoxDecoration(
-                      color: AppColors.gray100,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: AppMargin.small),
-                Shimmer.fromColors(
-                  baseColor: AppColors.gray100,
-                  highlightColor: AppColors.gray200,
-                  child: Container(
-                    height: 20,
-                    width: 60,
-                    decoration: BoxDecoration(
-                      color: AppColors.gray100,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
+            const SizedBox(height: AppMargin.medium),
+            Container(
+              width: double.infinity,
+              height: 1,
+              color: AppColors.gray100,
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: AppMargin.medium),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Shimmer.fromColors(
+                    baseColor: AppColors.gray100,
+                    highlightColor: AppColors.gray200,
+                    child: Container(
+                      height: 16,
+                      width: 60,
+                      decoration: BoxDecoration(
+                        color: AppColors.gray100,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: AppMargin.medium),
+                  Row(
+                    children: List.generate(
+                      2,
+                      (index) => Padding(
+                        padding: EdgeInsets.only(right: AppMargin.small),
+                        child: Shimmer.fromColors(
+                          baseColor: AppColors.gray100,
+                          highlightColor: AppColors.gray200,
+                          child: Container(
+                            height: 20,
+                            width: 120,
+                            decoration: BoxDecoration(
+                              color: AppColors.gray100,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              width: double.infinity,
+              height: 1,
+              color: AppColors.gray100,
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: AppMargin.medium),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: List.generate(
+                  3,
+                  (index) => Padding(
+                    padding: EdgeInsets.only(bottom: AppMargin.small),
+                    child: Shimmer.fromColors(
+                      baseColor: AppColors.gray100,
+                      highlightColor: AppColors.gray200,
+                      child: Container(
+                        height: 18,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: AppColors.gray100,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              width: double.infinity,
+              height: 1,
+              color: AppColors.gray100,
+            ),
+            const CopyrightFooter(),
           ],
         ),
       ),

@@ -12,28 +12,36 @@ class GlobalToast extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final toastState = ref.watch(globalToastProvider);
-    final bottomSafeAreaPadding = MediaQuery.of(context).padding.bottom;
+    final bottomSafeAreaPadding = MediaQuery.of(context).padding.top;
 
     return Stack(
       children: [
         child,
         AnimatedPositioned(
-          duration: const Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 200),
           curve: Curves.easeInOut,
           left: AppMargin.medium,
           right: AppMargin.medium,
-          bottom: toastState.isVisible ? bottomSafeAreaPadding + 40 : -100,
-          child: GestureDetector(
-            onTap: () => ref.read(globalToastProvider.notifier).hideToast(),
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
-              decoration: BoxDecoration(
-                color: Colors.black.withValues(alpha: 0.6),
-                borderRadius: BorderRadius.circular(AppRadius.large),
-              ),
-              child: DefaultTextStyle(
-                style: AppTextStyle.body1.copyWith(color: Colors.white),
-                child: Text(toastState.message, textAlign: TextAlign.start),
+          top: toastState.isVisible ? bottomSafeAreaPadding + 48 : 0,
+          child: AnimatedOpacity(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+            opacity: toastState.isVisible ? 1.0 : 0.0,
+            child: GestureDetector(
+              onTap: () => ref.read(globalToastProvider.notifier).hideToast(),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 16,
+                  horizontal: 12,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.6),
+                  borderRadius: BorderRadius.circular(AppRadius.large),
+                ),
+                child: DefaultTextStyle(
+                  style: AppTextStyle.body1.copyWith(color: Colors.white),
+                  child: Text(toastState.message, textAlign: TextAlign.start),
+                ),
               ),
             ),
           ),

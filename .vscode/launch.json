@@ -1,0 +1,30 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "imdaesomun (local)",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+
+        },
+        {
+            "name": "imdaesomun (dev)",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart", 
+            "args": [
+                "--flavor=dev",
+            ]
+        },
+        {
+            "name": "imdaesomun (prod)",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+            "args": [
+                "--flavor=prod",
+            ]
+        }
+    ]
+}

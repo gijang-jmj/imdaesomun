@@ -20,7 +20,9 @@ _Notice _$NoticeFromJson(Map<String, dynamic> json) => _Notice(
       (json['files'] as List<dynamic>)
           .map((e) => File.fromJson(e as Map<String, dynamic>))
           .toList(),
-  html: json['html'] as String,
+  contents:
+      (json['contents'] as List<dynamic>).map((e) => e as String).toList(),
+  link: json['link'] as String,
 );
 
 Map<String, dynamic> _$NoticeToJson(_Notice instance) => <String, dynamic>{
@@ -34,5 +36,6 @@ Map<String, dynamic> _$NoticeToJson(_Notice instance) => <String, dynamic>{
   'createdAt': instance.createdAt,
   'corporation': instance.corporation,
   'files': instance.files,
-  'html': instance.html,
+  'contents': instance.contents,
+  'link': instance.link,
 };

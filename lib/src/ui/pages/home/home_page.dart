@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:imdaesomun/src/core/constants/router_path_constant.dart';
 import 'package:imdaesomun/src/core/enums/notice_enum.dart';
 import 'package:imdaesomun/src/core/theme/app_color.dart';
 import 'package:imdaesomun/src/core/theme/app_icon.dart';
@@ -105,11 +107,18 @@ class HomePage extends ConsumerWidget {
                                 children:
                                     notices
                                         .map(
-                                          (notice) => NoticeCard(
-                                            title: notice.title,
-                                            regDate: notice.regDate,
-                                            hits: notice.hits,
-                                            department: notice.department,
+                                          (notice) => GestureDetector(
+                                            onTap: () {
+                                              context.push(
+                                                '${RouterPathConstant.notice.path}/${notice.id}',
+                                              );
+                                            },
+                                            child: NoticeCard(
+                                              title: notice.title,
+                                              regDate: notice.regDate,
+                                              hits: notice.hits,
+                                              department: notice.department,
+                                            ),
                                           ),
                                         )
                                         .toList(),
@@ -165,11 +174,18 @@ class HomePage extends ConsumerWidget {
                                 children:
                                     notices
                                         .map(
-                                          (notice) => NoticeCard(
-                                            title: notice.title,
-                                            regDate: notice.regDate,
-                                            hits: notice.hits,
-                                            department: notice.department,
+                                          (notice) => GestureDetector(
+                                            onTap: () {
+                                              context.push(
+                                                '${RouterPathConstant.notice.path}/${notice.id}',
+                                              );
+                                            },
+                                            child: NoticeCard(
+                                              title: notice.title,
+                                              regDate: notice.regDate,
+                                              hits: notice.hits,
+                                              department: notice.department,
+                                            ),
                                           ),
                                         )
                                         .toList(),

@@ -38,6 +38,7 @@ class DocumentViewer extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(title: Text('문서 뷰어')),
       body: SafeArea(child: WebViewWidget(controller: controller)),
     );
   }

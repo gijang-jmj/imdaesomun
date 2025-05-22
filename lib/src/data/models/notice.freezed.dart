@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Notice {
 
- String get id; String get seq; int get no; String get title; String get department; int get regDate; int get hits; int get createdAt; String get corporation; List<File> get files; String get html;
+ String get id; String get seq; int get no; String get title; String get department; int get regDate; int get hits; int get createdAt; String get corporation; List<File> get files; List<String> get contents; String get link;
 /// Create a copy of Notice
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $NoticeCopyWith<Notice> get copyWith => _$NoticeCopyWithImpl<Notice>(this as Not
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Notice&&(identical(other.id, id) || other.id == id)&&(identical(other.seq, seq) || other.seq == seq)&&(identical(other.no, no) || other.no == no)&&(identical(other.title, title) || other.title == title)&&(identical(other.department, department) || other.department == department)&&(identical(other.regDate, regDate) || other.regDate == regDate)&&(identical(other.hits, hits) || other.hits == hits)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.corporation, corporation) || other.corporation == corporation)&&const DeepCollectionEquality().equals(other.files, files)&&(identical(other.html, html) || other.html == html));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Notice&&(identical(other.id, id) || other.id == id)&&(identical(other.seq, seq) || other.seq == seq)&&(identical(other.no, no) || other.no == no)&&(identical(other.title, title) || other.title == title)&&(identical(other.department, department) || other.department == department)&&(identical(other.regDate, regDate) || other.regDate == regDate)&&(identical(other.hits, hits) || other.hits == hits)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.corporation, corporation) || other.corporation == corporation)&&const DeepCollectionEquality().equals(other.files, files)&&const DeepCollectionEquality().equals(other.contents, contents)&&(identical(other.link, link) || other.link == link));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,seq,no,title,department,regDate,hits,createdAt,corporation,const DeepCollectionEquality().hash(files),html);
+int get hashCode => Object.hash(runtimeType,id,seq,no,title,department,regDate,hits,createdAt,corporation,const DeepCollectionEquality().hash(files),const DeepCollectionEquality().hash(contents),link);
 
 @override
 String toString() {
-  return 'Notice(id: $id, seq: $seq, no: $no, title: $title, department: $department, regDate: $regDate, hits: $hits, createdAt: $createdAt, corporation: $corporation, files: $files, html: $html)';
+  return 'Notice(id: $id, seq: $seq, no: $no, title: $title, department: $department, regDate: $regDate, hits: $hits, createdAt: $createdAt, corporation: $corporation, files: $files, contents: $contents, link: $link)';
 }
 
 
@@ -49,7 +49,7 @@ abstract mixin class $NoticeCopyWith<$Res>  {
   factory $NoticeCopyWith(Notice value, $Res Function(Notice) _then) = _$NoticeCopyWithImpl;
 @useResult
 $Res call({
- String id, String seq, int no, String title, String department, int regDate, int hits, int createdAt, String corporation, List<File> files, String html
+ String id, String seq, int no, String title, String department, int regDate, int hits, int createdAt, String corporation, List<File> files, List<String> contents, String link
 });
 
 
@@ -66,7 +66,7 @@ class _$NoticeCopyWithImpl<$Res>
 
 /// Create a copy of Notice
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? seq = null,Object? no = null,Object? title = null,Object? department = null,Object? regDate = null,Object? hits = null,Object? createdAt = null,Object? corporation = null,Object? files = null,Object? html = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? seq = null,Object? no = null,Object? title = null,Object? department = null,Object? regDate = null,Object? hits = null,Object? createdAt = null,Object? corporation = null,Object? files = null,Object? contents = null,Object? link = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,seq: null == seq ? _self.seq : seq // ignore: cast_nullable_to_non_nullable
@@ -78,7 +78,8 @@ as int,hits: null == hits ? _self.hits : hits // ignore: cast_nullable_to_non_nu
 as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as int,corporation: null == corporation ? _self.corporation : corporation // ignore: cast_nullable_to_non_nullable
 as String,files: null == files ? _self.files : files // ignore: cast_nullable_to_non_nullable
-as List<File>,html: null == html ? _self.html : html // ignore: cast_nullable_to_non_nullable
+as List<File>,contents: null == contents ? _self.contents : contents // ignore: cast_nullable_to_non_nullable
+as List<String>,link: null == link ? _self.link : link // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -90,7 +91,7 @@ as String,
 @JsonSerializable()
 
 class _Notice implements Notice {
-  const _Notice({required this.id, required this.seq, required this.no, required this.title, required this.department, required this.regDate, required this.hits, required this.createdAt, required this.corporation, required final  List<File> files, required this.html}): _files = files;
+  const _Notice({required this.id, required this.seq, required this.no, required this.title, required this.department, required this.regDate, required this.hits, required this.createdAt, required this.corporation, required final  List<File> files, required final  List<String> contents, required this.link}): _files = files,_contents = contents;
   factory _Notice.fromJson(Map<String, dynamic> json) => _$NoticeFromJson(json);
 
 @override final  String id;
@@ -109,7 +110,14 @@ class _Notice implements Notice {
   return EqualUnmodifiableListView(_files);
 }
 
-@override final  String html;
+ final  List<String> _contents;
+@override List<String> get contents {
+  if (_contents is EqualUnmodifiableListView) return _contents;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_contents);
+}
+
+@override final  String link;
 
 /// Create a copy of Notice
 /// with the given fields replaced by the non-null parameter values.
@@ -124,16 +132,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Notice&&(identical(other.id, id) || other.id == id)&&(identical(other.seq, seq) || other.seq == seq)&&(identical(other.no, no) || other.no == no)&&(identical(other.title, title) || other.title == title)&&(identical(other.department, department) || other.department == department)&&(identical(other.regDate, regDate) || other.regDate == regDate)&&(identical(other.hits, hits) || other.hits == hits)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.corporation, corporation) || other.corporation == corporation)&&const DeepCollectionEquality().equals(other._files, _files)&&(identical(other.html, html) || other.html == html));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Notice&&(identical(other.id, id) || other.id == id)&&(identical(other.seq, seq) || other.seq == seq)&&(identical(other.no, no) || other.no == no)&&(identical(other.title, title) || other.title == title)&&(identical(other.department, department) || other.department == department)&&(identical(other.regDate, regDate) || other.regDate == regDate)&&(identical(other.hits, hits) || other.hits == hits)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.corporation, corporation) || other.corporation == corporation)&&const DeepCollectionEquality().equals(other._files, _files)&&const DeepCollectionEquality().equals(other._contents, _contents)&&(identical(other.link, link) || other.link == link));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,seq,no,title,department,regDate,hits,createdAt,corporation,const DeepCollectionEquality().hash(_files),html);
+int get hashCode => Object.hash(runtimeType,id,seq,no,title,department,regDate,hits,createdAt,corporation,const DeepCollectionEquality().hash(_files),const DeepCollectionEquality().hash(_contents),link);
 
 @override
 String toString() {
-  return 'Notice(id: $id, seq: $seq, no: $no, title: $title, department: $department, regDate: $regDate, hits: $hits, createdAt: $createdAt, corporation: $corporation, files: $files, html: $html)';
+  return 'Notice(id: $id, seq: $seq, no: $no, title: $title, department: $department, regDate: $regDate, hits: $hits, createdAt: $createdAt, corporation: $corporation, files: $files, contents: $contents, link: $link)';
 }
 
 
@@ -144,7 +152,7 @@ abstract mixin class _$NoticeCopyWith<$Res> implements $NoticeCopyWith<$Res> {
   factory _$NoticeCopyWith(_Notice value, $Res Function(_Notice) _then) = __$NoticeCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String seq, int no, String title, String department, int regDate, int hits, int createdAt, String corporation, List<File> files, String html
+ String id, String seq, int no, String title, String department, int regDate, int hits, int createdAt, String corporation, List<File> files, List<String> contents, String link
 });
 
 
@@ -161,7 +169,7 @@ class __$NoticeCopyWithImpl<$Res>
 
 /// Create a copy of Notice
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? seq = null,Object? no = null,Object? title = null,Object? department = null,Object? regDate = null,Object? hits = null,Object? createdAt = null,Object? corporation = null,Object? files = null,Object? html = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? seq = null,Object? no = null,Object? title = null,Object? department = null,Object? regDate = null,Object? hits = null,Object? createdAt = null,Object? corporation = null,Object? files = null,Object? contents = null,Object? link = null,}) {
   return _then(_Notice(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,seq: null == seq ? _self.seq : seq // ignore: cast_nullable_to_non_nullable
@@ -173,7 +181,8 @@ as int,hits: null == hits ? _self.hits : hits // ignore: cast_nullable_to_non_nu
 as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as int,corporation: null == corporation ? _self.corporation : corporation // ignore: cast_nullable_to_non_nullable
 as String,files: null == files ? _self._files : files // ignore: cast_nullable_to_non_nullable
-as List<File>,html: null == html ? _self.html : html // ignore: cast_nullable_to_non_nullable
+as List<File>,contents: null == contents ? _self._contents : contents // ignore: cast_nullable_to_non_nullable
+as List<String>,link: null == link ? _self.link : link // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

@@ -17,7 +17,8 @@ abstract class Notice with _$Notice {
     required int createdAt,
     required String corporation,
     required List<File> files,
-    required String html,
+    required List<String> contents,
+    required String link,
   }) = _Notice;
 
   factory Notice.fromJson(Map<String, dynamic> json) => _$NoticeFromJson(json);
