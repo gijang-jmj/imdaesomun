@@ -13,20 +13,25 @@ class DevTools extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     const testNotice = Notice(
-      id: 'gh63579',
-      seq: '63579',
-      no: 1,
-      title: 'Test Notice',
-      department: 'Test Department',
-      regDate: 1678901234,
-      hits: 100,
-      createdAt: 1678901234,
-      corporation: 'Test Corporation',
+      id: "gh63626",
+      seq: "63626",
+      no: 497,
+      title: "25년 매입임대주택 입주자 모집공고(자격완화, 주택목록 게시)",
+      department: "매입임대관리부",
+      regDate: 1747958400000,
+      hits: 3312,
+      corporation: "gh",
+      createdAt: 1748097422846,
       files: [
-        File(fileName: 'file1', fileLink: 'https://example.com/file1.pdf'),
+        File(
+          fileName: "1. 매입임대 자격완화 모집공고문(2025.05.23).hwp",
+          fileLink: "https://gh.or.kr/gh/conv.do",
+          fileId: "79675",
+        ),
       ],
-      contents: ['Test content', 'Test content 2'],
-      link: 'https://example.com',
+      contents: [],
+      link:
+          "https://gh.or.kr/gh/announcement-of-salerental001.do?mode=view&articleNo=63626",
     );
 
     return SizedBox(

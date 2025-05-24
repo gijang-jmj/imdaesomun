@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:imdaesomun/src/core/helpers/notice_helper.dart';
 import 'package:imdaesomun/src/core/theme/app_color.dart';
 import 'package:imdaesomun/src/core/theme/app_icon.dart';
 import 'package:imdaesomun/src/core/theme/app_size.dart';
@@ -6,6 +7,7 @@ import 'package:imdaesomun/src/core/theme/app_style.dart';
 import 'package:imdaesomun/src/core/theme/app_text_style.dart';
 import 'package:imdaesomun/src/core/utils/format_util.dart';
 import 'package:imdaesomun/src/core/utils/text_util.dart';
+import 'package:imdaesomun/src/ui/components/badge/app_text_badge.dart';
 import 'package:shimmer/shimmer.dart';
 
 class NoticeCard extends StatelessWidget {
@@ -37,10 +39,19 @@ class NoticeCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: AppMargin.small,
           children: [
-            Text(
-              TextUtil.keepWord(title),
-              style: AppTextStyle.subTitle2.copyWith(color: AppColors.gray900),
-              textAlign: TextAlign.start,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: AppMargin.extraSmall,
+              children: [
+                if (NoticeHelper.isNewNotice(regDate)) AppTextBadge(text: '신규'),
+                Text(
+                  TextUtil.keepWord(title),
+                  style: AppTextStyle.subTitle2.copyWith(
+                    color: AppColors.gray900,
+                  ),
+                  textAlign: TextAlign.start,
+                ),
+              ],
             ),
             Row(
               spacing: AppMargin.small,

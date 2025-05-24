@@ -144,7 +144,7 @@ const scrapeShNoticeDetail = async (seq) => {
   const files = [];
   $('#fileControl')
     .closest('tr')
-    .each((index, element) => {
+    .each((_, element) => {
       const fileName = $(element).find('a.btnAttach').text().trim();
       const previewLink = $(element).find('a.icoView').attr('href');
 
@@ -158,18 +158,13 @@ const scrapeShNoticeDetail = async (seq) => {
 
   // extract contents
   const contents = [];
-  $('tr')
-    .filter((_, el) => $(el).find('td.cont').length > 0)
-    .find('td.cont')
-    .find('p')
-    .each((_, el) => {
-      const text = $(el)
-        .text()
-        .replace(/\u00A0/g, '')
-        .replace(/\s+/g, ' ')
-        .trim();
+  const contentTarget = $('tr').find('td.cont').first();
+  if (contentTarget.length) {
+    contentTarget.children().each((_, el) => {
+      const text = $(el).text().trim();
       if (text) contents.push(text);
     });
+  }
 
   return {
     files,
@@ -301,7 +296,7 @@ const scrapeGhNoticeDetail = async (seq) => {
 
   // extract files
   const files = [];
-  $('.download-file-list-wrap ul li').each((index, element) => {
+  $('.download-file-list-wrap ul li').each((_, element) => {
     const fileName = $(element).find('.fileNm').text().trim();
     const fileId = $(element).find('button').attr('data-id');
 
@@ -316,17 +311,13 @@ const scrapeGhNoticeDetail = async (seq) => {
 
   // extract contents
   const contents = [];
-  $('.fr-view')
-    .first()
-    .find('p')
-    .each((_, el) => {
-      const text = $(el)
-        .text()
-        .replace(/\u00A0/g, '')
-        .replace(/\s+/g, ' ')
-        .trim();
+  const contentTarget = $('.fr-view').first();
+  if (contentTarget.length) {
+    contentTarget.children().each((_, el) => {
+      const text = $(el).text().trim();
       if (text) contents.push(text);
     });
+  }
 
   return {
     files,

@@ -21,8 +21,14 @@ class HomePage extends ConsumerWidget {
     return Scaffold(
       backgroundColor: AppColors.gray50,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
+        child: RefreshIndicator(
+          onRefresh: () async {
+            ref.read(shNoticesProvider.notifier).getNotices();
+            ref.read(ghNoticesProvider.notifier).getNotices();
+          },
+          child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: EdgeInsets.zero,
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(
