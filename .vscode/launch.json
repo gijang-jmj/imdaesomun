@@ -9,15 +9,6 @@
 
         },
         {
-            "name": "imdaesomun (dev)",
-            "request": "launch",
-            "type": "dart",
-            "program": "lib/main.dart", 
-            "args": [
-                "--flavor=dev",
-            ]
-        },
-        {
             "name": "imdaesomun (prod)",
             "request": "launch",
             "type": "dart",
