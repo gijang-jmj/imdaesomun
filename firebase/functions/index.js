@@ -13,7 +13,7 @@ initializeApp();
  * 공고 크롤링
  */
 exports.scrapeNotices = onRequest(
-  { secrets: ['IMDAESOMUN_API_KEY'] },
+  { region: 'asia-northeast1', secrets: ['IMDAESOMUN_API_KEY'] },
   async (req, res) => {
     try {
       if (req.method !== 'POST') {
@@ -44,7 +44,7 @@ exports.scrapeNotices = onRequest(
  * SH 공고 가져오기
  */
 exports.getShNotices = onRequest(
-  { secrets: ['IMDAESOMUN_API_KEY'] },
+  { region: 'asia-northeast1', secrets: ['IMDAESOMUN_API_KEY'] },
   async (req, res) => {
     try {
       const apiKey = req.headers['x-imdaesomun-api-key'];
@@ -72,7 +72,7 @@ exports.getShNotices = onRequest(
  * GH 공고 가져오기
  */
 exports.getGhNotices = onRequest(
-  { secrets: ['IMDAESOMUN_API_KEY'] },
+  { region: 'asia-northeast1', secrets: ['IMDAESOMUN_API_KEY'] },
   async (req, res) => {
     try {
       const apiKey = req.headers['x-imdaesomun-api-key'];
@@ -100,7 +100,7 @@ exports.getGhNotices = onRequest(
  * SH/GH 공고 조회
  */
 exports.getNoticeById = onRequest(
-  { secrets: ['IMDAESOMUN_API_KEY'] },
+  { region: 'asia-northeast1', secrets: ['IMDAESOMUN_API_KEY'] },
   async (req, res) => {
     try {
       const apiKey = req.headers['x-imdaesomun-api-key'];
