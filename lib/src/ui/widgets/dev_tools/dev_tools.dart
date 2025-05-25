@@ -25,8 +25,9 @@ class DevTools extends ConsumerWidget {
       files: [
         File(
           fileName: "1. 매입임대 자격완화 모집공고문(2025.05.23).hwp",
-          fileLink: "https://gh.or.kr/gh/conv.do",
-          fileId: "79675",
+          fileLink:
+              "https://gh.or.kr/synap/result/zBiNCWydESZpTSQsUFXjhPDQiS.view.xhtml",
+          // fileId: "79675",
         ),
       ],
       contents: [],

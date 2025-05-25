@@ -1,0 +1,115 @@
+flutter_native_splash:
+  # 이 패키지는 Flutter의 기본 흰색 네이티브 스플래시 화면을 배경색과 스플래시 이미지로 사용자 정의하는 네이티브 코드를 생성합니다.
+  # 아래 매개변수를 사용자 정의하고, 터미널에서 다음 명령어를 실행하세요:
+  # dart run flutter_native_splash:create
+  # Flutter의 기본 흰색 스플래시 화면을 복원하려면, 터미널에서 다음 명령어를 실행하세요:
+  # dart run flutter_native_splash:remove
+
+  # 중요 참고 사항: 이 매개변수는 Android 12 이상 버전의 구성에 영향을 미치지 않습니다. Android 12 이상 버전은 이전 버전과 다르게 스플래시 화면을 처리합니다. Android 12 이상 버전은 아래의 android_12 섹션에서 별도로 구성해야 합니다.
+
+  # color 또는 background_image는 필수 매개변수입니다. color를 사용하여 스플래시 화면의 배경을 단색으로 설정할 수 있습니다. background_image를 사용하여 스플래시 화면의 배경을 png 이미지로 설정할 수 있습니다. 이는 그라디언트에 유용합니다. 이미지는 앱 크기에 맞게 확장됩니다. color와 background_image는 둘 다 설정할 수 없으며, 하나만 사용할 수 있습니다.
+  color: "#2CB1A3"
+  #background_image: "assets/background.png"
+
+  # 선택적 매개변수는 아래에 나열되어 있습니다. 매개변수를 활성화하려면, 줄의 앞에 있는 # 문자를 제거하여 주석 처리를 해제하세요.
+
+  # image 매개변수를 사용하여 스플래시 화면에 사용할 이미지를 지정할 수 있습니다. png 파일이어야 하며, 4x 픽셀 밀도로 크기가 조정되어야 합니다.
+  image: assets/splash/splash.png
+
+  # branding 속성을 사용하여 스플래시 화면에 사용할 브랜딩 이미지를 지정할 수 있습니다. png 파일이어야 합니다. Android, iOS 및 웹에서 지원됩니다. Android 12의 경우, 아래 Android 12 섹션을 참조하세요.
+  #branding: assets/dart.png
+
+  # 브랜딩 이미지를 화면 하단에 배치하려면 bottom, bottomRight, bottomLeft를 사용할 수 있습니다. 기본값은 지정하지 않거나 다른 값을 지정한 경우 bottom입니다.
+  #branding_mode: bottom
+  
+  # 화면 하단에서 브랜딩 패딩을 설정합니다. 기본값은 0입니다. (웹에서는 아직 지원되지 않음)
+  # branding_bottom_padding: 24
+
+  # color_dark, background_image_dark, image_dark, branding_dark는 장치가 다크 모드일 때 배경 및 이미지를 설정하는 매개변수입니다. 지정되지 않은 경우, 앱은 위의 매개변수를 사용합니다. 위에 매개변수가 없는 경우, 앱은 라이트 모드 값을 사용합니다. image_dark 매개변수가 지정된 경우, color_dark 또는 background_image_dark가 지정되어야 합니다. color_dark와 background_image_dark는 둘 다 설정할 수 없습니다.
+  #color_dark: "#042a49"
+  #background_image_dark: "assets/dark-background.png"
+  #image_dark: assets/splash-invert.png
+  #branding_dark: assets/dart_dark.png
+
+  # Android 12 이상 버전부터는 스플래시 화면이 이전 버전과 다르게 처리됩니다. 자세한 내용은 https://developer.android.com/guide/topics/ui/splash-screen을 참조하세요. 다음은 Android 12+에 대한 특정 매개변수입니다.
+  android_12:
+    # image 매개변수는 스플래시 화면 아이콘 이미지를 설정합니다. 이 매개변수가 지정되지 않은 경우, 앱의 런처 아이콘이 대신 사용됩니다.
+    # 스플래시 화면은 화면 중앙의 원으로 잘립니다.
+    # 아이콘 배경이 있는 앱 아이콘: 960×960 픽셀이어야 하며, 지름 640 픽셀의 원 안에 맞아야 합니다.
+    # 아이콘 배경이 없는 앱 아이콘: 1152×1152 픽셀이어야 하며, 지름 768 픽셀의 원 안에 맞아야 합니다. 1152x1152 이미지를 지름 768의 원 안에 맞추려면, 가장 중요한 디자인 요소가 1152x1152 캔버스의 중앙에 있는 지름 768의 원 안에 배치되도록 하면 됩니다.
+    image: assets/splash/splash.png
+
+    # 스플래시 화면 배경색.
+    color: "#2CB1A3"
+
+    # 앱 아이콘 배경색.
+    icon_background_color: "#2CB1A3"
+
+    # branding 속성을 사용하여 스플래시 화면에 사용할 브랜딩 이미지를 지정할 수 있습니다.
+    #branding: assets/dart.png
+
+    # image_dark, color_dark, icon_background_color_dark, branding_dark는 장치가 다크 모드일 때 적용되는 값을 설정합니다. 지정되지 않은 경우, 앱은 위의 매개변수를 사용합니다. 위에 매개변수가 없는 경우, 앱은 라이트 모드 값을 사용합니다.
+    #image_dark: assets/android12splash-invert.png
+    #color_dark: "#042a49"
+    #icon_background_color_dark: "#eeeeee"
+
+  # android, ios 및 web 매개변수는 특정 플랫폼에서 스플래시 화면 생성을 비활성화하는 데 사용할 수 있습니다.
+  #android: false
+  #ios: false
+  #web: false
+
+  # 플랫폼별 이미지는 다음 매개변수로 지정할 수 있으며, 해당 매개변수를 재정의합니다. 모든 매개변수를 지정하거나 선택적으로 지정하거나 지정하지 않을 수 있습니다:
+  #color_android: "#42a5f5"
+  #color_dark_android: "#042a49"
+  #color_ios: "#42a5f5"
+  #color_dark_ios: "#042a49"
+  #color_web: "#42a5f5"
+  #color_dark_web: "#042a49"
+  #image_android: assets/splash-android.png
+  #image_dark_android: assets/splash-invert-android.png
+  #image_ios: assets/splash-ios.png
+  #image_dark_ios: assets/splash-invert-ios.png
+  #image_web: assets/splash-web.gif
+  #image_dark_web: assets/splash-invert-web.gif
+  #background_image_android: "assets/background-android.png"
+  #background_image_dark_android: "assets/dark-background-android.png"
+  #background_image_ios: "assets/background-ios.png"
+  #background_image_dark_ios: "assets/dark-background-ios.png"
+  #background_image_web: "assets/background-web.png"
+  #background_image_dark_web: "assets/dark-background-web.png"
+  #branding_android: assets/brand-android.png
+  #branding_bottom_padding_android: 24
+  #branding_dark_android: assets/dart_dark-android.png
+  #branding_ios: assets/brand-ios.png
+  #branding_bottom_padding_ios: 24
+  #branding_dark_ios: assets/dart_dark-ios.png
+  #branding_web: assets/brand-web.gif
+  #branding_dark_web: assets/dart_dark-web.gif
+
+  # 스플래시 이미지의 위치는 android_gravity, ios_content_mode, web_image_mode 매개변수로 설정할 수 있습니다. 모두 기본값은 center입니다.
+  #
+  # android_gravity는 다음 Android Gravity 중 하나일 수 있습니다 (참조: https://developer.android.com/reference/android/view/Gravity): bottom, center, center_horizontal, center_vertical, clip_horizontal, clip_vertical, end, fill, fill_horizontal, fill_vertical, left, right, start, 또는 top. android_gravity는 | 연산자를 사용하여 여러 효과를 결합할 수 있습니다. 예를 들어:
+  # `android_gravity: fill|clip_vertical` - 이는 이미지의 세로 비율을 유지하면서 너비를 채웁니다.
+  #android_gravity: center
+  #
+  # ios_content_mode는 다음 iOS UIView.ContentMode 중 하나일 수 있습니다 (참조: https://developer.apple.com/documentation/uikit/uiview/contentmode): scaleToFill, scaleAspectFit, scaleAspectFill, center, top, bottom, left, right, topLeft, topRight, bottomLeft, 또는 bottomRight.
+  #ios_content_mode: center
+  #
+  # web_image_mode는 다음 모드 중 하나일 수 있습니다: center, contain, stretch, cover.
+  #web_image_mode: center
+
+  # 화면 방향은 android_screen_orientation 매개변수로 Android에서 설정할 수 있습니다. 유효한 매개변수는 다음에서 찾을 수 있습니다:
+  # https://developer.android.com/guide/topics/manifest/activity-element#screen
+  #android_screen_orientation: sensorLandscape
+
+  # 알림 바를 숨기려면 fullscreen 매개변수를 사용하세요. 웹에서는 알림 바가 없으므로 효과가 없습니다. 기본값은 false입니다.
+  # 참고: Android와 달리, iOS는 앱이 로드될 때 자동으로 알림 바를 표시하지 않습니다.
+  #       알림 바를 표시하려면, Flutter 앱에 다음 코드를 추가하세요:
+  #       WidgetsFlutterBinding.ensureInitialized();
+  #       SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.bottom, SystemUiOverlay.top], );
+  #fullscreen: true
+
+  # info.plist 파일의 이름을 변경한 경우, info_plist_files 매개변수로 파일 이름을 지정할 수 있습니다. 아래 세 줄에서 # 문자만 제거하고, 공백은 제거하지 마세요:
+  #info_plist_files:
+  #  - 'ios/Runner/Info-Debug.plist'
+  #  - 'ios/Runner/Info-Release.plist'

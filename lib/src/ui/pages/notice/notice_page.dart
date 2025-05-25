@@ -4,6 +4,7 @@ import 'package:imdaesomun/src/core/services/toast_service.dart';
 import 'package:imdaesomun/src/core/theme/app_color.dart';
 import 'package:imdaesomun/src/core/theme/app_icon.dart';
 import 'package:imdaesomun/src/core/theme/app_size.dart';
+import 'package:imdaesomun/src/ui/components/app_bar/app_app_bar.dart';
 import 'package:imdaesomun/src/ui/components/button/app_text_button.dart';
 import 'package:imdaesomun/src/ui/pages/notice/notice_page_view_model.dart';
 import 'package:imdaesomun/src/ui/widgets/card/notice_detail_card.dart';
@@ -19,7 +20,7 @@ class NoticePage extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: AppColors.gray50,
-      appBar: AppBar(title: const Text('공고 상세')),
+      appBar: AppAppBar(title: const Text('공고 상세')),
       body: SafeArea(
         child: Column(
           children: [
