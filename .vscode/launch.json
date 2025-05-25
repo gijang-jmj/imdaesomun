@@ -2,11 +2,20 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "imdaesomun (local)",
+            "name": "imdaesomun (ios)",
             "request": "launch",
             "type": "dart",
             "program": "lib/main.dart",
 
+        },
+        {
+            "name": "imdaesomun (android)",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+            "args": [
+                "--flavor", "local"
+            ]
         },
         {
             "name": "imdaesomun (prod)",
@@ -14,7 +23,7 @@
             "type": "dart",
             "program": "lib/main.dart",
             "args": [
-                "--flavor=prod",
+                "--flavor", "prod"
             ]
         }
     ]

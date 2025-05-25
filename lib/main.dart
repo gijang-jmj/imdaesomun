@@ -16,7 +16,6 @@ void main() async {
     env = await MethodChannel(
       'com.example.imdaesomun/environment',
     ).invokeMethod('getEnvironment');
-    print('Current environment: $env');
   } catch (e) {
     env = 'prod';
   }
