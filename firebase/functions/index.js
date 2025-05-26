@@ -140,3 +140,48 @@ exports.getNoticeById = onRequest(
     }
   },
 );
+
+/**
+ * FCM 토큰 등록/갱신
+ * POST /registerToken
+ * body: { token: string, userId?: string }
+ */
+exports.registerToken = onRequest(
+  { region: 'asia-northeast1', secrets: ['IMDAESOMUN_API_KEY'] },
+  async (req, res) => {
+    try {
+      if (req.method !== 'POST') {
+        return res.status(404).send({ error: 'Not Found' });
+      }
+
+      const apiKey = req.headers['x-imdaesomun-api-key'];
+      const SECRET_KEY = process.env.IMDAESOMUN_API_KEY;
+
+      if (apiKey !== SECRET_KEY) {
+        return res.status(401).send({ error: 'Unauthorized' });
+      }
+
+      const { token, userId } = req.body;
+      if (!token) {
+        return res.status(400).send({ error: 'Missing parameter.' });
+      }
+
+      const db = getFirestore();
+      const tokenRef = db.collection('token').doc(token);
+
+      // 토큰 문서가 이미 있으면 userId만 업데이트, 없으면 새로 생성
+      await tokenRef.set(
+        {
+          userId: userId || null,
+          createdAt: Date.now(),
+        },
+        { merge: true },
+      );
+
+      return res.status(200).send({ message: 'Token registered/updated.' });
+    } catch (error) {
+      res.status(500).send({ error: 'Failed to register token.' });
+      logger.error('[Token] Error registering token:', error);
+    }
+  },
+);

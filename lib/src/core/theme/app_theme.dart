@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:imdaesomun/src/core/theme/app_color.dart';
 
 class AppTheme {
@@ -12,12 +11,6 @@ class AppTheme {
         seedColor: AppColors.teal500,
         brightness: Brightness.light,
       ),
-      appBarTheme: const AppBarTheme(
-        systemOverlayStyle: SystemUiOverlayStyle(
-          statusBarIconBrightness: Brightness.dark, // Android
-          statusBarBrightness: Brightness.light, // iOS
-        ),
-      ),
     );
   }
 
@@ -29,12 +22,6 @@ class AppTheme {
       colorScheme: ColorScheme.fromSeed(
         seedColor: AppColors.teal500,
         brightness: Brightness.dark,
-      ),
-      appBarTheme: const AppBarTheme(
-        systemOverlayStyle: SystemUiOverlayStyle(
-          statusBarIconBrightness: Brightness.dark, // Android
-          statusBarBrightness: Brightness.light, // iOS
-        ),
       ),
     );
   }
