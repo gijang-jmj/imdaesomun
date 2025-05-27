@@ -14,7 +14,6 @@ abstract class Notice with _$Notice {
     required String department,
     required int regDate,
     required int hits,
-    required int createdAt,
     required String corporation,
     required List<File> files,
     required List<String> contents,

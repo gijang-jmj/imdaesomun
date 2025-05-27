@@ -52,7 +52,7 @@ class LogService {
   }
 }
 
-class LoggingNotifier extends AutoDisposeAsyncNotifier<List<LogEntry>> {
+class LogNotifier extends AutoDisposeAsyncNotifier<List<LogEntry>> {
   Future<List<LogEntry>> _getLogs() async {
     return await LogService.getLogs();
   }
@@ -83,6 +83,6 @@ class LoggingNotifier extends AutoDisposeAsyncNotifier<List<LogEntry>> {
 }
 
 final logProvider =
-    AsyncNotifierProvider.autoDispose<LoggingNotifier, List<LogEntry>>(
-      LoggingNotifier.new,
+    AsyncNotifierProvider.autoDispose<LogNotifier, List<LogEntry>>(
+      LogNotifier.new,
     );

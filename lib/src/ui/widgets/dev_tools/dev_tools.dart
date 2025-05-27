@@ -21,7 +21,6 @@ class DevTools extends ConsumerWidget {
       regDate: 1747958400000,
       hits: 3312,
       corporation: "gh",
-      createdAt: 1748097422846,
       files: [
         File(
           fileName: "1. 매입임대 자격완화 모집공고문(2025.05.23).hwp",

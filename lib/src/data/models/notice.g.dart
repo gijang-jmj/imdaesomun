@@ -14,7 +14,6 @@ _Notice _$NoticeFromJson(Map<String, dynamic> json) => _Notice(
   department: json['department'] as String,
   regDate: (json['regDate'] as num).toInt(),
   hits: (json['hits'] as num).toInt(),
-  createdAt: (json['createdAt'] as num).toInt(),
   corporation: json['corporation'] as String,
   files:
       (json['files'] as List<dynamic>)
@@ -33,7 +32,6 @@ Map<String, dynamic> _$NoticeToJson(_Notice instance) => <String, dynamic>{
   'department': instance.department,
   'regDate': instance.regDate,
   'hits': instance.hits,
-  'createdAt': instance.createdAt,
   'corporation': instance.corporation,
   'files': instance.files,
   'contents': instance.contents,

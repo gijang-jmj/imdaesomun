@@ -1,5 +1,6 @@
 const { logger } = require('firebase-functions');
 const { getFirestore } = require('firebase-admin/firestore');
+const { FieldValue } = require('firebase-admin/firestore');
 
 // Crawling libraries
 const axios = require('axios');
@@ -113,7 +114,7 @@ const scrapeShNotices = async () => {
         hits,
         department,
         corporation: 'sh',
-        createdAt: Date.now(),
+        createdAt: FieldValue.serverTimestamp(),
         ...detail,
       };
       notices.push(notice);
@@ -267,7 +268,7 @@ const scrapeGhNotices = async () => {
         regDate,
         hits,
         corporation: 'gh',
-        createdAt: Date.now(),
+        createdAt: FieldValue.serverTimestamp(),
         ...detail,
       };
       notices.push(notice);

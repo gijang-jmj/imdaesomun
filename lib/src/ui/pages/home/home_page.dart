@@ -13,12 +13,62 @@ import 'package:imdaesomun/src/ui/widgets/footer/copyright_footer.dart';
 import 'package:imdaesomun/src/ui/widgets/card/notice_card.dart';
 import 'package:imdaesomun/src/ui/pages/home/home_page_view_model.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:imdaesomun/src/core/services/log_service.dart';
 
-class HomePage extends ConsumerWidget {
+class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends ConsumerState<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    // 앱 시작 시 메시지 등록
+    FirebaseMessaging.instance.getInitialMessage().then((
+      RemoteMessage? message,
+    ) {
+      if (message != null) {
+        if (mounted && message.data['noticeId'] != null) {
+          context.push(
+            '${RouterPathConstant.notice.path}/${message.data['noticeId']}',
+          );
+        }
+        ref
+            .read(logProvider.notifier)
+            .log('[getInitialMessage]\n\nmessage:\n${message.data}');
+      }
+    });
+
+    // 백그라운드 메시지 리스너 등록
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      if (mounted && message.data['noticeId'] != null) {
+        context.push(
+          '${RouterPathConstant.notice.path}/${message.data['noticeId']}',
+        );
+      }
+      ref.read(shNoticesProvider.notifier).getNotices();
+      ref.read(ghNoticesProvider.notifier).getNotices();
+      ref
+          .read(logProvider.notifier)
+          .log('[onMessageOpenedApp]\n\nmessage:\n${message.data}');
+    });
+
+    // 포그라운드 메시지 리스너 등록
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      ref.read(shNoticesProvider.notifier).getNotices();
+      ref.read(ghNoticesProvider.notifier).getNotices();
+      ref
+          .read(logProvider.notifier)
+          .log('[onMessage]\n\nmessage:\n${message.data}');
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: AppStatusBarStyle.light,
       child: Scaffold(

@@ -5,7 +5,10 @@ class UserSource {
 
   const UserSource(this._dio);
 
-  Future<void> registerToken({required String token, String? userId}) async {
-    await _dio.post('/registerToken', data: {'token': token, 'userId': userId});
+  Future<void> registerFcmToken({required String token, String? userId}) async {
+    await _dio.post(
+      '/registerFcmToken',
+      data: {'token': token, 'userId': userId},
+    );
   }
 }
