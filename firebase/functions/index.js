@@ -29,8 +29,7 @@ exports.scrapeNotices = onRequest(
         return res.status(401).send({ error: 'Unauthorized' });
       }
 
-      await scrapeShNotices();
-      await scrapeGhNotices();
+      await Promise.all([scrapeShNotices(), scrapeGhNotices()]);
 
       res
         .status(200)
@@ -261,6 +260,63 @@ exports.sendFcmToAll = onRequest(
     } catch (error) {
       res.status(500).send({ error: 'Failed to send FCM.' });
       logger.error('[FCM] Error sending to all:', error);
+    }
+  },
+);
+
+/**
+ * 최근 scrapeNotices 성공 로그의 timestamp 반환 (type: 0/1, status: 0)
+ */
+exports.getLatestScrapeTs = onRequest(
+  { region: 'asia-northeast1', secrets: ['IMDAESOMUN_API_KEY'] },
+  async (req, res) => {
+    try {
+      const apiKey = req.headers['x-imdaesomun-api-key'];
+      const SECRET_KEY = process.env.IMDAESOMUN_API_KEY;
+
+      if (apiKey !== SECRET_KEY) {
+        return res.status(401).send({ error: 'Unauthorized' });
+      }
+
+      const db = getFirestore();
+
+      // type: 0 (sh)
+      const shSnap = await db
+        .collection('log')
+        .where('function', '==', 'scrapeNotices')
+        .where('type', '==', 0)
+        .where('status', '==', 0)
+        .orderBy('timestamp', 'desc')
+        .limit(1)
+        .get();
+
+      // type: 1 (gh)
+      const ghSnap = await db
+        .collection('log')
+        .where('function', '==', 'scrapeNotices')
+        .where('type', '==', 1)
+        .where('status', '==', 0)
+        .orderBy('timestamp', 'desc')
+        .limit(1)
+        .get();
+
+      const shTs = shSnap.empty ? null : shSnap.docs[0].data().timestamp;
+      const ghTs = ghSnap.empty ? null : ghSnap.docs[0].data().timestamp;
+
+      if (shTs === null && ghTs === null) {
+        return res.status(404).send({ error: 'No log found.' });
+      }
+
+      return res.status(200).send({
+        sh: shTs,
+        gh: ghTs,
+      });
+    } catch (error) {
+      res.status(500).send({ error: 'Failed to fetch latest timestamp.' });
+      logger.error(
+        '[Log] Error fetching latest scrapeNotices timestamp:',
+        error,
+      );
     }
   },
 );

@@ -129,6 +129,14 @@ const scrapeShNotices = async () => {
     });
     await batch.commit();
 
+    await db.collection('log').add({
+      function: 'scrapeNotices',
+      type: 0, // sh
+      status: 0, // success
+      timestamp: FieldValue.serverTimestamp(),
+      message: 'SH notices scraped successfully',
+    });
+
     logger.log('[SH] Notices scraped and saved!');
   } catch (error) {
     logger.error('[SH] Error scraping notices!');
@@ -282,6 +290,14 @@ const scrapeGhNotices = async () => {
       batch.set(docRef, notice);
     });
     await batch.commit();
+
+    await db.collection('log').add({
+      function: 'scrapeNotices',
+      type: 1, // gh
+      status: 0, // success
+      timestamp: FieldValue.serverTimestamp(),
+      message: 'GH notices scraped successfully',
+    });
 
     logger.log('[GH] Notices scraped and saved!');
   } catch (error) {
