@@ -4,8 +4,6 @@ const { onRequest } = require('firebase-functions/v2/https');
 const { getFirestore } = require('firebase-admin/firestore');
 const { FieldValue } = require('firebase-admin/firestore');
 const { getMessaging } = require('firebase-admin/messaging');
-
-// The Firebase Admin SDK to access Firestore.
 const { initializeApp } = require('firebase-admin/app');
 const { scrapeShNotices, scrapeGhNotices } = require('./scrape');
 
@@ -280,25 +278,26 @@ exports.getLatestScrapeTs = onRequest(
 
       const db = getFirestore();
 
-      // type: 0 (sh)
-      const shSnap = await db
-        .collection('log')
-        .where('function', '==', 'scrapeNotices')
-        .where('type', '==', 0)
-        .where('status', '==', 0)
-        .orderBy('timestamp', 'desc')
-        .limit(1)
-        .get();
-
-      // type: 1 (gh)
-      const ghSnap = await db
-        .collection('log')
-        .where('function', '==', 'scrapeNotices')
-        .where('type', '==', 1)
-        .where('status', '==', 0)
-        .orderBy('timestamp', 'desc')
-        .limit(1)
-        .get();
+      const [shSnap, ghSnap] = await Promise.all([
+        // type: 0 (sh)
+        db
+          .collection('log')
+          .where('function', '==', 'scrapeNotices')
+          .where('type', '==', 0)
+          .where('status', '==', 0)
+          .orderBy('timestamp', 'desc')
+          .limit(1)
+          .get(),
+        // type: 1 (gh)
+        db
+          .collection('log')
+          .where('function', '==', 'scrapeNotices')
+          .where('type', '==', 1)
+          .where('status', '==', 0)
+          .orderBy('timestamp', 'desc')
+          .limit(1)
+          .get(),
+      ]);
 
       const shTs = shSnap.empty ? null : shSnap.docs[0].data().timestamp;
       const ghTs = ghSnap.empty ? null : ghSnap.docs[0].data().timestamp;
