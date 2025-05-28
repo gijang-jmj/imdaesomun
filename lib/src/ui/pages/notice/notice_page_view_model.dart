@@ -1,13 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:imdaesomun/src/data/models/notice.dart';
-import 'package:imdaesomun/src/data/providers/notice_provider.dart';
+import 'package:imdaesomun/src/data/repositories/notice_repository.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class NoticePageViewModel
     extends AutoDisposeFamilyAsyncNotifier<Notice, String> {
   @override
   Future<Notice> build(String id) async {
-    return await ref.read(noticeProvider).getNoticeById(id);
+    return await ref.read(noticeRepositoryProvider).getNoticeById(id);
   }
 
   Future<void> openLink({required void Function(String error) onError}) async {

@@ -10,7 +10,7 @@ import 'package:imdaesomun/src/core/router/app_router.dart';
 import 'package:imdaesomun/src/core/services/log_service.dart';
 import 'package:imdaesomun/src/core/services/permission_service.dart';
 import 'package:imdaesomun/src/core/theme/app_theme.dart';
-import 'package:imdaesomun/src/data/providers/user_provider.dart';
+import 'package:imdaesomun/src/data/repositories/user_repository.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -57,7 +57,7 @@ class _MyAppState extends ConsumerState<MyApp> {
     FirebaseMessaging.instance.getToken().then(
       (fcmToken) {
         if (fcmToken != null) {
-          ref.read(userProvider).registerFcmToken(token: fcmToken);
+          ref.read(userRepositoryProvider).registerFcmToken(token: fcmToken);
           ref
               .read(logProvider.notifier)
               .log('[getToken]\n\nfcmToken:\n$fcmToken');
@@ -73,7 +73,7 @@ class _MyAppState extends ConsumerState<MyApp> {
     // 토큰 갱신 리스너 등록
     FirebaseMessaging.instance.onTokenRefresh
         .listen((fcmToken) {
-          ref.read(userProvider).registerFcmToken(token: fcmToken);
+          ref.read(userRepositoryProvider).registerFcmToken(token: fcmToken);
           ref
               .read(logProvider.notifier)
               .log('[onTokenRefresh]\n\nfcmToken:\n$fcmToken');

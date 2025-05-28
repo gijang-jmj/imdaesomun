@@ -172,7 +172,7 @@ exports.registerFcmToken = onRequest(
         return res.status(401).send({ error: 'Unauthorized' });
       }
 
-      const { token, userId } = req.body;
+      const { token, userId, device } = req.body;
 
       if (!token) {
         return res.status(400).send({ error: 'Missing parameter.' });
@@ -186,6 +186,7 @@ exports.registerFcmToken = onRequest(
         {
           token,
           userId: userId || null,
+          device: device || null,
           createdAt: FieldValue.serverTimestamp(),
         },
         { merge: true },

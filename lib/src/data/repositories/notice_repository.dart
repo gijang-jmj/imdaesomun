@@ -1,3 +1,5 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:imdaesomun/src/core/services/dio_service.dart';
 import 'package:imdaesomun/src/data/models/notice.dart';
 import 'package:imdaesomun/src/data/sources/remote/notice_source.dart';
 
@@ -28,3 +30,8 @@ class NoticeRepositoryImpl implements NoticeRepository {
     return await _noticeSource.getNoticeById(id);
   }
 }
+
+final noticeRepositoryProvider = Provider<NoticeRepository>((ref) {
+  final dio = ref.watch(dioProvider);
+  return NoticeRepositoryImpl(noticeSource: NoticeSource(dio));
+});

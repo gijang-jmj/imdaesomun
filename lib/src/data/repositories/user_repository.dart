@@ -1,3 +1,5 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:imdaesomun/src/core/services/dio_service.dart';
 import 'package:imdaesomun/src/data/sources/remote/user_source.dart';
 
 abstract class UserRepository {
@@ -15,3 +17,8 @@ class UserRepositoryImpl implements UserRepository {
     await _userSource.registerFcmToken(token: token, userId: userId);
   }
 }
+
+final userRepositoryProvider = Provider<UserRepository>((ref) {
+  final dio = ref.watch(dioProvider);
+  return UserRepositoryImpl(userSource: UserSource(dio));
+});
