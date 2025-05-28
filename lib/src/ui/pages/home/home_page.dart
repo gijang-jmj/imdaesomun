@@ -166,18 +166,16 @@ class _HomePageState extends ConsumerState<HomePage> {
                                   children:
                                       notices
                                           .map(
-                                            (notice) => GestureDetector(
+                                            (notice) => NoticeCard(
+                                              title: notice.title,
+                                              regDate: notice.regDate,
+                                              hits: notice.hits,
+                                              department: notice.department,
                                               onTap: () {
                                                 context.push(
                                                   '${RouterPathConstant.notice.path}/${notice.id}',
                                                 );
                                               },
-                                              child: NoticeCard(
-                                                title: notice.title,
-                                                regDate: notice.regDate,
-                                                hits: notice.hits,
-                                                department: notice.department,
-                                              ),
                                             ),
                                           )
                                           .toList(),
@@ -233,18 +231,16 @@ class _HomePageState extends ConsumerState<HomePage> {
                                   children:
                                       notices
                                           .map(
-                                            (notice) => GestureDetector(
+                                            (notice) => NoticeCard(
+                                              title: notice.title,
+                                              regDate: notice.regDate,
+                                              hits: notice.hits,
+                                              department: notice.department,
                                               onTap: () {
                                                 context.push(
                                                   '${RouterPathConstant.notice.path}/${notice.id}',
                                                 );
                                               },
-                                              child: NoticeCard(
-                                                title: notice.title,
-                                                regDate: notice.regDate,
-                                                hits: notice.hits,
-                                                department: notice.department,
-                                              ),
                                             ),
                                           )
                                           .toList(),

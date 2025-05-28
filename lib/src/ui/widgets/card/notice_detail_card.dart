@@ -216,11 +216,6 @@ class _NoticeDetailCardState extends State<NoticeDetailCard> {
                 ],
               ),
             ),
-            Container(
-              width: double.infinity,
-              height: 1,
-              color: AppColors.gray100,
-            ),
             const CopyrightFooter(),
           ],
         ),
