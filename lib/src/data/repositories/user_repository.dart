@@ -17,6 +17,7 @@ abstract class UserRepository {
   Future<void> deleteUser();
   Future<void> sendEmailVerification();
   Future<void> sendPasswordResetEmail({required String email});
+  Future<void> updateUserDisplayName({required String displayName});
 }
 
 class UserRepositoryImpl implements UserRepository {
@@ -64,6 +65,11 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future<void> sendPasswordResetEmail({required String email}) async {
     await _userSource.sendPasswordResetEmail(email: email);
+  }
+
+  @override
+  Future<void> updateUserDisplayName({required String displayName}) async {
+    await _userSource.updateUserDisplayName(displayName: displayName);
   }
 }
 

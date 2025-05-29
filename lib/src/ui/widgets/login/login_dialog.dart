@@ -134,6 +134,7 @@ class _LoginAlertState extends ConsumerState<LoginDialog> {
                       ],
                     ),
                     Row(
+                      spacing: AppMargin.small,
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Text(

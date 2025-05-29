@@ -56,6 +56,7 @@ class AppIcons {
   static const String home = '$_iconPath/home.svg';
   static const String link = '$_iconPath/link.svg';
   static const String mail = '$_iconPath/mail.svg';
+  static const String out = '$_iconPath/out.svg';
   static const String post = '$_iconPath/post.svg';
   static const String profile = '$_iconPath/profile.svg';
   static const String view = '$_iconPath/view.svg';

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:imdaesomun/src/core/enums/log_enum.dart';
+import 'package:imdaesomun/src/core/services/loading_service.dart';
 import 'package:imdaesomun/src/core/services/log_service.dart';
 import 'package:imdaesomun/src/data/repositories/user_repository.dart';
 import 'package:imdaesomun/src/ui/widgets/login/login_state.dart';
@@ -24,14 +25,15 @@ class LoginDialogViewModel extends AutoDisposeNotifier<LoginState> {
     required void Function(String msg) onError,
   }) async {
     try {
+      ref.read(globalLoadingProvider.notifier).start();
       final userCredential = await ref
           .read(userRepositoryProvider)
           .signIn(email: email, password: password);
       final user = userCredential.user;
+      onSuccess('로그인에 성공했어요');
       ref
           .read(logProvider.notifier)
-          .log('[LoginDialogViewModel] onLogin success:\n\n$user');
-      onSuccess('로그인에 성공했어요');
+          .log('[LoginDialogViewModel]\n\nonLogin\n\nsuccess:\n\n$user');
     } on FirebaseAuthException catch (e) {
       if (e.code == 'invalid-credential') {
         onError('이메일 또는 비밀번호를 확인해주세요');
@@ -48,7 +50,7 @@ class LoginDialogViewModel extends AutoDisposeNotifier<LoginState> {
         ref
             .read(logProvider.notifier)
             .log(
-              '[LoginDialogViewModel] onLogin error:\n\n$e',
+              '[LoginDialogViewModel]\n\nonLogin\n\nerror:\n\n$e',
               type: LogType.error,
             );
       }
@@ -57,9 +59,11 @@ class LoginDialogViewModel extends AutoDisposeNotifier<LoginState> {
       ref
           .read(logProvider.notifier)
           .log(
-            '[LoginDialogViewModel] onLogin error:\n\n$e',
+            '[LoginDialogViewModel]\n\nonLogin\n\nerror:\n\n$e',
             type: LogType.error,
           );
+    } finally {
+      ref.read(globalLoadingProvider.notifier).finish();
     }
   }
 
@@ -70,11 +74,15 @@ class LoginDialogViewModel extends AutoDisposeNotifier<LoginState> {
     required void Function(String msg) onError,
   }) async {
     try {
+      ref.read(globalLoadingProvider.notifier).start();
       await ref
           .read(userRepositoryProvider)
           .signUp(email: email, password: password);
       await ref.read(userRepositoryProvider).sendEmailVerification();
       onSuccess('회원가입이 완료되었어요!\n인증 메일을 확인해주세요');
+      ref
+          .read(logProvider.notifier)
+          .log('[LoginDialogViewModel]\n\nonSignUp\n\nsuccess:\n\n$email');
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         onError('6자리 이상의 비밀번호를 입력해주세요');
@@ -89,7 +97,7 @@ class LoginDialogViewModel extends AutoDisposeNotifier<LoginState> {
         ref
             .read(logProvider.notifier)
             .log(
-              '[LoginDialogViewModel] onLogin error:\n\n$e',
+              '[LoginDialogViewModel]\n\nonSignUp\n\nerror:\n\n$e',
               type: LogType.error,
             );
       }
@@ -98,9 +106,11 @@ class LoginDialogViewModel extends AutoDisposeNotifier<LoginState> {
       ref
           .read(logProvider.notifier)
           .log(
-            '[LoginDialogViewModel] onLogin error:\n\n$e',
+            '[LoginDialogViewModel]\n\nonSignUp\n\nerror:\n\n$e',
             type: LogType.error,
           );
+    } finally {
+      ref.read(globalLoadingProvider.notifier).finish();
     }
   }
 }

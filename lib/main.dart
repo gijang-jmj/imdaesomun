@@ -58,10 +58,13 @@ class _MyAppState extends ConsumerState<MyApp> {
     FirebaseMessaging.instance.getToken().then(
       (fcmToken) {
         if (fcmToken != null) {
-          ref.read(userRepositoryProvider).registerFcmToken(token: fcmToken);
+          final userId = FirebaseAuth.instance.currentUser?.uid;
+          ref
+              .read(userRepositoryProvider)
+              .registerFcmToken(token: fcmToken, userId: userId);
           ref
               .read(logProvider.notifier)
-              .log('[getToken]\n\nfcmToken:\n$fcmToken');
+              .log('[getToken]\n\nfcmToken:\n$fcmToken\n\nuserId:\n$userId');
         }
       },
       onError: (err) {
@@ -74,10 +77,15 @@ class _MyAppState extends ConsumerState<MyApp> {
     // 토큰 갱신 리스너 등록
     FirebaseMessaging.instance.onTokenRefresh
         .listen((fcmToken) {
-          ref.read(userRepositoryProvider).registerFcmToken(token: fcmToken);
+          final userId = FirebaseAuth.instance.currentUser?.uid;
+          ref
+              .read(userRepositoryProvider)
+              .registerFcmToken(token: fcmToken, userId: userId);
           ref
               .read(logProvider.notifier)
-              .log('[onTokenRefresh]\n\nfcmToken:\n$fcmToken');
+              .log(
+                '[onTokenRefresh]\n\nfcmToken:\n$fcmToken\n\nuserId:\n$userId',
+              );
         })
         .onError((err) {
           ref

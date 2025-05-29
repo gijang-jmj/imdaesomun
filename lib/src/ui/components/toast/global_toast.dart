@@ -12,7 +12,7 @@ class GlobalToast extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final toastState = ref.watch(globalToastProvider);
-    final bottomSafeAreaPadding = MediaQuery.of(context).padding.top;
+    final topSafeAreaPadding = MediaQuery.of(context).padding.top;
 
     return Stack(
       children: [
@@ -22,7 +22,7 @@ class GlobalToast extends ConsumerWidget {
           curve: Curves.easeInOut,
           left: AppMargin.medium,
           right: AppMargin.medium,
-          top: toastState.isVisible ? bottomSafeAreaPadding + 48 : 0,
+          top: toastState.isVisible ? topSafeAreaPadding : 0,
           child: AnimatedOpacity(
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeInOut,
@@ -36,7 +36,7 @@ class GlobalToast extends ConsumerWidget {
                 ),
                 decoration: BoxDecoration(
                   color: Colors.black.withValues(alpha: 0.6),
-                  borderRadius: BorderRadius.circular(AppRadius.large),
+                  borderRadius: BorderRadius.circular(AppRadius.medium),
                 ),
                 child: DefaultTextStyle(
                   style: AppTextStyle.body1.copyWith(color: Colors.white),

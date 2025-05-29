@@ -61,4 +61,13 @@ class UserSource {
   Future<void> sendPasswordResetEmail({required String email}) async {
     await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
   }
+
+  /// 닉네임 변경 (update user display name)
+  Future<void> updateUserDisplayName({required String displayName}) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      await user.updateProfile(displayName: displayName);
+      await user.reload();
+    }
+  }
 }

@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:imdaesomun/src/core/constants/router_path_constant.dart';
+import 'package:imdaesomun/src/core/services/log_service.dart';
 import 'package:imdaesomun/src/core/services/toast_service.dart';
 import 'package:imdaesomun/src/data/models/file.dart';
 import 'package:imdaesomun/src/data/models/notice.dart';
@@ -47,6 +48,41 @@ class DevTools extends ConsumerWidget {
             Text('ENV : ${dotenv.get('ENV')}'),
             Text('UID : ${user?.uid ?? 'null'}'),
             SizedBox(height: 16),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
+              onPressed: () {
+                ref
+                    .read(logProvider.notifier)
+                    .log('[Dev Tools]\n\nuser:\n$user');
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text('User Info'),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _infoRow('UID', user?.uid ?? 'null'),
+                          _infoRow('Email', user?.email ?? 'null'),
+                          _infoRow('Name', user?.displayName ?? 'null'),
+                          _infoRow('Phone', user?.phoneNumber ?? 'null'),
+                          _infoRow('PhotoURL', user?.photoURL ?? 'null'),
+                        ],
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: Text('닫기'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              child: Text('User Info'),
+            ),
+            SizedBox(height: 10),
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
               onPressed: () {
@@ -124,6 +160,18 @@ class DevTools extends ConsumerWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _infoRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2.0),
+      child: Row(
+        children: [
+          Text('$label: ', style: TextStyle(fontWeight: FontWeight.bold)),
+          Expanded(child: Text(value)),
+        ],
       ),
     );
   }
