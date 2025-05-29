@@ -15,7 +15,7 @@ class UserSource {
   }
 
   /// 회원가입 (create user with email and password)
-  Future<UserCredential> signUpWithEmail({
+  Future<UserCredential> signUp({
     required String email,
     required String password,
   }) async {
@@ -26,7 +26,7 @@ class UserSource {
   }
 
   /// 로그인 (sign in with email and password)
-  Future<UserCredential> signInWithEmail({
+  Future<UserCredential> signIn({
     required String email,
     required String password,
   }) async {

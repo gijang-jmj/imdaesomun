@@ -6,12 +6,14 @@ import 'package:imdaesomun/src/core/constants/router_path_constant.dart';
 import 'package:imdaesomun/src/core/services/toast_service.dart';
 import 'package:imdaesomun/src/data/models/file.dart';
 import 'package:imdaesomun/src/data/models/notice.dart';
+import 'package:imdaesomun/src/data/providers/user_provider.dart';
 
 class DevTools extends ConsumerWidget {
   const DevTools({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userProvider);
     const testNotice = Notice(
       id: "gh63626",
       seq: "63626",
@@ -43,6 +45,7 @@ class DevTools extends ConsumerWidget {
           children: [
             Text('Dev Tools', style: TextStyle(fontSize: 20)),
             Text('ENV : ${dotenv.get('ENV')}'),
+            Text('UID : ${user?.uid ?? 'null'}'),
             SizedBox(height: 16),
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.black),

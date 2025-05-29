@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:imdaesomun/src/core/services/toast_service.dart';
 import 'package:imdaesomun/src/core/theme/app_color.dart';
 import 'package:imdaesomun/src/core/theme/app_icon.dart';
 import 'package:imdaesomun/src/core/theme/app_size.dart';
@@ -7,6 +9,7 @@ import 'package:imdaesomun/src/core/theme/app_style.dart';
 import 'package:imdaesomun/src/core/theme/app_text_style.dart';
 import 'package:imdaesomun/src/ui/components/button/app_icon_button.dart';
 import 'package:imdaesomun/src/ui/components/button/app_text_button.dart';
+import 'package:imdaesomun/src/ui/components/button/app_text_line_button.dart';
 import 'package:imdaesomun/src/ui/components/field/app_text_form_field.dart';
 import 'package:imdaesomun/src/ui/widgets/login/login_dialog_view_model.dart';
 
@@ -67,7 +70,7 @@ class _LoginAlertState extends ConsumerState<LoginDialog> {
                           color: AppColors.teal500,
                         ),
                         Text(
-                          '로그인',
+                          '임대소문',
                           style: AppTextStyle.subTitle1.copyWith(
                             color: AppColors.gray900,
                           ),
@@ -147,24 +150,48 @@ class _LoginAlertState extends ConsumerState<LoginDialog> {
                         Expanded(
                           child: AppTextButton(
                             text: '로그인',
+                            textStyle: AppTextStyle.body1,
                             onPressed:
                                 () => ref
                                     .read(loginDialogViewModelProvider.notifier)
-                                    .onSignUp(
+                                    .onLogin(
                                       email: _emailController.text.trim(),
                                       password: _passwordController.text,
+                                      onSuccess: (msg) {
+                                        ref
+                                            .read(globalToastProvider.notifier)
+                                            .showToast(msg);
+                                        context.pop();
+                                      },
+                                      onError: (msg) {
+                                        ref
+                                            .read(globalToastProvider.notifier)
+                                            .showToast(msg);
+                                      },
                                     ),
                           ),
                         ),
                         Expanded(
-                          child: AppTextButton(
+                          child: AppTextLineButton(
                             text: '회원가입',
+                            textStyle: AppTextStyle.body1,
                             onPressed:
                                 () => ref
                                     .read(loginDialogViewModelProvider.notifier)
                                     .onSignUp(
                                       email: _emailController.text.trim(),
                                       password: _passwordController.text,
+                                      onSuccess: (msg) {
+                                        ref
+                                            .read(globalToastProvider.notifier)
+                                            .showToast(msg);
+                                        context.pop();
+                                      },
+                                      onError: (msg) {
+                                        ref
+                                            .read(globalToastProvider.notifier)
+                                            .showToast(msg);
+                                      },
                                     ),
                           ),
                         ),

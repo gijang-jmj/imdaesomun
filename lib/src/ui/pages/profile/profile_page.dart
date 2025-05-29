@@ -6,12 +6,15 @@ import 'package:go_router/go_router.dart';
 import 'package:imdaesomun/src/core/constants/router_path_constant.dart';
 import 'package:imdaesomun/src/core/helpers/dialog_helper.dart';
 import 'package:imdaesomun/src/core/services/dialog_service.dart';
+import 'package:imdaesomun/src/core/services/loading_service.dart';
+import 'package:imdaesomun/src/core/services/toast_service.dart';
 import 'package:imdaesomun/src/core/theme/app_color.dart';
 import 'package:imdaesomun/src/core/theme/app_icon.dart';
 import 'package:imdaesomun/src/core/theme/app_size.dart';
 import 'package:imdaesomun/src/core/theme/app_style.dart';
 import 'package:imdaesomun/src/core/theme/app_text_style.dart';
 import 'package:imdaesomun/src/ui/components/switch/app_switch.dart';
+import 'package:imdaesomun/src/ui/pages/profile/profile_page_view_model.dart';
 import 'package:imdaesomun/src/ui/widgets/login/login_dialog.dart';
 
 class ProfilePage extends ConsumerWidget {
@@ -158,18 +161,6 @@ class ProfilePage extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(AppRadius.medium),
                     child: Column(
                       children: [
-                        _ProfileMenuItem(
-                          icon: AppIcons.edit,
-                          label: '닉네임 변경',
-                          onTap: () {
-                            print('닉네임 변경');
-                          },
-                        ),
-                        Container(
-                          width: double.infinity,
-                          height: 1,
-                          color: AppColors.gray100,
-                        ),
                         InkWell(
                           borderRadius: BorderRadius.circular(AppRadius.medium),
                           onTap: () => {print('알림 설정 클릭')},
@@ -200,6 +191,42 @@ class ProfilePage extends ConsumerWidget {
                             ),
                           ),
                         ),
+                        Container(
+                          width: double.infinity,
+                          height: 1,
+                          color: AppColors.gray100,
+                        ),
+                        _ProfileMenuItem(
+                          icon: AppIcons.edit,
+                          label: '닉네임 변경',
+                          onTap: () {
+                            print('닉네임 변경');
+                          },
+                        ),
+                        Container(
+                          width: double.infinity,
+                          height: 1,
+                          color: AppColors.gray100,
+                        ),
+                        _ProfileMenuItem(
+                          icon: AppIcons.back,
+                          label: '로그아웃',
+                          onTap:
+                              () => ref
+                                  .read(profilePageViewModelProvider.notifier)
+                                  .signOut(
+                                    onSuccess: (msg) {
+                                      ref
+                                          .read(globalToastProvider.notifier)
+                                          .showToast(msg);
+                                    },
+                                    onError: (msg) {
+                                      ref
+                                          .read(globalToastProvider.notifier)
+                                          .showToast(msg);
+                                    },
+                                  ),
+                        ),
                       ],
                     ),
                   ),
@@ -217,6 +244,11 @@ class ProfilePage extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(AppRadius.medium),
                     child: Column(
                       children: [
+                        Container(
+                          width: double.infinity,
+                          height: 1,
+                          color: AppColors.gray100,
+                        ),
                         _ProfileMenuItem(
                           icon: AppIcons.delete,
                           label: '회원 탈퇴',

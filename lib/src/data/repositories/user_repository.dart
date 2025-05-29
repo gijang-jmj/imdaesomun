@@ -5,7 +5,11 @@ import 'package:imdaesomun/src/data/sources/remote/user_source.dart';
 
 abstract class UserRepository {
   Future<void> registerFcmToken({required String token, String? userId});
-  Future<UserCredential> signUpWithEmail({
+  Future<UserCredential> signUp({
+    required String email,
+    required String password,
+  });
+  Future<UserCredential> signIn({
     required String email,
     required String password,
   });
@@ -27,11 +31,19 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<UserCredential> signUpWithEmail({
+  Future<UserCredential> signUp({
     required String email,
     required String password,
   }) async {
-    return await _userSource.signUpWithEmail(email: email, password: password);
+    return await _userSource.signUp(email: email, password: password);
+  }
+
+  @override
+  Future<UserCredential> signIn({
+    required String email,
+    required String password,
+  }) async {
+    return await _userSource.signIn(email: email, password: password);
   }
 
   @override
