@@ -27,6 +27,8 @@ class RouterPathConstant {
   /// path : /notice
   ///
   /// description : 임대공고 상세 페이지
+  ///
+  /// parameter(*required) : id
   static const notice = RouterPathConstant._('/notice');
 
   /// page : community
@@ -63,4 +65,13 @@ class RouterPathConstant {
   ///
   /// description : 문서 뷰어 페이지
   static const documentViewer = RouterPathConstant._('/documentViewer');
+
+  /// page : dialog
+  ///
+  /// path : /dialog
+  ///
+  /// description : 커스텀 다이얼로그 페이지
+  ///
+  /// extra(*required) : Widget dialog
+  static const dialog = RouterPathConstant._('/dialog');
 }

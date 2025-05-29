@@ -1,7 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:imdaesomun/src/core/constants/router_path_constant.dart';
 import 'package:imdaesomun/src/data/models/file.dart';
 import 'package:imdaesomun/src/ui/components/loading/global_loading.dart';
+import 'package:imdaesomun/src/ui/components/overlay/dialog_overlay.dart';
 import 'package:imdaesomun/src/ui/components/toast/global_toast.dart';
 import 'package:imdaesomun/src/ui/pages/community/community_page.dart';
 import 'package:imdaesomun/src/ui/pages/home/home_page.dart';
@@ -10,6 +12,7 @@ import 'package:imdaesomun/src/ui/pages/notice/notice_page.dart';
 import 'package:imdaesomun/src/ui/pages/profile/profile_page.dart';
 import 'package:imdaesomun/src/ui/pages/webview/document_viewer.dart';
 import 'package:imdaesomun/src/ui/widgets/dev_tools/dev_tools_overlay.dart';
+import 'package:imdaesomun/src/ui/widgets/error/error_dialog.dart';
 import 'package:imdaesomun/src/ui/widgets/nav/bottom_nav.dart';
 
 // GoRouter configuration
@@ -80,10 +83,49 @@ final appRouter = GoRouter(
                 ),
                 // 임대공고 상세 페이지
                 GoRoute(
-                  path: '/notice/:id',
+                  path: '${RouterPathConstant.notice.path}/:id',
                   builder:
                       (context, state) =>
                           NoticePage(id: state.pathParameters['id']!),
+                ),
+                // Custom Dialog
+                GoRoute(
+                  path: RouterPathConstant.dialog.path,
+                  pageBuilder: (context, state) {
+                    final extra = state.extra as Map<String, dynamic>?;
+                    final dialog = extra?['dialog'] as Widget?;
+                    return CustomTransitionPage(
+                      opaque: false,
+                      child: DialogOverlay(
+                        dialog: dialog ?? const ErrorDialog(),
+                      ),
+                      transitionsBuilder: (
+                        context,
+                        animation,
+                        secondaryAnimation,
+                        child,
+                      ) {
+                        final curved = CurvedAnimation(
+                          parent: animation,
+                          curve: Curves.easeOutCubic,
+                          reverseCurve: Curves.easeInCubic,
+                        );
+                        return ScaleTransition(
+                          scale: Tween<double>(
+                            begin: 1.08,
+                            end: 1.0,
+                          ).animate(curved),
+                          child: FadeTransition(
+                            opacity: Tween<double>(
+                              begin: 0.0,
+                              end: 1.0,
+                            ).animate(curved),
+                            child: child,
+                          ),
+                        );
+                      },
+                    );
+                  },
                 ),
               ],
             ),

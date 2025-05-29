@@ -44,6 +44,7 @@ class AppIcons {
   static const String ai = '$_iconPath/ai.svg';
   static const String arrow = '$_iconPath/arrow.svg';
   static const String back = '$_iconPath/back.svg';
+  static const String bell = '$_iconPath/bell.svg';
   static const String bookmark = '$_iconPath/bookmark.svg';
   static const String comment = '$_iconPath/comment.svg';
   static const String community = '$_iconPath/community.svg';
@@ -54,9 +55,11 @@ class AppIcons {
   static const String homeFill = '$_iconPath/home_fill.svg';
   static const String home = '$_iconPath/home.svg';
   static const String link = '$_iconPath/link.svg';
+  static const String mail = '$_iconPath/mail.svg';
   static const String post = '$_iconPath/post.svg';
   static const String profile = '$_iconPath/profile.svg';
   static const String view = '$_iconPath/view.svg';
+  static const String viewOff = '$_iconPath/view_off.svg';
 
   // special
   static const String sh = '$_iconPath/sh.svg';
