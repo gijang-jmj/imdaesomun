@@ -4,6 +4,7 @@ import 'package:imdaesomun/src/core/enums/log_enum.dart';
 import 'package:imdaesomun/src/core/helpers/exception_helper.dart';
 import 'package:imdaesomun/src/core/services/loading_service.dart';
 import 'package:imdaesomun/src/core/services/log_service.dart';
+import 'package:imdaesomun/src/core/utils/validate_util.dart';
 import 'package:imdaesomun/src/data/providers/firebase_provider.dart';
 import 'package:imdaesomun/src/data/repositories/user_repository.dart';
 
@@ -38,6 +39,16 @@ class ProfilePageViewModel extends Notifier {
     required void Function(String msg) onError,
   }) async {
     try {
+      if (displayName.length < 3) {
+        onError('두 글자 이상 입력해 주세요');
+        return;
+      }
+
+      if (ValidateUtil.isContainSpecialCharacter(displayName)) {
+        onError('특수문자를 제외하고 입력해주세요');
+        return;
+      }
+
       ref.read(globalLoadingProvider.notifier).start();
       await ref
           .read(userRepositoryProvider)
@@ -79,16 +90,17 @@ class ProfilePageViewModel extends Notifier {
   }) async {
     try {
       ref.read(globalLoadingProvider.notifier).start();
-      final user = await ref.read(userRepositoryProvider).reloadUser();
+      await ref.read(userRepositoryProvider).reloadUser();
       ref.invalidate(firebaseAuthStateChangesProvider);
+      final user = await ref.refresh(firebaseAuthStateChangesProvider.future);
 
-      if (user.emailVerified) {
-        onSuccess('이메일 인증에 성공했어요');
+      if (user != null && user.emailVerified) {
+        onSuccess('이메일 인증이 완료되었어요');
         ref
             .read(logProvider.notifier)
             .log('[ProfilePageViewModel]\n\nverifyEmail success');
       } else {
-        onError('이메일 인증되지 않았어요\n재발송을 시도해주세요');
+        onError('이메일 인증이 완료되지 않았어요');
         ref
             .read(logProvider.notifier)
             .log('[ProfilePageViewModel]\n\nverifyEmail failed\n\nnot yet');
@@ -111,6 +123,79 @@ class ProfilePageViewModel extends Notifier {
           .read(logProvider.notifier)
           .log(
             '[ProfilePageViewModel]\n\nverifyEmail failed\n\nerror:\n$e',
+            type: LogType.error,
+          );
+    } finally {
+      ref.read(globalLoadingProvider.notifier).finish();
+    }
+  }
+
+  void sendEmailVerification({
+    required void Function(String msg) onSuccess,
+    required void Function(String msg) onError,
+  }) async {
+    try {
+      ref.read(globalLoadingProvider.notifier).start();
+      await ref.read(userRepositoryProvider).sendEmailVerification();
+      onSuccess('인증 메일을 발송했어요\n메일함을 확인해주세요');
+      ref
+          .read(logProvider.notifier)
+          .log('[ProfilePageViewModel]\n\nsendEmailVerification success');
+    } on FirebaseAuthException catch (e) {
+      final msg =
+          ExceptionHelper.getFirebaseAuthMessage(e) ??
+          '재발송 중 오류가 발생했어요\n잠시 후 다시 시도해주세요';
+
+      onError(msg);
+      ref
+          .read(logProvider.notifier)
+          .log(
+            '[ProfilePageViewModel]\n\nsendEmailVerification failed\n\nerror:\n$e',
+            type: LogType.error,
+          );
+    } catch (e) {
+      onError('재발송 중 오류가 발생했어요\n잠시 후 다시 시도해주세요');
+      ref
+          .read(logProvider.notifier)
+          .log(
+            '[ProfilePageViewModel]\n\nsendEmailVerification failed\n\nerror:\n$e',
+            type: LogType.error,
+          );
+    } finally {
+      ref.read(globalLoadingProvider.notifier).finish();
+    }
+  }
+
+  void deleteAccount({
+    required String password,
+    required void Function(String msg) onSuccess,
+    required void Function(String msg) onError,
+  }) async {
+    try {
+      ref.read(globalLoadingProvider.notifier).start();
+      await ref.read(userRepositoryProvider).deleteUser(password: password);
+      onSuccess('회원 탈퇴에 성공했어요');
+      ref
+          .read(logProvider.notifier)
+          .log('[ProfilePageViewModel]\n\ndeleteAccount success');
+    } on FirebaseAuthException catch (e) {
+      final msg =
+          ExceptionHelper.getFirebaseAuthMessage(e) ??
+          '회원 탈퇴 중 오류가 발생했어요\n잠시 후 다시 시도해주세요';
+
+      onError(msg);
+      ref
+          .read(logProvider.notifier)
+          .log(
+            '[ProfilePageViewModel]\n\ndeleteAccount failed\n\nerror:\n$e',
+            type: LogType.error,
+          );
+    } catch (e) {
+      onError('회원 탈퇴 중 오류가 발생했어요\n잠시 후 다시 시도해주세요');
+      ref
+          .read(logProvider.notifier)
+          .log(
+            '[ProfilePageViewModel]\n\ndeleteAccount failed\n\nerror:\n$e',
             type: LogType.error,
           );
     } finally {

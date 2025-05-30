@@ -38,7 +38,7 @@ class AppTextFormField extends StatelessWidget {
     Widget? customCounter =
         maxLength != null && controller != null
             ? Padding(
-              padding: EdgeInsets.only(right: 16),
+              padding: EdgeInsets.symmetric(horizontal: AppMargin.medium),
               child: RichText(
                 text: TextSpan(
                   style: AppTextStyle.caption2, // Default style for the counter
@@ -46,13 +46,13 @@ class AppTextFormField extends StatelessWidget {
                     TextSpan(
                       text: '${controller!.text.length}',
                       style: TextStyle(
-                        color: AppColors.gray800,
+                        color: AppColors.gray400,
                       ), // Color for the length
                     ),
                     TextSpan(
                       text: '/$maxLength',
                       style: TextStyle(
-                        color: AppColors.gray300,
+                        color: AppColors.gray400,
                       ), // Color for the max length part
                     ),
                   ],
@@ -60,8 +60,6 @@ class AppTextFormField extends StatelessWidget {
               ),
             )
             : null;
-
-    Widget? customPrefixIcon = prefixIcon;
 
     return Container(
       height: 46,
@@ -113,8 +111,12 @@ class AppTextFormField extends StatelessWidget {
               borderSide: BorderSide(color: Colors.red, width: 1),
             ),
             suffixIcon: maxLength != null ? customCounter : suffixIcon,
-            prefixIcon: customPrefixIcon,
+            prefixIcon: prefixIcon,
             counterText: '', // Hide the default counter
+            suffixIconConstraints:
+                maxLength != null
+                    ? const BoxConstraints(minWidth: 0, minHeight: 0)
+                    : null,
           ),
         ),
       ),

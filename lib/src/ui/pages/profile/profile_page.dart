@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:imdaesomun/src/core/helpers/dialog_helper.dart';
 import 'package:imdaesomun/src/core/helpers/user_helper.dart';
 import 'package:imdaesomun/src/core/services/toast_service.dart';
@@ -14,6 +15,9 @@ import 'package:imdaesomun/src/data/providers/firebase_provider.dart';
 import 'package:imdaesomun/src/ui/components/button/app_text_line_button.dart';
 import 'package:imdaesomun/src/ui/components/switch/app_switch.dart';
 import 'package:imdaesomun/src/ui/pages/profile/profile_page_view_model.dart';
+import 'package:imdaesomun/src/ui/widgets/dialog/confirm_dialog.dart';
+import 'package:imdaesomun/src/ui/widgets/dialog/default_input_dialog.dart';
+import 'package:imdaesomun/src/ui/widgets/dialog/password_input_dialog.dart';
 import 'package:imdaesomun/src/ui/widgets/login/login_dialog.dart';
 
 class ProfilePage extends ConsumerWidget {
@@ -115,9 +119,30 @@ class ProfilePage extends ConsumerWidget {
                                     padding: const EdgeInsets.all(
                                       AppMargin.small,
                                     ),
-                                    onPressed: () async {
-                                      // await ref.read(userRepositoryProvider).sendEmailVerification();
-                                    },
+                                    onPressed:
+                                        () => ref
+                                            .read(
+                                              profilePageViewModelProvider
+                                                  .notifier,
+                                            )
+                                            .sendEmailVerification(
+                                              onSuccess: (msg) {
+                                                ref
+                                                    .read(
+                                                      globalToastProvider
+                                                          .notifier,
+                                                    )
+                                                    .showToast(msg);
+                                              },
+                                              onError: (msg) {
+                                                ref
+                                                    .read(
+                                                      globalToastProvider
+                                                          .notifier,
+                                                    )
+                                                    .showToast(msg);
+                                              },
+                                            ),
                                   ),
                                 ),
                               ],
@@ -295,28 +320,39 @@ class ProfilePage extends ConsumerWidget {
                           icon: AppIcons.edit,
                           label: '닉네임 변경',
                           onTap: () {
-                            if (user != null && !user.emailVerified) {
-                              ref
-                                  .read(globalToastProvider.notifier)
-                                  .showToast('이메일 인증을 완료해주세요');
-                              return;
-                            }
-
-                            ref
-                                .read(profilePageViewModelProvider.notifier)
-                                .updateDisplayName(
-                                  displayName: '주민종종맨2234',
-                                  onSuccess: (msg) {
-                                    ref
-                                        .read(globalToastProvider.notifier)
-                                        .showToast(msg);
-                                  },
-                                  onError: (msg) {
-                                    ref
-                                        .read(globalToastProvider.notifier)
-                                        .showToast(msg);
-                                  },
-                                );
+                            showCustomDialog(
+                              context,
+                              DefaultInputDialog(
+                                title: '닉네임 변경',
+                                hintText: '변경할 닉네임 입력해주세요',
+                                maxLength: 10,
+                                onConfirm: (displayName) {
+                                  ref
+                                      .read(
+                                        profilePageViewModelProvider.notifier,
+                                      )
+                                      .updateDisplayName(
+                                        displayName: displayName,
+                                        onSuccess: (msg) {
+                                          context.pop();
+                                          ref
+                                              .read(
+                                                globalToastProvider.notifier,
+                                              )
+                                              .showToast(msg);
+                                        },
+                                        onError: (msg) {
+                                          ref
+                                              .read(
+                                                globalToastProvider.notifier,
+                                              )
+                                              .showToast(msg);
+                                        },
+                                      );
+                                },
+                                onCancel: () => context.pop(),
+                              ),
+                            );
                           },
                         ),
                         if (user != null)
@@ -373,7 +409,53 @@ class ProfilePage extends ConsumerWidget {
                             label: '회원 탈퇴',
                             isDestructive: true,
                             onTap: () {
-                              print('회원 탈퇴');
+                              showCustomDialog(
+                                context,
+                                ConfirmDialog(
+                                  title: '회원 탈퇴',
+                                  content: '탈퇴 시 모든 데이터가 삭제됩니다.\n정말 탈퇴하시겠습니까?',
+                                  rightText: '탈퇴',
+                                  onRight: () {
+                                    context.pop();
+                                    showCustomDialog(
+                                      context,
+                                      PasswordInputDialog(
+                                        title: '비밀번호 입력',
+                                        onConfirm: (password) {
+                                          ref
+                                              .read(
+                                                profilePageViewModelProvider
+                                                    .notifier,
+                                              )
+                                              .deleteAccount(
+                                                password: password,
+                                                onSuccess: (msg) {
+                                                  ref
+                                                      .read(
+                                                        globalToastProvider
+                                                            .notifier,
+                                                      )
+                                                      .showToast(msg);
+                                                  context.pop();
+                                                },
+                                                onError: (msg) {
+                                                  ref
+                                                      .read(
+                                                        globalToastProvider
+                                                            .notifier,
+                                                      )
+                                                      .showToast(msg);
+                                                },
+                                              );
+                                        },
+                                        onCancel: () => context.pop(),
+                                      ),
+                                    );
+                                  },
+                                  leftText: '취소',
+                                  onLeft: () => context.pop(),
+                                ),
+                              );
                             },
                           ),
                         ],

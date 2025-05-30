@@ -8,6 +8,6 @@ class UserHelper {
     if (user.displayName == null || user.displayName!.isEmpty) {
       return '임대소문(#${user.uid.substring(user.uid.length - 4)})';
     }
-    return user.displayName!;
+    return '${user.displayName!}(#${user.uid.substring(user.uid.length - 4)})';
   }
 }

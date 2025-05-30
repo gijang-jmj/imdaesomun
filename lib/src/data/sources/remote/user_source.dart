@@ -43,7 +43,7 @@ class UserSource {
   }
 
   /// 회원탈퇴 (delete user)
-  Future<void> deleteUser() async {
+  Future<void> deleteUser({required String password}) async {
     final user = _firebaseAuth.currentUser;
 
     if (user == null) {
@@ -53,6 +53,13 @@ class UserSource {
       );
     }
 
+    // Re-authenticate the user with the provided password
+    final credential = EmailAuthProvider.credential(
+      email: user.email!,
+      password: password,
+    );
+
+    await user.reauthenticateWithCredential(credential);
     await user.delete();
   }
 
@@ -97,7 +104,7 @@ class UserSource {
   }
 
   /// 유저 리로드
-  Future<User> reloadUser() async {
+  Future<void> reloadUser() async {
     final user = _firebaseAuth.currentUser;
 
     if (user == null) {
@@ -108,6 +115,5 @@ class UserSource {
     }
 
     await user.reload();
-    return user;
   }
 }

@@ -4,7 +4,7 @@ class ExceptionHelper {
   static String? getFirebaseAuthMessage(FirebaseAuthException e) {
     switch (e.code) {
       case 'invalid-credential':
-        return '이메일 또는 비밀번호를 확인해주세요';
+        return '입력한 정보가 올바르지 않아요';
       case 'user-not-found':
         return '존재하지 않는 계정이에요';
       case 'wrong-password':
@@ -21,6 +21,12 @@ class ExceptionHelper {
         return '이미 사용 중인 이메일이에요';
       case 'email-already-verified':
         return '이미 인증된 이메일이에요';
+      case 'user-mismatch':
+        return '사용자 정보가 일치하지 않아요';
+      case 'invalid-verification-code':
+        return '인증 코드가 올바르지 않아요';
+      case 'invalid-verification-id':
+        return '인증 ID가 올바르지 않아요';
       default:
         return null;
     }

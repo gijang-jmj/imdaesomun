@@ -15,11 +15,11 @@ abstract class UserRepository {
     required String password,
   });
   Future<void> signOut();
-  Future<void> deleteUser();
+  Future<void> deleteUser({required String password});
   Future<void> sendEmailVerification();
   Future<void> sendPasswordResetEmail({required String email});
   Future<void> updateUserDisplayName({required String displayName});
-  Future<User> reloadUser();
+  Future<void> reloadUser();
 }
 
 class UserRepositoryImpl implements UserRepository {
@@ -55,8 +55,8 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<void> deleteUser() async {
-    await _userSource.deleteUser();
+  Future<void> deleteUser({required String password}) async {
+    await _userSource.deleteUser(password: password);
   }
 
   @override
@@ -75,8 +75,8 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<User> reloadUser() async {
-    return await _userSource.reloadUser();
+  Future<void> reloadUser() async {
+    await _userSource.reloadUser();
   }
 }
 

@@ -21,8 +21,15 @@ class LoginDialog extends ConsumerStatefulWidget {
 }
 
 class _LoginAlertState extends ConsumerState<LoginDialog> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  late TextEditingController _emailController;
+  late TextEditingController _passwordController;
+
+  @override
+  void initState() {
+    super.initState();
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
+  }
 
   @override
   void dispose() {
