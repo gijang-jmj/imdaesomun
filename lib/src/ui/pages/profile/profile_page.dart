@@ -10,7 +10,8 @@ import 'package:imdaesomun/src/core/theme/app_size.dart';
 import 'package:imdaesomun/src/core/theme/app_style.dart';
 import 'package:imdaesomun/src/core/theme/app_text_style.dart';
 import 'package:imdaesomun/src/core/utils/text_util.dart';
-import 'package:imdaesomun/src/data/providers/user_provider.dart';
+import 'package:imdaesomun/src/data/providers/firebase_provider.dart';
+import 'package:imdaesomun/src/ui/components/button/app_text_line_button.dart';
 import 'package:imdaesomun/src/ui/components/switch/app_switch.dart';
 import 'package:imdaesomun/src/ui/pages/profile/profile_page_view_model.dart';
 import 'package:imdaesomun/src/ui/widgets/login/login_dialog.dart';
@@ -62,7 +63,7 @@ class ProfilePage extends ConsumerWidget {
                                 Expanded(
                                   child: Text(
                                     TextUtil.keepWord(
-                                      '"${user.email}"로 전송된 이메일 인증을 완료해주세요',
+                                      '이메일(${user.email})로 전송된 인증 링크를 클릭해 가입을 완료해 주세요',
                                     ),
                                     style: AppTextStyle.subBody1.copyWith(
                                       color: AppColors.gray500,
@@ -72,24 +73,51 @@ class ProfilePage extends ConsumerWidget {
                               ],
                             ),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              spacing: AppMargin.medium,
                               children: [
                                 Expanded(
-                                  child: Text(
-                                    '인증 완료',
-                                    textAlign: TextAlign.center,
-                                    style: AppTextStyle.caption1.copyWith(
-                                      color: AppColors.teal500,
+                                  child: AppTextLineButton(
+                                    text: '인증 완료',
+                                    textStyle: AppTextStyle.caption1,
+                                    padding: const EdgeInsets.all(
+                                      AppMargin.small,
                                     ),
+                                    onPressed:
+                                        () => ref
+                                            .read(
+                                              profilePageViewModelProvider
+                                                  .notifier,
+                                            )
+                                            .verifyEmail(
+                                              onSuccess: (msg) {
+                                                ref
+                                                    .read(
+                                                      globalToastProvider
+                                                          .notifier,
+                                                    )
+                                                    .showToast(msg);
+                                              },
+                                              onError: (msg) {
+                                                ref
+                                                    .read(
+                                                      globalToastProvider
+                                                          .notifier,
+                                                    )
+                                                    .showToast(msg);
+                                              },
+                                            ),
                                   ),
                                 ),
                                 Expanded(
-                                  child: Text(
-                                    '재발송',
-                                    textAlign: TextAlign.center,
-                                    style: AppTextStyle.caption1.copyWith(
-                                      color: AppColors.teal500,
+                                  child: AppTextLineButton(
+                                    text: '재발송',
+                                    textStyle: AppTextStyle.caption1,
+                                    padding: const EdgeInsets.all(
+                                      AppMargin.small,
                                     ),
+                                    onPressed: () async {
+                                      // await ref.read(userRepositoryProvider).sendEmailVerification();
+                                    },
                                   ),
                                 ),
                               ],

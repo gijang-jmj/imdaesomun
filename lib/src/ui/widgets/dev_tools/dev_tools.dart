@@ -7,7 +7,7 @@ import 'package:imdaesomun/src/core/services/log_service.dart';
 import 'package:imdaesomun/src/core/services/toast_service.dart';
 import 'package:imdaesomun/src/data/models/file.dart';
 import 'package:imdaesomun/src/data/models/notice.dart';
-import 'package:imdaesomun/src/data/providers/user_provider.dart';
+import 'package:imdaesomun/src/data/providers/firebase_provider.dart';
 
 class DevTools extends ConsumerWidget {
   const DevTools({super.key});

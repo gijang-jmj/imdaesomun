@@ -73,25 +73,6 @@ class _MyAppState extends ConsumerState<MyApp> {
             .log('[getToken]\n\nerror:\n$err', type: LogType.error);
       },
     );
-
-    // 토큰 갱신 리스너 등록
-    FirebaseMessaging.instance.onTokenRefresh
-        .listen((fcmToken) {
-          final userId = FirebaseAuth.instance.currentUser?.uid;
-          ref
-              .read(userRepositoryProvider)
-              .registerFcmToken(token: fcmToken, userId: userId);
-          ref
-              .read(logProvider.notifier)
-              .log(
-                '[onTokenRefresh]\n\nfcmToken:\n$fcmToken\n\nuserId:\n$userId',
-              );
-        })
-        .onError((err) {
-          ref
-              .read(logProvider.notifier)
-              .log('[onTokenRefresh]\n\nerror:\n$err', type: LogType.error);
-        });
   }
 
   @override

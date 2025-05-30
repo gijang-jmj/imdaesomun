@@ -27,6 +27,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   void initState() {
     super.initState();
+
     // 앱 시작 시 메시지 등록
     FirebaseMessaging.instance.getInitialMessage().then((
       RemoteMessage? message,

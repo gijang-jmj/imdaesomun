@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:imdaesomun/src/core/services/dio_service.dart';
+import 'package:imdaesomun/src/data/providers/firebase_provider.dart';
 import 'package:imdaesomun/src/data/sources/remote/user_source.dart';
 
 abstract class UserRepository {
@@ -18,6 +19,7 @@ abstract class UserRepository {
   Future<void> sendEmailVerification();
   Future<void> sendPasswordResetEmail({required String email});
   Future<void> updateUserDisplayName({required String displayName});
+  Future<User> reloadUser();
 }
 
 class UserRepositoryImpl implements UserRepository {
@@ -71,9 +73,15 @@ class UserRepositoryImpl implements UserRepository {
   Future<void> updateUserDisplayName({required String displayName}) async {
     await _userSource.updateUserDisplayName(displayName: displayName);
   }
+
+  @override
+  Future<User> reloadUser() async {
+    return await _userSource.reloadUser();
+  }
 }
 
 final userRepositoryProvider = Provider<UserRepository>((ref) {
   final dio = ref.watch(dioProvider);
-  return UserRepositoryImpl(userSource: UserSource(dio));
+  final firebaseAuth = ref.watch(firebaseAuthProvider);
+  return UserRepositoryImpl(userSource: UserSource(dio, firebaseAuth));
 });

@@ -10,7 +10,7 @@ class GlobalToastNotifier extends Notifier<Toast> {
     return Toast(message: '');
   }
 
-  void showToast(String message, {int durationInSeconds = 3}) {
+  void showToast(String message, {int durationInSeconds = 2}) {
     _timer?.cancel();
 
     state = Toast(

@@ -3,8 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class UserSource {
   final Dio _dio;
+  final FirebaseAuth _firebaseAuth;
 
-  const UserSource(this._dio);
+  const UserSource(this._dio, this._firebaseAuth);
 
   /// FCM 토큰 등록
   Future<void> registerFcmToken({required String token, String? userId}) async {
@@ -19,7 +20,7 @@ class UserSource {
     required String email,
     required String password,
   }) async {
-    return await FirebaseAuth.instance.createUserWithEmailAndPassword(
+    return await _firebaseAuth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
@@ -30,7 +31,7 @@ class UserSource {
     required String email,
     required String password,
   }) async {
-    return await FirebaseAuth.instance.signInWithEmailAndPassword(
+    return await _firebaseAuth.signInWithEmailAndPassword(
       email: email,
       password: password,
     );
@@ -38,36 +39,75 @@ class UserSource {
 
   /// 로그아웃 (sign out)
   Future<void> signOut() async {
-    await FirebaseAuth.instance.signOut();
+    await _firebaseAuth.signOut();
   }
 
   /// 회원탈퇴 (delete user)
   Future<void> deleteUser() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      await user.delete();
+    final user = _firebaseAuth.currentUser;
+
+    if (user == null) {
+      throw FirebaseAuthException(
+        code: 'no-user',
+        message: 'No user is currently signed in.',
+      );
     }
+
+    await user.delete();
   }
 
   /// 사용자에게 인증 메일 보내기 (send email verification)
   Future<void> sendEmailVerification() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null && !user.emailVerified) {
-      await user.sendEmailVerification();
+    final user = _firebaseAuth.currentUser;
+
+    if (user == null) {
+      throw FirebaseAuthException(
+        code: 'no-user',
+        message: 'No user is currently signed in.',
+      );
     }
+
+    if (user.emailVerified) {
+      throw FirebaseAuthException(
+        code: 'email-already-verified',
+        message: 'Email is already verified.',
+      );
+    }
+
+    await user.sendEmailVerification();
   }
 
   /// 비밀번호 재설정 이메일 보내기 (send password reset email)
   Future<void> sendPasswordResetEmail({required String email}) async {
-    await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+    await _firebaseAuth.sendPasswordResetEmail(email: email);
   }
 
   /// 닉네임 변경 (update user display name)
   Future<void> updateUserDisplayName({required String displayName}) async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      await user.updateProfile(displayName: displayName);
-      await user.reload();
+    final user = _firebaseAuth.currentUser;
+
+    if (user == null) {
+      throw FirebaseAuthException(
+        code: 'no-user',
+        message: 'No user is currently signed in.',
+      );
     }
+
+    await user.updateProfile(displayName: displayName);
+  }
+
+  /// 유저 리로드
+  Future<User> reloadUser() async {
+    final user = _firebaseAuth.currentUser;
+
+    if (user == null) {
+      throw FirebaseAuthException(
+        code: 'no-user',
+        message: 'No user is currently signed in.',
+      );
+    }
+
+    await user.reload();
+    return user;
   }
 }
