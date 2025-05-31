@@ -234,10 +234,22 @@ class ProfilePage extends ConsumerWidget {
                                       color: AppColors.gray500,
                                     ),
                                   ),
-                                  Text(
-                                    UserHelper.generateUserName(user),
-                                    style: AppTextStyle.body2.copyWith(
-                                      color: AppColors.gray900,
+                                  RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: UserHelper.getNickName(user),
+                                          style: AppTextStyle.body2.copyWith(
+                                            color: AppColors.gray900,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: UserHelper.getUidShort(user),
+                                          style: AppTextStyle.caption2.copyWith(
+                                            color: AppColors.gray500,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
@@ -332,7 +344,7 @@ class ProfilePage extends ConsumerWidget {
                                         profilePageViewModelProvider.notifier,
                                       )
                                       .updateDisplayName(
-                                        displayName: displayName,
+                                        displayName: displayName.trim(),
                                         onSuccess: (msg) {
                                           context.pop();
                                           ref

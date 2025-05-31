@@ -39,13 +39,18 @@ class ProfilePageViewModel extends Notifier {
     required void Function(String msg) onError,
   }) async {
     try {
-      if (displayName.length < 3) {
+      if (displayName.length < 2) {
         onError('두 글자 이상 입력해 주세요');
         return;
       }
 
       if (ValidateUtil.isContainSpecialCharacter(displayName)) {
         onError('특수문자를 제외하고 입력해주세요');
+        return;
+      }
+
+      if (ValidateUtil.containsKoreanConsonantVowel(displayName)) {
+        onError('완성된 글자로 입력해주세요');
         return;
       }
 
@@ -137,7 +142,7 @@ class ProfilePageViewModel extends Notifier {
     try {
       ref.read(globalLoadingProvider.notifier).start();
       await ref.read(userRepositoryProvider).sendEmailVerification();
-      onSuccess('인증 메일을 발송했어요\n메일함을 확인해주세요');
+      onSuccess('인증 메일을 재발송했어요');
       ref
           .read(logProvider.notifier)
           .log('[ProfilePageViewModel]\n\nsendEmailVerification success');

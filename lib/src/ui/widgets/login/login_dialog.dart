@@ -23,6 +23,8 @@ class LoginDialog extends ConsumerStatefulWidget {
 class _LoginAlertState extends ConsumerState<LoginDialog> {
   late TextEditingController _emailController;
   late TextEditingController _passwordController;
+  final _formKey = GlobalKey<FormState>();
+  final _emailFieldKey = GlobalKey<FormFieldState>();
 
   @override
   void initState() {
@@ -58,113 +60,116 @@ class _LoginAlertState extends ConsumerState<LoginDialog> {
           ),
           child: Padding(
             padding: EdgeInsets.all(AppMargin.medium),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Column(
-                  spacing: AppMargin.medium,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      spacing: AppMargin.small,
-                      children: [
-                        const AppIcon(
-                          AppIcons.homeFill,
-                          size: AppIconSize.medium,
-                          color: AppColors.teal500,
-                        ),
-                        Text(
-                          '임대소문',
-                          style: AppTextStyle.subTitle1.copyWith(
-                            color: AppColors.gray900,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      spacing: AppMargin.small,
-                      children: [
-                        Text(
-                          '이메일',
-                          style: AppTextStyle.subBody3.copyWith(
-                            color: AppColors.gray900,
-                          ),
-                        ),
-                        AppTextFormField(
-                          controller: _emailController,
-                          hintText: 'example@email.com',
-                          keyboardType: TextInputType.emailAddress,
-                          suffixIcon: const AppIconButton(
-                            icon: AppIcon(
-                              AppIcons.mail,
-                              size: AppIconSize.medium,
-                            ),
-                            onPressed: null,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      spacing: AppMargin.small,
-                      children: [
-                        Text(
-                          '비밀번호',
-                          style: AppTextStyle.subBody3.copyWith(
-                            color: AppColors.gray900,
-                          ),
-                        ),
-                        AppTextFormField(
-                          controller: _passwordController,
-                          hintText: '비밀번호 입력',
-                          obscureText: viewModel.obscure,
-                          suffixIcon: AppIconButton(
-                            icon: AppIcon(
-                              viewModel.obscure
-                                  ? AppIcons.viewOff
-                                  : AppIcons.view,
-                              size: AppIconSize.medium,
-                            ),
-                            onPressed:
-                                () =>
-                                    ref
-                                        .read(
-                                          loginDialogViewModelProvider.notifier,
-                                        )
-                                        .toggleObscure(),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      spacing: AppMargin.small,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(
-                          '비밀번호 재설정',
-                          style: AppTextStyle.caption2.copyWith(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Column(
+                    spacing: AppMargin.medium,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        spacing: AppMargin.small,
+                        children: [
+                          const AppIcon(
+                            AppIcons.homeFill,
+                            size: AppIconSize.medium,
                             color: AppColors.teal500,
                           ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      spacing: AppMargin.small,
-                      children: [
-                        Expanded(
-                          child: AppTextButton(
-                            text: '로그인',
-                            textStyle: AppTextStyle.body1,
-                            onPressed:
-                                () => ref
+                          Text(
+                            '임대소문',
+                            style: AppTextStyle.subTitle1.copyWith(
+                              color: AppColors.gray900,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        spacing: AppMargin.small,
+                        children: [
+                          Text(
+                            '이메일',
+                            style: AppTextStyle.subBody3.copyWith(
+                              color: AppColors.gray900,
+                            ),
+                          ),
+                          AppTextFormField(
+                            formKey: _emailFieldKey,
+                            controller: _emailController,
+                            hintText: 'example@email.com',
+                            keyboardType: TextInputType.emailAddress,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            validator:
+                                ref
                                     .read(loginDialogViewModelProvider.notifier)
-                                    .onLogin(
+                                    .emailValidator,
+                            suffixIcon: const AppIconButton(
+                              icon: AppIcon(
+                                AppIcons.mail,
+                                size: AppIconSize.medium,
+                              ),
+                              onPressed: null,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        spacing: AppMargin.small,
+                        children: [
+                          Text(
+                            '비밀번호',
+                            style: AppTextStyle.subBody3.copyWith(
+                              color: AppColors.gray900,
+                            ),
+                          ),
+                          AppTextFormField(
+                            controller: _passwordController,
+                            hintText: '비밀번호 입력',
+                            keyboardType: TextInputType.visiblePassword,
+                            obscureText: viewModel.obscure,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            validator:
+                                ref
+                                    .read(loginDialogViewModelProvider.notifier)
+                                    .passwordValidator,
+                            suffixIcon: AppIconButton(
+                              icon: AppIcon(
+                                viewModel.obscure
+                                    ? AppIcons.viewOff
+                                    : AppIcons.view,
+                                size: AppIconSize.medium,
+                              ),
+                              onPressed:
+                                  () =>
+                                      ref
+                                          .read(
+                                            loginDialogViewModelProvider
+                                                .notifier,
+                                          )
+                                          .toggleObscure(),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        spacing: AppMargin.small,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              if (_emailFieldKey.currentState!.validate()) {
+                                ref
+                                    .read(loginDialogViewModelProvider.notifier)
+                                    .resetPassword(
                                       email: _emailController.text.trim(),
-                                      password: _passwordController.text,
                                       onSuccess: (msg) {
                                         ref
                                             .read(globalToastProvider.notifier)
@@ -176,38 +181,93 @@ class _LoginAlertState extends ConsumerState<LoginDialog> {
                                             .read(globalToastProvider.notifier)
                                             .showToast(msg);
                                       },
-                                    ),
+                                    );
+                              }
+                            },
+                            child: Text(
+                              '비밀번호 재설정',
+                              style: AppTextStyle.caption1.copyWith(
+                                color: AppColors.teal500,
+                              ),
+                            ),
                           ),
-                        ),
-                        Expanded(
-                          child: AppTextLineButton(
-                            text: '회원가입',
-                            textStyle: AppTextStyle.body1,
-                            onPressed:
-                                () => ref
-                                    .read(loginDialogViewModelProvider.notifier)
-                                    .onSignUp(
-                                      email: _emailController.text.trim(),
-                                      password: _passwordController.text,
-                                      onSuccess: (msg) {
-                                        ref
-                                            .read(globalToastProvider.notifier)
-                                            .showToast(msg);
-                                        context.pop();
-                                      },
-                                      onError: (msg) {
-                                        ref
-                                            .read(globalToastProvider.notifier)
-                                            .showToast(msg);
-                                      },
-                                    ),
+                        ],
+                      ),
+                      Row(
+                        spacing: AppMargin.small,
+                        children: [
+                          Expanded(
+                            child: AppTextButton(
+                              text: '로그인',
+                              textStyle: AppTextStyle.body1,
+                              onPressed: () {
+                                if (_formKey.currentState!.validate()) {
+                                  ref
+                                      .read(
+                                        loginDialogViewModelProvider.notifier,
+                                      )
+                                      .onLogin(
+                                        email: _emailController.text.trim(),
+                                        password: _passwordController.text,
+                                        onSuccess: (msg) {
+                                          ref
+                                              .read(
+                                                globalToastProvider.notifier,
+                                              )
+                                              .showToast(msg);
+                                          context.pop();
+                                        },
+                                        onError: (msg) {
+                                          ref
+                                              .read(
+                                                globalToastProvider.notifier,
+                                              )
+                                              .showToast(msg);
+                                        },
+                                      );
+                                }
+                              },
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
+                          Expanded(
+                            child: AppTextLineButton(
+                              text: '회원가입',
+                              textStyle: AppTextStyle.body1,
+                              onPressed: () {
+                                if (_formKey.currentState!.validate()) {
+                                  ref
+                                      .read(
+                                        loginDialogViewModelProvider.notifier,
+                                      )
+                                      .onSignUp(
+                                        email: _emailController.text.trim(),
+                                        password: _passwordController.text,
+                                        onSuccess: (msg) {
+                                          ref
+                                              .read(
+                                                globalToastProvider.notifier,
+                                              )
+                                              .showToast(msg);
+                                          context.pop();
+                                        },
+                                        onError: (msg) {
+                                          ref
+                                              .read(
+                                                globalToastProvider.notifier,
+                                              )
+                                              .showToast(msg);
+                                        },
+                                      );
+                                }
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

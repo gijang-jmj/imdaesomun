@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$LoginState {
 
- bool get obscure;
+ bool get obscure; String get email; String get password;
 /// Create a copy of LoginState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $LoginStateCopyWith<LoginState> get copyWith => _$LoginStateCopyWithImpl<LoginSt
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LoginState&&(identical(other.obscure, obscure) || other.obscure == obscure));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LoginState&&(identical(other.obscure, obscure) || other.obscure == obscure)&&(identical(other.email, email) || other.email == email)&&(identical(other.password, password) || other.password == password));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,obscure);
+int get hashCode => Object.hash(runtimeType,obscure,email,password);
 
 @override
 String toString() {
-  return 'LoginState(obscure: $obscure)';
+  return 'LoginState(obscure: $obscure, email: $email, password: $password)';
 }
 
 
@@ -49,7 +49,7 @@ abstract mixin class $LoginStateCopyWith<$Res>  {
   factory $LoginStateCopyWith(LoginState value, $Res Function(LoginState) _then) = _$LoginStateCopyWithImpl;
 @useResult
 $Res call({
- bool obscure
+ bool obscure, String email, String password
 });
 
 
@@ -66,10 +66,12 @@ class _$LoginStateCopyWithImpl<$Res>
 
 /// Create a copy of LoginState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? obscure = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? obscure = null,Object? email = null,Object? password = null,}) {
   return _then(_self.copyWith(
 obscure: null == obscure ? _self.obscure : obscure // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
+as String,password: null == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
@@ -80,10 +82,12 @@ as bool,
 @JsonSerializable()
 
 class _LoginState implements LoginState {
-  const _LoginState({required this.obscure});
+  const _LoginState({required this.obscure, required this.email, required this.password});
   factory _LoginState.fromJson(Map<String, dynamic> json) => _$LoginStateFromJson(json);
 
 @override final  bool obscure;
+@override final  String email;
+@override final  String password;
 
 /// Create a copy of LoginState
 /// with the given fields replaced by the non-null parameter values.
@@ -98,16 +102,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoginState&&(identical(other.obscure, obscure) || other.obscure == obscure));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoginState&&(identical(other.obscure, obscure) || other.obscure == obscure)&&(identical(other.email, email) || other.email == email)&&(identical(other.password, password) || other.password == password));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,obscure);
+int get hashCode => Object.hash(runtimeType,obscure,email,password);
 
 @override
 String toString() {
-  return 'LoginState(obscure: $obscure)';
+  return 'LoginState(obscure: $obscure, email: $email, password: $password)';
 }
 
 
@@ -118,7 +122,7 @@ abstract mixin class _$LoginStateCopyWith<$Res> implements $LoginStateCopyWith<$
   factory _$LoginStateCopyWith(_LoginState value, $Res Function(_LoginState) _then) = __$LoginStateCopyWithImpl;
 @override @useResult
 $Res call({
- bool obscure
+ bool obscure, String email, String password
 });
 
 
@@ -135,10 +139,12 @@ class __$LoginStateCopyWithImpl<$Res>
 
 /// Create a copy of LoginState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? obscure = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? obscure = null,Object? email = null,Object? password = null,}) {
   return _then(_LoginState(
 obscure: null == obscure ? _self.obscure : obscure // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
+as String,password: null == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 

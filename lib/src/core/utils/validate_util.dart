@@ -23,9 +23,17 @@ class ValidateUtil {
     return koreanRegExp.hasMatch(value);
   }
 
-  // 숫자만 입력되었는지 확인
+  // 숫자만 입력되었는지 확인`
   static bool isNumbersOnly(String value) {
     final RegExp numbersOnlyRegExp = RegExp(r'^[0-9]+$');
     return numbersOnlyRegExp.hasMatch(value);
+  }
+
+  // 이메일 유효성 검사 (가장 보편적인 형식)
+  static bool isValidEmail(String value) {
+    final RegExp emailRegExp = RegExp(
+      r'^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$',
+    );
+    return emailRegExp.hasMatch(value);
   }
 }

@@ -116,4 +116,9 @@ class UserSource {
 
     await user.reload();
   }
+
+  /// 비밀번호 재설정
+  Future<void> resetPassword({required String email}) async {
+    await _firebaseAuth.sendPasswordResetEmail(email: email);
+  }
 }

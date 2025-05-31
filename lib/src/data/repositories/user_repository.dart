@@ -20,6 +20,7 @@ abstract class UserRepository {
   Future<void> sendPasswordResetEmail({required String email});
   Future<void> updateUserDisplayName({required String displayName});
   Future<void> reloadUser();
+  Future<void> resetPassword({required String email});
 }
 
 class UserRepositoryImpl implements UserRepository {
@@ -77,6 +78,11 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future<void> reloadUser() async {
     await _userSource.reloadUser();
+  }
+
+  @override
+  Future<void> resetPassword({required String email}) async {
+    await _userSource.resetPassword(email: email);
   }
 }
 

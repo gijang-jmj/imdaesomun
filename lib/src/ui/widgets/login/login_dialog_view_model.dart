@@ -4,6 +4,7 @@ import 'package:imdaesomun/src/core/enums/log_enum.dart';
 import 'package:imdaesomun/src/core/helpers/exception_helper.dart';
 import 'package:imdaesomun/src/core/services/loading_service.dart';
 import 'package:imdaesomun/src/core/services/log_service.dart';
+import 'package:imdaesomun/src/core/utils/validate_util.dart';
 import 'package:imdaesomun/src/data/repositories/user_repository.dart';
 import 'package:imdaesomun/src/ui/widgets/login/login_state.dart';
 
@@ -11,7 +12,7 @@ class LoginDialogViewModel extends AutoDisposeNotifier<LoginState> {
   @override
   LoginState build() {
     {
-      return LoginState(obscure: true);
+      return LoginState(obscure: true, email: '', password: '');
     }
   }
 
@@ -99,6 +100,63 @@ class LoginDialogViewModel extends AutoDisposeNotifier<LoginState> {
     } finally {
       ref.read(globalLoadingProvider.notifier).finish();
     }
+  }
+
+  void resetPassword({
+    required String email,
+    required void Function(String msg) onSuccess,
+    required void Function(String msg) onError,
+  }) async {
+    try {
+      ref.read(globalLoadingProvider.notifier).start();
+      await ref.read(userRepositoryProvider).resetPassword(email: email);
+      onSuccess('비밀번호 재설정 메일을 발송했어요');
+      ref
+          .read(logProvider.notifier)
+          .log('[LoginDialogViewModel]\n\nresetPassword success:\n$email');
+    } on FirebaseAuthException catch (e) {
+      final msg =
+          ExceptionHelper.getFirebaseAuthMessage(e) ??
+          '비밀번호 재설정 중 오류가 발생했어요\n잠시 후 다시 시도해주세요';
+
+      onError(msg);
+      ref
+          .read(logProvider.notifier)
+          .log(
+            '[LoginDialogViewModel]\n\nresetPassword error:\n$e',
+            type: LogType.error,
+          );
+    } catch (e) {
+      onError('비밀번호 재설정 중 오류가 발생했어요\n잠시 후 다시 시도해주세요');
+      ref
+          .read(logProvider.notifier)
+          .log(
+            '[LoginDialogViewModel]\n\nresetPassword error:\n$e',
+            type: LogType.error,
+          );
+    } finally {
+      ref.read(globalLoadingProvider.notifier).finish();
+    }
+  }
+
+  String? emailValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return '이메일을 입력해주세요';
+    }
+    if (ValidateUtil.isValidEmail(value) == false) {
+      return '올바른 이메일 형식이 아닙니다';
+    }
+    return null;
+  }
+
+  String? passwordValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return '비밀번호를 입력해주세요';
+    }
+    if (value.length < 6) {
+      return '비밀번호는 6자 이상이어야 합니다';
+    }
+    return null;
   }
 }
 
