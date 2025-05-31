@@ -11,6 +11,7 @@ import 'package:imdaesomun/src/core/router/app_router.dart';
 import 'package:imdaesomun/src/core/services/log_service.dart';
 import 'package:imdaesomun/src/core/services/permission_service.dart';
 import 'package:imdaesomun/src/core/theme/app_theme.dart';
+import 'package:imdaesomun/src/data/providers/user_provider.dart';
 import 'package:imdaesomun/src/data/repositories/user_repository.dart';
 
 void main() async {
@@ -59,6 +60,7 @@ class _MyAppState extends ConsumerState<MyApp> {
       (fcmToken) {
         if (fcmToken != null) {
           final userId = FirebaseAuth.instance.currentUser?.uid;
+          ref.read(fcmTokenStateProvider.notifier).state = fcmToken;
           ref
               .read(userRepositoryProvider)
               .registerFcmToken(token: fcmToken, userId: userId);

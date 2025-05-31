@@ -121,4 +121,22 @@ class UserSource {
   Future<void> resetPassword({required String email}) async {
     await _firebaseAuth.sendPasswordResetEmail(email: email);
   }
+
+  /// 푸시 알림 허용 여부 확인
+  Future<bool> getPushAllowed({required String token}) async {
+    final response = await _dio.post('/getPushAllowed', data: {'token': token});
+
+    return response.data['allowed'] as bool;
+  }
+
+  /// 푸시 알림 허용 여부 설정
+  Future<void> setPushAllowed({
+    required String token,
+    required bool allowed,
+  }) async {
+    await _dio.post(
+      '/setPushAllowed',
+      data: {'token': token, 'allowed': allowed},
+    );
+  }
 }

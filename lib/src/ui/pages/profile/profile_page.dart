@@ -11,7 +11,7 @@ import 'package:imdaesomun/src/core/theme/app_size.dart';
 import 'package:imdaesomun/src/core/theme/app_style.dart';
 import 'package:imdaesomun/src/core/theme/app_text_style.dart';
 import 'package:imdaesomun/src/core/utils/text_util.dart';
-import 'package:imdaesomun/src/data/providers/firebase_provider.dart';
+import 'package:imdaesomun/src/data/providers/user_provider.dart';
 import 'package:imdaesomun/src/ui/components/button/app_text_line_button.dart';
 import 'package:imdaesomun/src/ui/components/switch/app_switch.dart';
 import 'package:imdaesomun/src/ui/pages/profile/profile_page_view_model.dart';
@@ -26,6 +26,8 @@ class ProfilePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider);
+    final pushAllowedAsync = ref.watch(profilePageViewModelProvider);
+    final pushAllowed = pushAllowedAsync.value ?? false;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: AppStatusBarStyle.light,
@@ -295,7 +297,10 @@ class ProfilePage extends ConsumerWidget {
                       children: [
                         InkWell(
                           borderRadius: BorderRadius.circular(AppRadius.medium),
-                          onTap: () => {print('알림 설정 클릭')},
+                          onTap:
+                              () => ref
+                                  .read(profilePageViewModelProvider.notifier)
+                                  .togglePushAllowed(allowed: !pushAllowed),
                           child: Padding(
                             padding: const EdgeInsets.all(AppMargin.medium),
                             child: Row(
@@ -318,7 +323,7 @@ class ProfilePage extends ConsumerWidget {
                                     ),
                                   ],
                                 ),
-                                AppSwitch(value: false),
+                                AppSwitch(value: pushAllowed),
                               ],
                             ),
                           ),

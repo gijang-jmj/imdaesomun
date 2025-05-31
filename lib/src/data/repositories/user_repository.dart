@@ -21,6 +21,8 @@ abstract class UserRepository {
   Future<void> updateUserDisplayName({required String displayName});
   Future<void> reloadUser();
   Future<void> resetPassword({required String email});
+  Future<bool> getPushAllowed({required String token});
+  Future<void> setPushAllowed({required String token, required bool allowed});
 }
 
 class UserRepositoryImpl implements UserRepository {
@@ -83,6 +85,19 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future<void> resetPassword({required String email}) async {
     await _userSource.resetPassword(email: email);
+  }
+
+  @override
+  Future<bool> getPushAllowed({required String token}) async {
+    return await _userSource.getPushAllowed(token: token);
+  }
+
+  @override
+  Future<void> setPushAllowed({
+    required String token,
+    required bool allowed,
+  }) async {
+    await _userSource.setPushAllowed(token: token, allowed: allowed);
   }
 }
 

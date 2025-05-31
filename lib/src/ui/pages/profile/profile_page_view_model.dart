@@ -6,11 +6,39 @@ import 'package:imdaesomun/src/core/services/loading_service.dart';
 import 'package:imdaesomun/src/core/services/log_service.dart';
 import 'package:imdaesomun/src/core/utils/validate_util.dart';
 import 'package:imdaesomun/src/data/providers/firebase_provider.dart';
+import 'package:imdaesomun/src/data/providers/user_provider.dart';
 import 'package:imdaesomun/src/data/repositories/user_repository.dart';
 
-class ProfilePageViewModel extends Notifier {
+class ProfilePageViewModel extends AsyncNotifier<bool> {
+  Future<void> getPushAllowed() async {
+    try {
+      final token = ref.read(fcmTokenStateProvider);
+      if (token == null) {
+        state = AsyncValue.data(false);
+        return;
+      }
+      final isPushAllowed = await ref
+          .read(userRepositoryProvider)
+          .getPushAllowed(token: token);
+      state = AsyncValue.data(isPushAllowed);
+    } catch (e) {
+      ref
+          .read(logProvider.notifier)
+          .log(
+            '[ProfilePageViewModel]\n\ngetPushAllowed failed\n\nerror:\n$e',
+            type: LogType.error,
+          );
+    }
+  }
+
   @override
-  void build() {}
+  Future<bool> build() async {
+    final token = ref.read(fcmTokenStateProvider);
+    if (token == null) {
+      return false;
+    }
+    return await ref.read(userRepositoryProvider).getPushAllowed(token: token);
+  }
 
   void signOut({
     required void Function(String msg) onSuccess,
@@ -207,7 +235,29 @@ class ProfilePageViewModel extends Notifier {
       ref.read(globalLoadingProvider.notifier).finish();
     }
   }
+
+  void togglePushAllowed({required bool allowed}) async {
+    try {
+      state = AsyncValue.data(allowed);
+      final token = ref.read(fcmTokenStateProvider);
+      if (token == null) {
+        state = AsyncValue.data(allowed);
+        return;
+      }
+      await ref
+          .read(userRepositoryProvider)
+          .setPushAllowed(token: token, allowed: allowed);
+      getPushAllowed();
+    } catch (e) {
+      ref
+          .read(logProvider.notifier)
+          .log(
+            '[ProfilePageViewModel]\n\ntogglePushAllowed failed\n\nerror:\n$e',
+            type: LogType.error,
+          );
+    }
+  }
 }
 
 final profilePageViewModelProvider =
-    NotifierProvider<ProfilePageViewModel, void>(ProfilePageViewModel.new);
+    AsyncNotifierProvider<ProfilePageViewModel, bool>(ProfilePageViewModel.new);

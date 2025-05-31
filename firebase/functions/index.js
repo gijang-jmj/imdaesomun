@@ -178,16 +178,19 @@ exports.registerFcmToken = onRequest(
       const db = getFirestore();
       const tokenRef = db.collection('fcm').doc(token);
 
-      // 토큰 문서가 이미 있으면 userId만 업데이트, 없으면 새로 생성
-      await tokenRef.set(
-        {
-          token,
-          userId: userId || null,
-          device: device || null,
-          createdAt: FieldValue.serverTimestamp(),
-        },
-        { merge: true },
-      );
+      // allowed가 undefined인 경우 true로 설정
+      const docSnap = await tokenRef.get();
+      const dataToSet = {
+        token,
+        userId: userId || null,
+        device: device || null,
+        createdAt: FieldValue.serverTimestamp(),
+        ...((!docSnap.exists || docSnap.data().allowed === undefined) && {
+          allowed: true,
+        }),
+      };
+
+      await tokenRef.set(dataToSet, { merge: true });
 
       return res.status(200).send({ message: 'Token registered/updated.' });
     } catch (error) {
@@ -224,8 +227,11 @@ exports.sendFcmToAll = onRequest(
       }
 
       const db = getFirestore();
-      const snapshot = await db.collection('fcm').get();
-      const tokens = snapshot.docs.map((doc) => doc.id); // token이 doc id
+      const snapshot = await db
+        .collection('fcm')
+        .where('allowed', '==', true)
+        .get();
+      const tokens = snapshot.docs.map((doc) => doc.id);
       const messaging = getMessaging();
       const BATCH_SIZE = 500;
       const messageBatches = [];
@@ -312,6 +318,86 @@ exports.getLatestScrapeTs = onRequest(
         '[Log] Error fetching latest scrapeNotices timestamp:',
         error,
       );
+    }
+  },
+);
+
+/**
+ * FCM 푸시 알림 허용 여부 조회
+ * POST /getPushAllowed
+ * body: { token: string }
+ * return: { allowed: boolean }
+ */
+exports.getPushAllowed = onRequest(
+  { region: 'asia-northeast1', secrets: ['IMDAESOMUN_API_KEY'] },
+  async (req, res) => {
+    try {
+      if (req.method !== 'POST') {
+        return res.status(404).send({ error: 'Not Found' });
+      }
+
+      const apiKey = req.headers['x-imdaesomun-api-key'];
+      const SECRET_KEY = process.env.IMDAESOMUN_API_KEY;
+
+      if (apiKey !== SECRET_KEY) {
+        return res.status(401).send({ error: 'Unauthorized' });
+      }
+
+      const { token } = req.body;
+
+      if (!token) {
+        return res.status(400).send({ error: 'Missing parameter.' });
+      }
+
+      const db = getFirestore();
+      const doc = await db.collection('fcm').doc(token).get();
+      let allowed = true;
+
+      if (doc.exists) {
+        allowed = doc.data().allowed;
+      }
+
+      return res.status(200).send({ allowed });
+    } catch (error) {
+      res.status(500).send({ error: 'Failed to get push allowed.' });
+      logger.error('[FCM] Error getting push allowed:', error);
+    }
+  },
+);
+
+/**
+ * FCM 푸시 알림 허용 여부 설정
+ * POST /setPushAllowed
+ * body: { token: string, allowed: boolean }
+ */
+exports.setPushAllowed = onRequest(
+  { region: 'asia-northeast1', secrets: ['IMDAESOMUN_API_KEY'] },
+  async (req, res) => {
+    try {
+      if (req.method !== 'POST') {
+        return res.status(404).send({ error: 'Not Found' });
+      }
+
+      const apiKey = req.headers['x-imdaesomun-api-key'];
+      const SECRET_KEY = process.env.IMDAESOMUN_API_KEY;
+
+      if (apiKey !== SECRET_KEY) {
+        return res.status(401).send({ error: 'Unauthorized' });
+      }
+
+      const { token, allowed } = req.body;
+
+      if (!token || typeof allowed !== 'boolean') {
+        return res.status(400).send({ error: 'Missing parameter.' });
+      }
+
+      const db = getFirestore();
+      await db.collection('fcm').doc(token).set({ allowed }, { merge: true });
+
+      return res.status(200).send({ message: 'Push allowed updated.' });
+    } catch (error) {
+      res.status(500).send({ error: 'Failed to update push allowed.' });
+      logger.error('[FCM] Error updating push allowed:', error);
     }
   },
 );
