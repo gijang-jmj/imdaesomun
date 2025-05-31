@@ -130,9 +130,7 @@ const scrapeShNotices = async () => {
     await batch.commit();
 
     await db.collection('log').add({
-      function: 'scrapeNotices',
-      type: 0, // sh
-      status: 0, // success
+      function: 'scrapeShNotices',
       timestamp: FieldValue.serverTimestamp(),
       message: 'SH notices scraped successfully',
     });
@@ -292,9 +290,7 @@ const scrapeGhNotices = async () => {
     await batch.commit();
 
     await db.collection('log').add({
-      function: 'scrapeNotices',
-      type: 1, // gh
-      status: 0, // success
+      function: 'scrapeGhNotices',
       timestamp: FieldValue.serverTimestamp(),
       message: 'GH notices scraped successfully',
     });

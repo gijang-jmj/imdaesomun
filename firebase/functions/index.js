@@ -263,7 +263,7 @@ exports.sendFcmToAll = onRequest(
 );
 
 /**
- * 최근 scrapeNotices 성공 로그의 timestamp 반환 (type: 0/1, status: 0)
+ * 최근 scrapeNotices 성공 로그의 timestamp 반환
  */
 exports.getLatestScrapeTs = onRequest(
   { region: 'asia-northeast1', secrets: ['IMDAESOMUN_API_KEY'] },
@@ -279,21 +279,17 @@ exports.getLatestScrapeTs = onRequest(
       const db = getFirestore();
 
       const [shSnap, ghSnap] = await Promise.all([
-        // type: 0 (sh)
+        // sh
         db
           .collection('log')
-          .where('function', '==', 'scrapeNotices')
-          .where('type', '==', 0)
-          .where('status', '==', 0)
+          .where('function', '==', 'scrapeShNotices')
           .orderBy('timestamp', 'desc')
           .limit(1)
           .get(),
-        // type: 1 (gh)
+        // gh
         db
           .collection('log')
-          .where('function', '==', 'scrapeNotices')
-          .where('type', '==', 1)
-          .where('status', '==', 0)
+          .where('function', '==', 'scrapeGhNotices')
           .orderBy('timestamp', 'desc')
           .limit(1)
           .get(),
