@@ -332,6 +332,11 @@ class ProfilePage extends ConsumerWidget {
                           icon: AppIcons.edit,
                           label: '닉네임 변경',
                           onTap: () {
+                            if (user == null) {
+                              showCustomDialog(context, const LoginDialog());
+                              return;
+                            }
+
                             showCustomDialog(
                               context,
                               DefaultInputDialog(
