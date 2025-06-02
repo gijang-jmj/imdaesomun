@@ -1,6 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -11,6 +9,7 @@ import 'package:imdaesomun/src/core/router/app_router.dart';
 import 'package:imdaesomun/src/core/services/log_service.dart';
 import 'package:imdaesomun/src/core/services/permission_service.dart';
 import 'package:imdaesomun/src/core/theme/app_theme.dart';
+import 'package:imdaesomun/src/data/providers/firebase_provider.dart';
 import 'package:imdaesomun/src/data/providers/user_provider.dart';
 import 'package:imdaesomun/src/data/repositories/user_repository.dart';
 
@@ -51,34 +50,22 @@ class MyApp extends ConsumerStatefulWidget {
 }
 
 class _MyAppState extends ConsumerState<MyApp> {
+  bool _isListenerRegistered = false;
+
   @override
   void initState() {
     super.initState();
-
-    // 최초 토큰 등록
-    FirebaseMessaging.instance.getToken().then(
-      (fcmToken) {
-        if (fcmToken != null) {
-          final userId = FirebaseAuth.instance.currentUser?.uid;
-          ref.read(fcmTokenStateProvider.notifier).state = fcmToken;
-          ref
-              .read(userRepositoryProvider)
-              .registerFcmToken(token: fcmToken, userId: userId);
-          ref
-              .read(logProvider.notifier)
-              .log('[getToken]\n\nfcmToken:\n$fcmToken\n\nuserId:\n$userId');
-        }
-      },
-      onError: (err) {
-        ref
-            .read(logProvider.notifier)
-            .log('[getToken]\n\nerror:\n$err', type: LogType.error);
-      },
-    );
+    initFcmToken(ref);
   }
 
   @override
   Widget build(BuildContext context) {
+    if (!_isListenerRegistered) {
+      initFcmTokenListener(ref);
+      initUserListener(ref);
+      _isListenerRegistered = true;
+    }
+
     return MaterialApp.router(
       title: 'Imdaesomun',
       theme: AppTheme.light,
@@ -86,4 +73,61 @@ class _MyAppState extends ConsumerState<MyApp> {
       routerConfig: appRouter,
     );
   }
+}
+
+/// 최초 FCM 토큰 등록
+void initFcmToken(WidgetRef ref) {
+  ref
+      .read(firebaseMessagingProvider)
+      .getToken()
+      .then(
+        (fcmToken) {
+          if (fcmToken != null) {
+            ref.read(fcmTokenStateProvider.notifier).state = fcmToken;
+          }
+        },
+        onError: (err) {
+          ref
+              .read(logProvider.notifier)
+              .log('[initFcmToken]\n\nerror:\n$err', type: LogType.error);
+        },
+      );
+}
+
+/// FCM 토큰 갱신 리스너
+void initFcmTokenListener(WidgetRef ref) {
+  ref.listen(fcmTokenProvider, (previous, fcmToken) {
+    if (fcmToken != null) {
+      final userId = ref.read(firebaseAuthProvider).currentUser?.uid;
+
+      ref
+          .read(userRepositoryProvider)
+          .registerFcmToken(token: fcmToken, userId: userId);
+      ref
+          .read(logProvider.notifier)
+          .log(
+            '[initFcmTokenListener]\n\nfcmToken:\n$fcmToken\n\nuserId:\n$userId',
+          );
+    }
+  });
+}
+
+/// 유저 갱신 리스너
+void initUserListener(WidgetRef ref) {
+  ref.listen(userProvider, (previous, user) {
+    final fcmToken = ref.read(fcmTokenProvider);
+
+    if (fcmToken != null) {
+      final userId = ref.read(firebaseAuthProvider).currentUser?.uid;
+
+      ref
+          .read(userRepositoryProvider)
+          .registerFcmToken(token: fcmToken, userId: userId);
+      ref
+          .read(logProvider.notifier)
+          .log(
+            '[initUserListener]\n\nfcmToken:\n$fcmToken\n\nuserId:\n$userId',
+          );
+    }
+  });
 }

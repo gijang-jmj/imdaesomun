@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -15,6 +16,8 @@ class DevTools extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider);
+    final fcmToken = ref.watch(fcmTokenProvider);
+
     const testNotice = Notice(
       id: "gh63626",
       seq: "63626",
@@ -48,115 +51,155 @@ class DevTools extends ConsumerWidget {
             Text('ENV : ${dotenv.get('ENV')}'),
             Text('UID : ${user?.uid ?? 'null'}'),
             SizedBox(height: 16),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
-              onPressed: () {
-                ref
-                    .read(logProvider.notifier)
-                    .log('[Dev Tools]\n\nuser:\n$user');
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: Text('User Info'),
-                      content: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _infoRow('UID', user?.uid ?? 'null'),
-                          _infoRow('Email', user?.email ?? 'null'),
-                          _infoRow('Name', user?.displayName ?? 'null'),
-                          _infoRow('Phone', user?.phoneNumber ?? 'null'),
-                          _infoRow('PhotoURL', user?.photoURL ?? 'null'),
-                        ],
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  spacing: 10,
+                  children: [
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
                       ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: Text('닫기'),
-                        ),
-                      ],
-                    );
-                  },
-                );
-              },
-              child: Text('User Info'),
-            ),
-            SizedBox(height: 10),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
-              onPressed: () {
-                context.pop();
-                context.push(
-                  '${RouterPathConstant.notice.path}/${testNotice.id}',
-                );
-              },
-              child: Text('Notice Detail Page'),
-            ),
-            SizedBox(height: 10),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
-              onPressed: () {
-                context.pop();
-                context.push(
-                  RouterPathConstant.documentViewer.path,
-                  extra: testNotice.files.first,
-                );
-              },
-              child: Text('Document Viewer'),
-            ),
-            SizedBox(height: 10),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
-              onPressed: () {
-                context.pop();
-                context.push(RouterPathConstant.log.path);
-              },
-              child: Text('Log Page'),
-            ),
-            SizedBox(height: 10),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
-              onPressed: () {
-                final TextEditingController toastTextController =
-                    TextEditingController();
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: Text('토스트 메시지 입력'),
-                      content: TextField(
-                        controller: toastTextController,
-                        decoration: InputDecoration(
-                          hintText: '표시할 토스트 메시지를 입력하세요',
-                        ),
-                        maxLines: 2,
+                      onPressed: () {
+                        ref
+                            .read(logProvider.notifier)
+                            .log('[Dev Tools]\n\fcmToken:\n$fcmToken');
+                        if (fcmToken != null) {
+                          Clipboard.setData(ClipboardData(text: fcmToken));
+                        } else {
+                          ref
+                              .read(globalToastProvider.notifier)
+                              .showToast('FCM Token is null');
+                        }
+                      },
+                      child: Text('FCM Token'),
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
                       ),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            context.pop();
+                      onPressed: () {
+                        ref
+                            .read(logProvider.notifier)
+                            .log('[Dev Tools]\n\nuser:\n$user');
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text('User Info'),
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _infoRow('UID', user?.uid ?? 'null'),
+                                  _infoRow('Email', user?.email ?? 'null'),
+                                  _infoRow('Name', user?.displayName ?? 'null'),
+                                  _infoRow(
+                                    'Phone',
+                                    user?.phoneNumber ?? 'null',
+                                  ),
+                                  _infoRow(
+                                    'PhotoURL',
+                                    user?.photoURL ?? 'null',
+                                  ),
+                                ],
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.of(context).pop(),
+                                  child: Text('닫기'),
+                                ),
+                              ],
+                            );
                           },
-                          child: Text('취소'),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            context.pop();
-                            if (toastTextController.text.isNotEmpty) {
-                              context.pop();
-                              ref
-                                  .read(globalToastProvider.notifier)
-                                  .showToast(toastTextController.text);
-                            }
+                        );
+                      },
+                      child: Text('User Info'),
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
+                      ),
+                      onPressed: () {
+                        context.pop();
+                        context.push(
+                          '${RouterPathConstant.notice.path}/${testNotice.id}',
+                        );
+                      },
+                      child: Text('Notice Detail Page'),
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
+                      ),
+                      onPressed: () {
+                        context.pop();
+                        context.push(
+                          RouterPathConstant.documentViewer.path,
+                          extra: testNotice.files.first,
+                        );
+                      },
+                      child: Text('Document Viewer'),
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
+                      ),
+                      onPressed: () {
+                        context.pop();
+                        context.push(RouterPathConstant.log.path);
+                      },
+                      child: Text('Log Page'),
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
+                      ),
+                      onPressed: () {
+                        final TextEditingController toastTextController =
+                            TextEditingController();
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text('토스트 메시지 입력'),
+                              content: TextField(
+                                controller: toastTextController,
+                                decoration: InputDecoration(
+                                  hintText: '표시할 토스트 메시지를 입력하세요',
+                                ),
+                                maxLines: 2,
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    context.pop();
+                                  },
+                                  child: Text('취소'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    context.pop();
+                                    if (toastTextController.text.isNotEmpty) {
+                                      context.pop();
+                                      ref
+                                          .read(globalToastProvider.notifier)
+                                          .showToast(toastTextController.text);
+                                    }
+                                  },
+                                  child: Text('확인'),
+                                ),
+                              ],
+                            );
                           },
-                          child: Text('확인'),
-                        ),
-                      ],
-                    );
-                  },
-                );
-              },
-              child: Text('Toast Test'),
+                        );
+                      },
+                      child: Text('Toast Test'),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),

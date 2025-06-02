@@ -12,7 +12,7 @@ import 'package:imdaesomun/src/data/repositories/user_repository.dart';
 class ProfilePageViewModel extends AsyncNotifier<bool> {
   Future<void> getPushAllowed() async {
     try {
-      final token = ref.read(fcmTokenStateProvider);
+      final token = ref.read(fcmTokenProvider);
       if (token == null) {
         state = AsyncValue.data(false);
         return;
@@ -33,7 +33,7 @@ class ProfilePageViewModel extends AsyncNotifier<bool> {
 
   @override
   Future<bool> build() async {
-    final token = ref.read(fcmTokenStateProvider);
+    final token = ref.read(fcmTokenProvider);
     if (token == null) {
       return false;
     }
@@ -239,7 +239,7 @@ class ProfilePageViewModel extends AsyncNotifier<bool> {
   void togglePushAllowed({required bool allowed}) async {
     try {
       state = AsyncValue.data(allowed);
-      final token = ref.read(fcmTokenStateProvider);
+      final token = ref.read(fcmTokenProvider);
       if (token == null) {
         state = AsyncValue.data(allowed);
         return;
