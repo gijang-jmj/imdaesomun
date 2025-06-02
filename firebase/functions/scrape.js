@@ -172,6 +172,9 @@ const scrapeShNoticeDetail = async (seq) => {
       if (text) contents.push(text);
     });
   }
+  if (!contents.length) {
+    contents.push(contentTarget.text().trim());
+  }
 
   return {
     files,
@@ -330,6 +333,9 @@ const scrapeGhNoticeDetail = async (seq) => {
       const text = $(el).text().trim();
       if (text) contents.push(text);
     });
+  }
+  if (!contents.length) {
+    contents.push(contentTarget.text().trim());
   }
 
   return {
