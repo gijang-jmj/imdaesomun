@@ -4,31 +4,34 @@ import 'package:imdaesomun/src/core/enums/log_enum.dart';
 import 'package:imdaesomun/src/core/helpers/exception_helper.dart';
 import 'package:imdaesomun/src/core/services/loading_service.dart';
 import 'package:imdaesomun/src/core/services/log_service.dart';
+import 'package:imdaesomun/src/core/utils/timing_util.dart';
 import 'package:imdaesomun/src/core/utils/validate_util.dart';
 import 'package:imdaesomun/src/data/providers/firebase_provider.dart';
 import 'package:imdaesomun/src/data/providers/user_provider.dart';
 import 'package:imdaesomun/src/data/repositories/user_repository.dart';
 
 class ProfilePageViewModel extends AsyncNotifier<bool> {
-  Future<void> getPushAllowed() async {
-    try {
-      final token = ref.read(fcmTokenProvider);
-      if (token == null) {
+  void setPushAllowed({required bool allowed}) {
+    Debounce.call('setPushAllowed', const Duration(seconds: 3), () async {
+      try {
+        final token = ref.read(fcmTokenProvider);
+        if (token == null) {
+          state = AsyncValue.data(false);
+          return;
+        }
+        await ref
+            .read(userRepositoryProvider)
+            .setPushAllowed(token: token, allowed: allowed);
+      } catch (e) {
+        ref
+            .read(logProvider.notifier)
+            .log(
+              '[ProfilePageViewModel]\n\nsetPushAllowed failed\n\nerror:\n$e',
+              type: LogType.error,
+            );
         state = AsyncValue.data(false);
-        return;
       }
-      final isPushAllowed = await ref
-          .read(userRepositoryProvider)
-          .getPushAllowed(token: token);
-      state = AsyncValue.data(isPushAllowed);
-    } catch (e) {
-      ref
-          .read(logProvider.notifier)
-          .log(
-            '[ProfilePageViewModel]\n\ngetPushAllowed failed\n\nerror:\n$e',
-            type: LogType.error,
-          );
-    }
+    });
   }
 
   @override
@@ -237,25 +240,8 @@ class ProfilePageViewModel extends AsyncNotifier<bool> {
   }
 
   void togglePushAllowed({required bool allowed}) async {
-    try {
-      state = AsyncValue.data(allowed);
-      final token = ref.read(fcmTokenProvider);
-      if (token == null) {
-        state = AsyncValue.data(allowed);
-        return;
-      }
-      await ref
-          .read(userRepositoryProvider)
-          .setPushAllowed(token: token, allowed: allowed);
-      getPushAllowed();
-    } catch (e) {
-      ref
-          .read(logProvider.notifier)
-          .log(
-            '[ProfilePageViewModel]\n\ntogglePushAllowed failed\n\nerror:\n$e',
-            type: LogType.error,
-          );
-    }
+    state = AsyncValue.data(allowed);
+    setPushAllowed(allowed: allowed);
   }
 }
 

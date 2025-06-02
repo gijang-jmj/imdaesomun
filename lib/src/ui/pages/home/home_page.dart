@@ -51,8 +51,8 @@ class _HomePageState extends ConsumerState<HomePage> {
           '${RouterPathConstant.notice.path}/${message.data['noticeId']}',
         );
       }
-      ref.read(shNoticesProvider.notifier).getNotices();
-      ref.read(ghNoticesProvider.notifier).getNotices();
+      ref.read(shNoticesProvider.notifier).getNotices(throttle: false);
+      ref.read(ghNoticesProvider.notifier).getNotices(throttle: false);
       ref
           .read(logProvider.notifier)
           .log('[onMessageOpenedApp]\n\nmessage:\n${message.data}');
@@ -60,8 +60,8 @@ class _HomePageState extends ConsumerState<HomePage> {
 
     // 포그라운드 메시지 리스너 등록
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      ref.read(shNoticesProvider.notifier).getNotices();
-      ref.read(ghNoticesProvider.notifier).getNotices();
+      ref.read(shNoticesProvider.notifier).getNotices(throttle: false);
+      ref.read(ghNoticesProvider.notifier).getNotices(throttle: false);
       ref
           .read(logProvider.notifier)
           .log('[onMessage]\n\nmessage:\n${message.data}');

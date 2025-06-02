@@ -64,7 +64,7 @@ class DevTools extends ConsumerWidget {
                       onPressed: () {
                         ref
                             .read(logProvider.notifier)
-                            .log('[Dev Tools]\n\fcmToken:\n$fcmToken');
+                            .log('[Dev Tools]\n\nfcmToken:\n$fcmToken');
                         if (fcmToken != null) {
                           Clipboard.setData(ClipboardData(text: fcmToken));
                         } else {

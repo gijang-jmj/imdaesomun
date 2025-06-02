@@ -26,8 +26,7 @@ class ProfilePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider);
-    final pushAllowedAsync = ref.watch(profilePageViewModelProvider);
-    final pushAllowed = pushAllowedAsync.value ?? false;
+    final pushAllowed = ref.watch(profilePageViewModelProvider).value ?? false;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: AppStatusBarStyle.light,

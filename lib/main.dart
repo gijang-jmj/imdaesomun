@@ -50,8 +50,6 @@ class MyApp extends ConsumerStatefulWidget {
 }
 
 class _MyAppState extends ConsumerState<MyApp> {
-  bool _isListenerRegistered = false;
-
   @override
   void initState() {
     super.initState();
@@ -60,11 +58,8 @@ class _MyAppState extends ConsumerState<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    if (!_isListenerRegistered) {
-      initFcmTokenListener(ref);
-      initUserListener(ref);
-      _isListenerRegistered = true;
-    }
+    initFcmTokenListener(ref);
+    initUserListener(ref);
 
     return MaterialApp.router(
       title: 'Imdaesomun',
