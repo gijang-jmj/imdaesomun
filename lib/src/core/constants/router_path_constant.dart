@@ -38,6 +38,13 @@ class RouterPathConstant {
   /// description : 커뮤니티 페이지
   static const community = RouterPathConstant._('/community');
 
+  /// page : saved
+  ///
+  /// path : /saved
+  ///
+  /// description : 저장된 공고 페이지
+  static const saved = RouterPathConstant._('/saved');
+
   /// page : post
   ///
   /// path : /post

@@ -45,6 +45,7 @@ class AppIcons {
   static const String arrow = '$_iconPath/arrow.svg';
   static const String back = '$_iconPath/back.svg';
   static const String bell = '$_iconPath/bell.svg';
+  static const String bookmarkCheck = '$_iconPath/bookmark_check.svg';
   static const String bookmark = '$_iconPath/bookmark.svg';
   static const String comment = '$_iconPath/comment.svg';
   static const String community = '$_iconPath/community.svg';

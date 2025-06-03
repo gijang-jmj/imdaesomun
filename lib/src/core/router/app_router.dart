@@ -5,7 +5,7 @@ import 'package:imdaesomun/src/data/models/file.dart';
 import 'package:imdaesomun/src/ui/components/loading/global_loading.dart';
 import 'package:imdaesomun/src/ui/components/overlay/dialog_overlay.dart';
 import 'package:imdaesomun/src/ui/components/toast/global_toast.dart';
-import 'package:imdaesomun/src/ui/pages/community/community_page.dart';
+import 'package:imdaesomun/src/ui/pages/saved/saved_page.dart';
 import 'package:imdaesomun/src/ui/pages/home/home_page.dart';
 import 'package:imdaesomun/src/ui/pages/log/log_page.dart';
 import 'package:imdaesomun/src/ui/pages/notice/notice_page.dart';
@@ -54,8 +54,8 @@ final appRouter = GoRouter(
                     StatefulShellBranch(
                       routes: [
                         GoRoute(
-                          path: RouterPathConstant.community.path,
-                          builder: (context, state) => const CommunityPage(),
+                          path: RouterPathConstant.saved.path,
+                          builder: (context, state) => const SavedPage(),
                         ),
                       ],
                     ),

@@ -14,29 +14,35 @@ class BottomNav extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: navigationShell,
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: navigationShell.currentIndex,
-        onTap: (index) => _onItemTapped(index, context),
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
-        selectedItemColor: AppColors.teal500,
-        unselectedItemColor: AppColors.gray400,
-        selectedLabelStyle: AppTextStyle.caption1,
-        unselectedLabelStyle: AppTextStyle.caption1,
-        items: const [
-          BottomNavigationBarItem(
-            icon: AppIcon(AppIcons.home, size: AppIconSize.large),
-            label: '임대소문',
-          ),
-          BottomNavigationBarItem(
-            icon: AppIcon(AppIcons.community, size: AppIconSize.large),
-            label: '커뮤니티',
-          ),
-          BottomNavigationBarItem(
-            icon: AppIcon(AppIcons.profile, size: AppIconSize.large),
-            label: '내정보',
-          ),
-        ],
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+          border: Border(top: BorderSide(color: AppColors.gray100, width: 1)),
+        ),
+        child: BottomNavigationBar(
+          elevation: 0,
+          currentIndex: navigationShell.currentIndex,
+          onTap: (index) => _onItemTapped(index, context),
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: Colors.white,
+          selectedItemColor: AppColors.teal500,
+          unselectedItemColor: AppColors.gray400,
+          selectedLabelStyle: AppTextStyle.caption1,
+          unselectedLabelStyle: AppTextStyle.caption1,
+          items: const [
+            BottomNavigationBarItem(
+              icon: AppIcon(AppIcons.home, size: AppIconSize.large),
+              label: '임대소문',
+            ),
+            BottomNavigationBarItem(
+              icon: AppIcon(AppIcons.bookmarkCheck, size: AppIconSize.large),
+              label: '저장됨',
+            ),
+            BottomNavigationBarItem(
+              icon: AppIcon(AppIcons.profile, size: AppIconSize.large),
+              label: '내정보',
+            ),
+          ],
+        ),
       ),
     );
   }

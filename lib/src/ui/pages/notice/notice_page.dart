@@ -5,6 +5,7 @@ import 'package:imdaesomun/src/core/theme/app_color.dart';
 import 'package:imdaesomun/src/core/theme/app_icon.dart';
 import 'package:imdaesomun/src/core/theme/app_size.dart';
 import 'package:imdaesomun/src/ui/components/app_bar/app_app_bar.dart';
+import 'package:imdaesomun/src/ui/components/button/app_icon_active_button.dart';
 import 'package:imdaesomun/src/ui/components/button/app_text_button.dart';
 import 'package:imdaesomun/src/ui/pages/notice/notice_page_view_model.dart';
 import 'package:imdaesomun/src/ui/widgets/card/notice_detail_card.dart';
@@ -45,19 +46,48 @@ class NoticePage extends ConsumerWidget {
             ),
             Padding(
               padding: AppEdgeInsets.bottomButtonMargin,
-              child: AppTextButton(
-                onPressed:
-                    () => ref
-                        .read(noticePageViewModelProvider(id).notifier)
-                        .openLink(
-                          onError: (error) {
-                            ref
-                                .read(globalToastProvider.notifier)
-                                .showToast(error);
-                          },
-                        ),
-                suffixIcon: AppIcon(AppIcons.link, size: AppIconSize.medium),
-                text: '공고 원문 보기',
+              child: Row(
+                spacing: AppMargin.smallMedium,
+                children: [
+                  Expanded(
+                    flex: 8,
+                    child: AppTextButton(
+                      onPressed:
+                          () => ref
+                              .read(noticePageViewModelProvider(id).notifier)
+                              .openLink(
+                                onError: (error) {
+                                  ref
+                                      .read(globalToastProvider.notifier)
+                                      .showToast(error);
+                                },
+                              ),
+                      suffixIcon: AppIcon(
+                        AppIcons.link,
+                        size: AppIconSize.medium,
+                      ),
+                      text: '공고 열기',
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: AppIconActiveButton(
+                      padding: EdgeInsets.zero,
+                      isActive: false,
+                      icon: AppIcon(
+                        AppIcons.bookmark,
+                        size: AppIconSize.medium,
+                      ),
+                      activeIcon: AppIcon(
+                        AppIcons.bookmarkCheck,
+                        size: AppIconSize.medium,
+                      ),
+                      onPressed: () {
+                        // TODO: Implement bookmark functionality
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
           ],

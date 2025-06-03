@@ -11,6 +11,20 @@ class AppBarHeight {
   static const double large = 56.0;
 }
 
+class AppButtonHeight {
+  /// 40
+  static const double small = 40.0;
+
+  /// 48
+  static const double medium = 48.0;
+
+  /// 56
+  static const double large = 56.0;
+
+  /// 64
+  static const double extraLarge = 64.0;
+}
+
 class AppMargin {
   /// 4
   static const double extraSmall = 4.0;
@@ -62,7 +76,6 @@ class AppEdgeInsets {
 
   /// 바텀 버튼의 안쪽 여백
   static const bottomButtonPadding = EdgeInsets.symmetric(
-    vertical: AppMargin.smallMedium,
     horizontal: AppMargin.large,
   );
 }

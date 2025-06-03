@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class CommunityPage extends StatelessWidget {
-  const CommunityPage({super.key});
+class SavedPage extends StatelessWidget {
+  const SavedPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(child: const Text('Community Page')),
+      body: Center(child: const Text('Saved Page')),
     );
   }
 }

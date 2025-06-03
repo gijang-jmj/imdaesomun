@@ -34,9 +34,9 @@ class AppTextButton extends StatelessWidget {
     this.foregroundColor = Colors.white,
     this.disabledBackgroundColor = AppColors.teal200,
     this.disabledForegroundColor = Colors.white,
-    this.textStyle = AppTextStyle.subTitle1,
+    this.textStyle = AppTextStyle.subTitle2,
     this.width = double.infinity,
-    this.height,
+    this.height = AppButtonHeight.medium,
     this.padding = AppEdgeInsets.bottomButtonPadding,
     this.minimumSize = const Size(0, 0),
     this.tapTargetSize = MaterialTapTargetSize.shrinkWrap,
@@ -45,7 +45,7 @@ class AppTextButton extends StatelessWidget {
     this.borderWidth,
     this.prefixIcon,
     this.suffixIcon,
-    this.iconSpacing = 8.0,
+    this.iconSpacing = AppMargin.extraSmall,
     this.child,
   });
 
