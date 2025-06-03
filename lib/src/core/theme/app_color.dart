@@ -20,6 +20,9 @@ class AppColors {
   /// #6B7280
   static const Color gray500 = Color(0xFF6B7280);
 
+  /// #6B7280 with 10% opacity
+  static const Color gray500WithOpacity10 = Color(0x1A6B7280);
+
   /// #4B5563
   static const Color gray600 = Color(0xFF4B5563);
 

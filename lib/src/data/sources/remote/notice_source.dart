@@ -1,12 +1,21 @@
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:imdaesomun/src/core/enums/notice_enum.dart';
 import 'package:imdaesomun/src/data/models/notice.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+class NoticeException implements Exception {
+  final String code;
+  final String message;
+
+  NoticeException({required this.code, required this.message});
+}
+
 class NoticeSource {
   final Dio _dio;
+  final User? _user;
 
-  const NoticeSource(this._dio);
+  const NoticeSource(this._dio, this._user);
 
   Future<List<Notice>> getShNotices() async {
     final response = await _dio.get('/getShNotices');
@@ -23,7 +32,7 @@ class NoticeSource {
   }
 
   Future<Notice> getNoticeById(String id) async {
-    final response = await _dio.get('/getNoticeById?id=$id');
+    final response = await _dio.get('/getNoticeById?noticeId=$id');
     final results = response.data as Map<String, dynamic>;
 
     return Notice.fromJson(results);
@@ -85,5 +94,46 @@ class NoticeSource {
     }
 
     return true;
+  }
+
+  Future<void> saveNotice(String id) async {
+    if (_user == null) {
+      throw NoticeException(
+        code: 'user-not-authenticated',
+        message: 'User not authenticated',
+      );
+    }
+
+    await _dio.post('/saveNotice', data: {'noticeId': id, 'userId': _user.uid});
+  }
+
+  Future<void> deleteNotice(String id) async {
+    if (_user == null) {
+      throw NoticeException(
+        code: 'user-not-authenticated',
+        message: 'User not authenticated',
+      );
+    }
+
+    await _dio.post(
+      '/deleteNotice',
+      data: {'noticeId': id, 'userId': _user.uid},
+    );
+  }
+
+  Future<bool> isNoticeSaved(String id) async {
+    if (_user == null) {
+      throw NoticeException(
+        code: 'user-not-authenticated',
+        message: 'User not authenticated',
+      );
+    }
+
+    final response = await _dio.get(
+      '/isNoticeSaved',
+      queryParameters: {'noticeId': id, 'userId': _user.uid},
+    );
+
+    return response.data['saved'] as bool;
   }
 }

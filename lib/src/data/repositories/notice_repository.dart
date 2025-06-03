@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:imdaesomun/src/core/services/dio_service.dart';
 import 'package:imdaesomun/src/data/models/notice.dart';
+import 'package:imdaesomun/src/data/providers/user_provider.dart';
 import 'package:imdaesomun/src/data/sources/remote/notice_source.dart';
 import 'package:imdaesomun/src/data/sources/local/notice_local_source.dart';
 
@@ -8,6 +9,9 @@ abstract class NoticeRepository {
   Future<List<Notice>> getShNotices();
   Future<List<Notice>> getGhNotices();
   Future<Notice> getNoticeById(String id);
+  Future<void> saveNotice(String id);
+  Future<void> deleteNotice(String id);
+  Future<bool> isNoticeSaved(String id);
 }
 
 class NoticeRepositoryImpl implements NoticeRepository {
@@ -54,12 +58,28 @@ class NoticeRepositoryImpl implements NoticeRepository {
     if (local != null) return local;
     return await _noticeSource.getNoticeById(id);
   }
+
+  @override
+  Future<void> saveNotice(String id) async {
+    await _noticeSource.saveNotice(id);
+  }
+
+  @override
+  Future<void> deleteNotice(String id) async {
+    await _noticeSource.deleteNotice(id);
+  }
+
+  @override
+  Future<bool> isNoticeSaved(String id) async {
+    return await _noticeSource.isNoticeSaved(id);
+  }
 }
 
 final noticeRepositoryProvider = Provider<NoticeRepository>((ref) {
   final dio = ref.watch(dioProvider);
+  final user = ref.watch(userProvider);
   return NoticeRepositoryImpl(
-    noticeSource: NoticeSource(dio),
+    noticeSource: NoticeSource(dio, user),
     localSource: NoticeLocalSource(),
   );
 });

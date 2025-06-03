@@ -129,8 +129,7 @@ const scrapeShNotices = async () => {
     });
     await batch.commit();
 
-    await db.collection('log').add({
-      function: 'scrapeShNotices',
+    await db.collection('log').doc('sh').set({
       timestamp: FieldValue.serverTimestamp(),
       message: 'SH notices scraped successfully',
     });
@@ -292,8 +291,7 @@ const scrapeGhNotices = async () => {
     });
     await batch.commit();
 
-    await db.collection('log').add({
-      function: 'scrapeGhNotices',
+    await db.collection('log').doc('gh').set({
       timestamp: FieldValue.serverTimestamp(),
       message: 'GH notices scraped successfully',
     });

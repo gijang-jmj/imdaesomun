@@ -46,6 +46,11 @@ class AppIconActiveButton extends StatelessWidget {
           backgroundColor: WidgetStateProperty.all<Color>(
             isActive ? AppColors.teal500WithOpacity10 : AppColors.gray200,
           ),
+          overlayColor: WidgetStateProperty.all<Color>(
+            isActive
+                ? AppColors.gray500WithOpacity10
+                : AppColors.teal500WithOpacity10,
+          ),
           shape: WidgetStateProperty.all<OutlinedBorder>(
             RoundedRectangleBorder(
               borderRadius:

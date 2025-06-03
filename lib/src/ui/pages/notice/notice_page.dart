@@ -34,7 +34,7 @@ class NoticePage extends ConsumerWidget {
                   ),
                   child: notice.when(
                     data: (data) {
-                      return NoticeDetailCard(notice: data);
+                      return NoticeDetailCard(notice: data.notice!);
                     },
                     error: (error, stackTrace) {
                       return Center(child: Text('Error: $error'));
@@ -73,7 +73,7 @@ class NoticePage extends ConsumerWidget {
                     flex: 2,
                     child: AppIconActiveButton(
                       padding: EdgeInsets.zero,
-                      isActive: false,
+                      isActive: notice.value?.isSaved ?? false,
                       icon: AppIcon(
                         AppIcons.bookmark,
                         size: AppIconSize.medium,
@@ -82,9 +82,13 @@ class NoticePage extends ConsumerWidget {
                         AppIcons.bookmarkCheck,
                         size: AppIconSize.medium,
                       ),
-                      onPressed: () {
-                        // TODO: Implement bookmark functionality
-                      },
+                      onPressed:
+                          () =>
+                              ref
+                                  .read(
+                                    noticePageViewModelProvider(id).notifier,
+                                  )
+                                  .toggleBookmark(),
                     ),
                   ),
                 ],

@@ -117,28 +117,28 @@ exports.getNoticeById = onRequest(
         return res.status(401).send({ error: 'Unauthorized' });
       }
 
-      const { id } = req.query;
+      const { noticeId } = req.query;
 
-      if (!id) {
+      if (!noticeId) {
         return res.status(400).send({ error: 'Missing parameter.' });
       }
 
       const db = getFirestore();
+      const [shDoc, ghDoc] = await Promise.all([
+        db.collection('sh').doc(noticeId).get(),
+        db.collection('gh').doc(noticeId).get(),
+      ]);
 
-      // sh에서 조회
-      let doc = await db.collection('sh').doc(id).get();
-      if (doc.exists) {
+      if (shDoc.exists) {
         return res
           .status(200)
-          .send({ collection: 'sh', id: doc.id, ...doc.data() });
+          .send({ collection: 'sh', id: shDoc.id, ...shDoc.data() });
       }
 
-      // gh에서 조회
-      doc = await db.collection('gh').doc(id).get();
-      if (doc.exists) {
+      if (ghDoc.exists) {
         return res
           .status(200)
-          .send({ collection: 'gh', id: doc.id, ...doc.data() });
+          .send({ collection: 'gh', id: ghDoc.id, ...ghDoc.data() });
       }
 
       return res.status(404).send({ error: 'Notice not found.' });
@@ -283,26 +283,13 @@ exports.getLatestScrapeTs = onRequest(
       }
 
       const db = getFirestore();
-
-      const [shSnap, ghSnap] = await Promise.all([
-        // sh
-        db
-          .collection('log')
-          .where('function', '==', 'scrapeShNotices')
-          .orderBy('timestamp', 'desc')
-          .limit(1)
-          .get(),
-        // gh
-        db
-          .collection('log')
-          .where('function', '==', 'scrapeGhNotices')
-          .orderBy('timestamp', 'desc')
-          .limit(1)
-          .get(),
+      const [shDoc, ghDoc] = await Promise.all([
+        db.collection('log').doc('sh').get(),
+        db.collection('log').doc('gh').get(),
       ]);
 
-      const shTs = shSnap.empty ? null : shSnap.docs[0].data().timestamp;
-      const ghTs = ghSnap.empty ? null : ghSnap.docs[0].data().timestamp;
+      const shTs = shDoc.exists ? shDoc.data().timestamp : null;
+      const ghTs = ghDoc.exists ? ghDoc.data().timestamp : null;
 
       if (shTs === null && ghTs === null) {
         return res.status(404).send({ error: 'No log found.' });
@@ -398,6 +385,129 @@ exports.setPushAllowed = onRequest(
     } catch (error) {
       res.status(500).send({ error: 'Failed to update push allowed.' });
       logger.error('[FCM] Error updating push allowed:', error);
+    }
+  },
+);
+
+/**
+ * USER 공고 저장
+ * POST /saveNotice
+ * body: { noticeId: string, userId: string }
+ */
+exports.saveNotice = onRequest(
+  { region: 'asia-northeast1', secrets: ['IMDAESOMUN_API_KEY'] },
+  async (req, res) => {
+    try {
+      if (req.method !== 'POST') {
+        return res.status(404).send({ error: 'Not Found' });
+      }
+
+      const apiKey = req.headers['x-imdaesomun-api-key'];
+      const SECRET_KEY = process.env.IMDAESOMUN_API_KEY;
+
+      if (apiKey !== SECRET_KEY) {
+        return res.status(401).send({ error: 'Unauthorized' });
+      }
+
+      const { noticeId, userId } = req.body;
+
+      if (!noticeId || !userId) {
+        return res.status(400).send({ error: 'Missing parameter.' });
+      }
+
+      const db = getFirestore();
+      const saveRef = db.collection('save').doc(`${userId}_${noticeId}`);
+      await saveRef.set(
+        {
+          userId,
+          noticeId,
+          createdAt: FieldValue.serverTimestamp(),
+        },
+        { merge: true },
+      );
+
+      return res.status(200).send({ message: 'Notice saved.' });
+    } catch (error) {
+      res.status(500).send({ error: 'Failed to save notice.' });
+      logger.error('[SAVE] Error saving notice:', error);
+    }
+  },
+);
+
+/**
+ * USER 공고 삭제
+ * POST /deleteNotice
+ * body: { noticeId: string, userId: string }
+ */
+exports.deleteNotice = onRequest(
+  { region: 'asia-northeast1', secrets: ['IMDAESOMUN_API_KEY'] },
+  async (req, res) => {
+    try {
+      if (req.method !== 'POST') {
+        return res.status(404).send({ error: 'Not Found' });
+      }
+
+      const apiKey = req.headers['x-imdaesomun-api-key'];
+      const SECRET_KEY = process.env.IMDAESOMUN_API_KEY;
+
+      if (apiKey !== SECRET_KEY) {
+        return res.status(401).send({ error: 'Unauthorized' });
+      }
+
+      const { noticeId, userId } = req.body;
+
+      if (!noticeId || !userId) {
+        return res.status(400).send({ error: 'Missing parameter.' });
+      }
+
+      const db = getFirestore();
+      const saveRef = db.collection('save').doc(`${userId}_${noticeId}`);
+      await saveRef.delete();
+
+      return res.status(200).send({ message: 'Notice deleted.' });
+    } catch (error) {
+      res.status(500).send({ error: 'Failed to delete notice.' });
+      logger.error('[SAVE] Error deleting notice:', error);
+    }
+  },
+);
+
+/**
+ * USER가 저장한 공고 여부 확인
+ * GET /isNoticeSaved
+ * query: { noticeId: string, userId: string }
+ * return: { saved: boolean }
+ */
+exports.isNoticeSaved = onRequest(
+  { region: 'asia-northeast1', secrets: ['IMDAESOMUN_API_KEY'] },
+  async (req, res) => {
+    try {
+      if (req.method !== 'GET') {
+        return res.status(404).send({ error: 'Not Found' });
+      }
+
+      const apiKey = req.headers['x-imdaesomun-api-key'];
+      const SECRET_KEY = process.env.IMDAESOMUN_API_KEY;
+
+      if (apiKey !== SECRET_KEY) {
+        return res.status(401).send({ error: 'Unauthorized' });
+      }
+
+      const { noticeId, userId } = req.query;
+
+      if (!noticeId || !userId) {
+        return res.status(400).send({ error: 'Missing parameter.' });
+      }
+
+      const db = getFirestore();
+      const saveRef = db.collection('save').doc(`${userId}_${noticeId}`);
+      const doc = await saveRef.get();
+      const saved = doc.exists;
+
+      return res.status(200).send({ saved });
+    } catch (error) {
+      res.status(500).send({ error: 'Failed to check notice saved.' });
+      logger.error('[SAVE] Error checking notice saved:', error);
     }
   },
 );
