@@ -1,18 +1,19 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'login_state.dart';
+part of 'login_dialog_state.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_LoginState _$LoginStateFromJson(Map<String, dynamic> json) => _LoginState(
-  obscure: json['obscure'] as bool,
-  email: json['email'] as String,
-  password: json['password'] as String,
-);
+_LoginDialogState _$LoginDialogStateFromJson(Map<String, dynamic> json) =>
+    _LoginDialogState(
+      obscure: json['obscure'] as bool,
+      email: json['email'] as String,
+      password: json['password'] as String,
+    );
 
-Map<String, dynamic> _$LoginStateToJson(_LoginState instance) =>
+Map<String, dynamic> _$LoginDialogStateToJson(_LoginDialogState instance) =>
     <String, dynamic>{
       'obscure': instance.obscure,
       'email': instance.email,

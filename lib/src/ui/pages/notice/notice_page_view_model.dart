@@ -14,7 +14,7 @@ class NoticePageViewModel
     final url = state.value?.link;
 
     if (url == null) {
-      onError('공고 원문 보기에 실패했어요\n잠시 후 다시 시도해주세요');
+      onError('공고 열기에 실패했어요\n잠시 후 다시 시도해주세요');
       return;
     }
 
@@ -22,7 +22,7 @@ class NoticePageViewModel
       Uri.parse(url),
       mode: LaunchMode.externalApplication,
     )) {
-      onError('공고 원문 보기에 실패했어요\n잠시 후 다시 시도해주세요');
+      onError('공고 열기에 실패했어요\n잠시 후 다시 시도해주세요');
     }
   }
 }

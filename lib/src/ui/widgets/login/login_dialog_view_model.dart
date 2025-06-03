@@ -6,13 +6,13 @@ import 'package:imdaesomun/src/core/services/loading_service.dart';
 import 'package:imdaesomun/src/core/services/log_service.dart';
 import 'package:imdaesomun/src/core/utils/validate_util.dart';
 import 'package:imdaesomun/src/data/repositories/user_repository.dart';
-import 'package:imdaesomun/src/ui/widgets/login/login_state.dart';
+import 'package:imdaesomun/src/ui/widgets/login/login_dialog_state.dart';
 
-class LoginDialogViewModel extends AutoDisposeNotifier<LoginState> {
+class LoginDialogViewModel extends AutoDisposeNotifier<LoginDialogState> {
   @override
-  LoginState build() {
+  LoginDialogState build() {
     {
-      return LoginState(obscure: true, email: '', password: '');
+      return LoginDialogState(obscure: true, email: '', password: '');
     }
   }
 
@@ -161,6 +161,6 @@ class LoginDialogViewModel extends AutoDisposeNotifier<LoginState> {
 }
 
 final loginDialogViewModelProvider =
-    NotifierProvider.autoDispose<LoginDialogViewModel, LoginState>(
+    NotifierProvider.autoDispose<LoginDialogViewModel, LoginDialogState>(
       LoginDialogViewModel.new,
     );
