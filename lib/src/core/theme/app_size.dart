@@ -12,6 +12,9 @@ class AppBarHeight {
 }
 
 class AppButtonHeight {
+  /// 32
+  static const double extraSmall = 32.0;
+
   /// 40
   static const double small = 40.0;
 

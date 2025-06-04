@@ -7,7 +7,7 @@ import 'package:imdaesomun/src/core/theme/app_size.dart';
 import 'package:imdaesomun/src/ui/widgets/app_bar/app_app_bar.dart';
 import 'package:imdaesomun/src/ui/components/button/app_text_button.dart';
 import 'package:imdaesomun/src/ui/pages/notice/notice_page_view_model.dart';
-import 'package:imdaesomun/src/ui/pages/notice/widgets/bookmark_button.dart';
+import 'package:imdaesomun/src/ui/pages/notice/widgets/notice_save_button.dart';
 import 'package:imdaesomun/src/ui/pages/notice/widgets/notice_detail_card.dart';
 
 class NoticePage extends ConsumerWidget {
@@ -72,7 +72,7 @@ class NoticePage extends ConsumerWidget {
                       text: '공고 열기',
                     ),
                   ),
-                  Expanded(flex: 2, child: BookmarkButton(noticeId: id)),
+                  Expanded(flex: 2, child: NoticeSaveButton(noticeId: id)),
                 ],
               ),
             ),

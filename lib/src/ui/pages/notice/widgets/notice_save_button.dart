@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:imdaesomun/src/core/helpers/dialog_helper.dart';
 import 'package:imdaesomun/src/core/services/toast_service.dart';
 import 'package:imdaesomun/src/core/theme/app_icon.dart';
 import 'package:imdaesomun/src/core/theme/app_size.dart';
+import 'package:imdaesomun/src/data/providers/user_provider.dart';
 import 'package:imdaesomun/src/ui/components/button/app_icon_active_button.dart';
 import 'package:imdaesomun/src/ui/pages/notice/notice_page_view_model.dart';
+import 'package:imdaesomun/src/ui/widgets/login/login_dialog.dart';
 
-class BookmarkButton extends ConsumerWidget {
+class NoticeSaveButton extends ConsumerWidget {
   final String noticeId;
 
-  const BookmarkButton({super.key, required this.noticeId});
+  const NoticeSaveButton({super.key, required this.noticeId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userProvider);
     final notice = ref.watch(noticeSavedProvider(noticeId));
 
     return notice.when(
@@ -24,7 +28,7 @@ class BookmarkButton extends ConsumerWidget {
           onPressed:
               () => ref
                   .read(noticeSavedProvider(noticeId).notifier)
-                  .toggleBookmark(isSaved: !isSaved, noticeId: noticeId),
+                  .toggleSave(isSaved: !isSaved, noticeId: noticeId),
         );
       },
       error: (error, stackTrace) {
@@ -32,10 +36,26 @@ class BookmarkButton extends ConsumerWidget {
           isActive: false,
           icon: AppIcon(AppIcons.bookmark, size: AppIconSize.medium),
           activeIcon: AppIcon(AppIcons.bookmarkCheck, size: AppIconSize.medium),
-          onPressed:
-              () => ref
+          onPressed: () {
+            if (user == null) {
+              ref
                   .read(globalToastProvider.notifier)
-                  .showToast('북마크 상태를 가져오지 못했어요'),
+                  .showToast('로그인이 필요한 기능이에요');
+              showCustomDialog(context, const LoginDialog());
+              return;
+            }
+
+            if (user.emailVerified == false) {
+              ref
+                  .read(globalToastProvider.notifier)
+                  .showToast('내정보 이메일 인증 후 이용할 수 있어요');
+              return;
+            }
+
+            ref
+                .read(globalToastProvider.notifier)
+                .showToast('공고 저장에 실패했어요\n잠시 후 다시 시도해주세요');
+          },
         );
       },
       loading: () {

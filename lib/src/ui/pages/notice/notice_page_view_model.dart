@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:imdaesomun/src/core/utils/timing_util.dart';
 import 'package:imdaesomun/src/data/models/notice.dart';
 import 'package:imdaesomun/src/data/repositories/notice_repository.dart';
+import 'package:imdaesomun/src/ui/pages/saved/saved_page_view_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class NoticeDetail extends AutoDisposeFamilyAsyncNotifier<Notice, String> {
@@ -37,16 +38,21 @@ class NoticeSaved extends AutoDisposeFamilyAsyncNotifier<bool, String> {
   }
 
   void setNoticeSaved({required bool isSaved, required String noticeId}) {
-    Debounce.call('setNoticeSaved', const Duration(seconds: 1), () async {
-      if (isSaved) {
-        await ref.read(noticeRepositoryProvider).saveNotice(noticeId);
-      } else {
-        await ref.read(noticeRepositoryProvider).deleteNotice(noticeId);
-      }
-    });
+    Debounce.call(
+      'setNoticeSaved',
+      const Duration(milliseconds: 300),
+      () async {
+        if (isSaved) {
+          await ref.read(noticeRepositoryProvider).saveNotice(noticeId);
+        } else {
+          await ref.read(noticeRepositoryProvider).deleteNotice(noticeId);
+        }
+        ref.read(savedNoticesProvider.notifier).refreshSavedNotices();
+      },
+    );
   }
 
-  Future<void> toggleBookmark({
+  Future<void> toggleSave({
     required bool isSaved,
     required String noticeId,
   }) async {

@@ -82,11 +82,9 @@ class ProfilePage extends ConsumerWidget {
                               children: [
                                 Expanded(
                                   child: AppTextLineButton(
+                                    height: AppButtonHeight.extraSmall,
                                     text: '인증 완료',
                                     textStyle: AppTextStyle.caption1,
-                                    padding: const EdgeInsets.all(
-                                      AppMargin.small,
-                                    ),
                                     onPressed:
                                         () => ref
                                             .read(
@@ -115,11 +113,9 @@ class ProfilePage extends ConsumerWidget {
                                 ),
                                 Expanded(
                                   child: AppTextLineButton(
+                                    height: AppButtonHeight.extraSmall,
                                     text: '재발송',
                                     textStyle: AppTextStyle.caption1,
-                                    padding: const EdgeInsets.all(
-                                      AppMargin.small,
-                                    ),
                                     onPressed:
                                         () => ref
                                             .read(

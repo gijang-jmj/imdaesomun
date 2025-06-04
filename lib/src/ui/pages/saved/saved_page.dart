@@ -6,7 +6,9 @@ import 'package:imdaesomun/src/core/constants/router_path_constant.dart';
 import 'package:imdaesomun/src/core/theme/app_color.dart';
 import 'package:imdaesomun/src/core/theme/app_size.dart';
 import 'package:imdaesomun/src/core/theme/app_style.dart';
+import 'package:imdaesomun/src/core/theme/app_text_style.dart';
 import 'package:imdaesomun/src/core/utils/timing_util.dart';
+import 'package:imdaesomun/src/ui/components/button/app_text_line_button.dart';
 import 'package:imdaesomun/src/ui/pages/home/widgets/notice_card.dart';
 import 'package:imdaesomun/src/ui/pages/saved/saved_page_view_model.dart';
 import 'package:imdaesomun/src/ui/widgets/card/information_card.dart';
@@ -118,35 +120,27 @@ class _SavedPageState extends ConsumerState<SavedPage> {
                                     padding: const EdgeInsets.all(
                                       AppMargin.medium,
                                     ),
-                                    child:
-                                        _isLoadingMore
-                                            ? const Center(
-                                              child:
-                                                  CircularProgressIndicator(),
-                                            )
-                                            : ElevatedButton(
-                                              onPressed: _loadMore,
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor:
-                                                    AppColors.teal500,
-                                                foregroundColor: Colors.white,
-                                                minimumSize: const Size(
-                                                  double.infinity,
-                                                  48,
+                                    child: Center(
+                                      child:
+                                          _isLoadingMore
+                                              ? const CircularProgressIndicator()
+                                              : AppTextLineButton(
+                                                width: null,
+                                                height:
+                                                    AppButtonHeight.extraSmall,
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal: AppMargin.medium,
                                                 ),
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(8),
-                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                      AppRadius.extraLarge,
+                                                    ),
+                                                onPressed: _loadMore,
+                                                text: '더보기',
+                                                textStyle:
+                                                    AppTextStyle.subBody1,
                                               ),
-                                              child: const Text(
-                                                '더보기',
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                            ),
+                                    ),
                                   ),
                               ],
                             ),

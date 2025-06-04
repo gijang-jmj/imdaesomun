@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:imdaesomun/src/data/models/notice.dart';
 
 part 'notice_page_state.freezed.dart';
 part 'notice_page_state.g.dart';
