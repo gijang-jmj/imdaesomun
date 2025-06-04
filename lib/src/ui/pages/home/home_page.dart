@@ -10,7 +10,7 @@ import 'package:imdaesomun/src/core/theme/app_style.dart';
 import 'package:imdaesomun/src/core/theme/app_text_style.dart';
 import 'package:imdaesomun/src/core/utils/text_util.dart';
 import 'package:imdaesomun/src/ui/widgets/footer/copyright_footer.dart';
-import 'package:imdaesomun/src/ui/widgets/card/notice_card.dart';
+import 'package:imdaesomun/src/ui/pages/home/widgets/notice_card.dart';
 import 'package:imdaesomun/src/ui/pages/home/home_page_view_model.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';

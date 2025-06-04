@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class DialogOverlay extends ConsumerWidget {
-  const DialogOverlay({super.key, required this.dialog});
+class DialogPage extends ConsumerWidget {
+  const DialogPage({super.key, required this.dialog});
 
   final Widget dialog;
 

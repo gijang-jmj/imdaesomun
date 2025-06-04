@@ -4,11 +4,11 @@ import 'package:imdaesomun/src/core/services/toast_service.dart';
 import 'package:imdaesomun/src/core/theme/app_color.dart';
 import 'package:imdaesomun/src/core/theme/app_icon.dart';
 import 'package:imdaesomun/src/core/theme/app_size.dart';
-import 'package:imdaesomun/src/ui/components/app_bar/app_app_bar.dart';
-import 'package:imdaesomun/src/ui/components/button/app_icon_active_button.dart';
+import 'package:imdaesomun/src/ui/widgets/app_bar/app_app_bar.dart';
 import 'package:imdaesomun/src/ui/components/button/app_text_button.dart';
 import 'package:imdaesomun/src/ui/pages/notice/notice_page_view_model.dart';
-import 'package:imdaesomun/src/ui/widgets/card/notice_detail_card.dart';
+import 'package:imdaesomun/src/ui/pages/notice/widgets/bookmark_button.dart';
+import 'package:imdaesomun/src/ui/pages/notice/widgets/notice_detail_card.dart';
 
 class NoticePage extends ConsumerWidget {
   final String id;
@@ -17,8 +17,6 @@ class NoticePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final notice = ref.watch(noticePageViewModelProvider(id));
-
     return Scaffold(
       backgroundColor: AppColors.gray50,
       appBar: AppAppBar(title: const Text('공고 상세')),
@@ -32,14 +30,19 @@ class NoticePage extends ConsumerWidget {
                     horizontal: AppMargin.medium,
                     vertical: AppMargin.small,
                   ),
-                  child: notice.when(
-                    data: (data) {
-                      return NoticeDetailCard(notice: data.notice!);
+                  child: Consumer(
+                    builder: (context, ref, child) {
+                      final notice = ref.watch(noticeDetailProvider(id));
+                      return notice.when(
+                        data: (data) {
+                          return NoticeDetailCard(notice: data);
+                        },
+                        error: (error, stackTrace) {
+                          return Center(child: Text('Error: $error'));
+                        },
+                        loading: () => const NoticeDetailCardSkeleton(),
+                      );
                     },
-                    error: (error, stackTrace) {
-                      return Center(child: Text('Error: $error'));
-                    },
-                    loading: () => const NoticeDetailCardSkeleton(),
                   ),
                 ),
               ),
@@ -54,7 +57,7 @@ class NoticePage extends ConsumerWidget {
                     child: AppTextButton(
                       onPressed:
                           () => ref
-                              .read(noticePageViewModelProvider(id).notifier)
+                              .read(noticeDetailProvider(id).notifier)
                               .openLink(
                                 onError: (error) {
                                   ref
@@ -71,24 +74,10 @@ class NoticePage extends ConsumerWidget {
                   ),
                   Expanded(
                     flex: 2,
-                    child: AppIconActiveButton(
+                    child: BookmarkButton(
+                      noticeId: id,
                       padding: EdgeInsets.zero,
-                      isActive: notice.value?.isSaved ?? false,
-                      icon: AppIcon(
-                        AppIcons.bookmark,
-                        size: AppIconSize.medium,
-                      ),
-                      activeIcon: AppIcon(
-                        AppIcons.bookmarkCheck,
-                        size: AppIconSize.medium,
-                      ),
-                      onPressed:
-                          () =>
-                              ref
-                                  .read(
-                                    noticePageViewModelProvider(id).notifier,
-                                  )
-                                  .toggleBookmark(),
+                      iconSize: AppIconSize.medium,
                     ),
                   ),
                 ],

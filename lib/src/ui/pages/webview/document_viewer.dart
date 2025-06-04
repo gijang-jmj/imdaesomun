@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:imdaesomun/src/data/models/file.dart';
-import 'package:imdaesomun/src/ui/components/app_bar/app_app_bar.dart';
+import 'package:imdaesomun/src/ui/widgets/app_bar/app_app_bar.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class DocumentViewer extends StatelessWidget {

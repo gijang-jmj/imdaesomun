@@ -474,11 +474,11 @@ exports.deleteNotice = onRequest(
 
 /**
  * USER가 저장한 공고 여부 확인
- * GET /isNoticeSaved
+ * GET /getNoticeSaved
  * query: { noticeId: string, userId: string }
  * return: { saved: boolean }
  */
-exports.isNoticeSaved = onRequest(
+exports.getNoticeSaved = onRequest(
   { region: 'asia-northeast1', secrets: ['IMDAESOMUN_API_KEY'] },
   async (req, res) => {
     try {
