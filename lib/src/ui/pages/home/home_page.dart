@@ -8,7 +8,7 @@ import 'package:imdaesomun/src/core/theme/app_icon.dart';
 import 'package:imdaesomun/src/core/theme/app_size.dart';
 import 'package:imdaesomun/src/core/theme/app_style.dart';
 import 'package:imdaesomun/src/core/theme/app_text_style.dart';
-import 'package:imdaesomun/src/core/utils/text_util.dart';
+import 'package:imdaesomun/src/ui/widgets/card/information_card.dart';
 import 'package:imdaesomun/src/ui/widgets/footer/copyright_footer.dart';
 import 'package:imdaesomun/src/ui/pages/home/widgets/notice_card.dart';
 import 'package:imdaesomun/src/ui/pages/home/home_page_view_model.dart';
@@ -84,43 +84,9 @@ class _HomePageState extends ConsumerState<HomePage> {
               physics: const AlwaysScrollableScrollPhysics(),
               padding: EdgeInsets.zero,
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppMargin.medium,
-                    vertical: AppMargin.small,
-                  ),
-                  child: Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: [AppBoxShadow.medium],
-                      borderRadius: BorderRadius.circular(AppRadius.medium),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(AppMargin.medium),
-                      child: Row(
-                        spacing: AppMargin.small,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const AppIcon(
-                            AppIcons.homeFill,
-                            size: AppIconSize.medium,
-                            color: AppColors.teal500,
-                          ),
-                          Expanded(
-                            child: Text(
-                              TextUtil.keepWord(
-                                '최근 10개 공고만 제공되며, 과거 공고 및 검색·정렬 기능은 각 공사의 공식 홈페이지를 이용해주세요',
-                              ),
-                              style: AppTextStyle.subBody1.copyWith(
-                                color: AppColors.gray500,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                InformationCard(
+                  text:
+                      '최근 10개 공고만 제공되며, 과거 공고 및 검색·정렬 기능은 각 공사의 공식 홈페이지를 이용해주세요',
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(
@@ -154,11 +120,10 @@ class _HomePageState extends ConsumerState<HomePage> {
                             loading:
                                 () => Column(
                                   spacing: AppMargin.small,
-                                  children: const [
-                                    NoticeCardSkeleton(),
-                                    NoticeCardSkeleton(),
-                                    NoticeCardSkeleton(),
-                                  ],
+                                  children: List.generate(
+                                    10,
+                                    (index) => const NoticeCardSkeleton(),
+                                  ),
                                 ),
                             error: (e, st) => Center(child: Text('오류: $e')),
                             data:
@@ -219,11 +184,10 @@ class _HomePageState extends ConsumerState<HomePage> {
                             loading:
                                 () => Column(
                                   spacing: AppMargin.small,
-                                  children: const [
-                                    NoticeCardSkeleton(),
-                                    NoticeCardSkeleton(),
-                                    NoticeCardSkeleton(),
-                                  ],
+                                  children: List.generate(
+                                    10,
+                                    (index) => const NoticeCardSkeleton(),
+                                  ),
                                 ),
                             error: (e, st) => Center(child: Text('오류: $e')),
                             data:

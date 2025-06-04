@@ -1,0 +1,18 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:imdaesomun/src/data/models/notice.dart';
+
+part 'notice_pagination.freezed.dart';
+part 'notice_pagination.g.dart';
+
+@freezed
+abstract class NoticePagination with _$NoticePagination {
+  const factory NoticePagination({
+    required List<Notice> notices,
+    required bool hasMore,
+    required int nextOffset,
+    required int totalFetched,
+  }) = _NoticePagination;
+
+  factory NoticePagination.fromJson(Map<String, dynamic> json) =>
+      _$NoticePaginationFromJson(json);
+}

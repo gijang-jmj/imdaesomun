@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$NoticePageState {
 
- String get id; bool get isSaved; Notice? get notice;
+ String get id; bool get isSaved;
 /// Create a copy of NoticePageState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $NoticePageStateCopyWith<NoticePageState> get copyWith => _$NoticePageStateCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is NoticePageState&&(identical(other.id, id) || other.id == id)&&(identical(other.isSaved, isSaved) || other.isSaved == isSaved)&&(identical(other.notice, notice) || other.notice == notice));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is NoticePageState&&(identical(other.id, id) || other.id == id)&&(identical(other.isSaved, isSaved) || other.isSaved == isSaved));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,isSaved,notice);
+int get hashCode => Object.hash(runtimeType,id,isSaved);
 
 @override
 String toString() {
-  return 'NoticePageState(id: $id, isSaved: $isSaved, notice: $notice)';
+  return 'NoticePageState(id: $id, isSaved: $isSaved)';
 }
 
 
@@ -49,11 +49,11 @@ abstract mixin class $NoticePageStateCopyWith<$Res>  {
   factory $NoticePageStateCopyWith(NoticePageState value, $Res Function(NoticePageState) _then) = _$NoticePageStateCopyWithImpl;
 @useResult
 $Res call({
- String id, bool isSaved, Notice? notice
+ String id, bool isSaved
 });
 
 
-$NoticeCopyWith<$Res>? get notice;
+
 
 }
 /// @nodoc
@@ -66,27 +66,14 @@ class _$NoticePageStateCopyWithImpl<$Res>
 
 /// Create a copy of NoticePageState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? isSaved = null,Object? notice = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? isSaved = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,isSaved: null == isSaved ? _self.isSaved : isSaved // ignore: cast_nullable_to_non_nullable
-as bool,notice: freezed == notice ? _self.notice : notice // ignore: cast_nullable_to_non_nullable
-as Notice?,
+as bool,
   ));
 }
-/// Create a copy of NoticePageState
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$NoticeCopyWith<$Res>? get notice {
-    if (_self.notice == null) {
-    return null;
-  }
 
-  return $NoticeCopyWith<$Res>(_self.notice!, (value) {
-    return _then(_self.copyWith(notice: value));
-  });
-}
 }
 
 
@@ -94,12 +81,11 @@ $NoticeCopyWith<$Res>? get notice {
 @JsonSerializable()
 
 class _NoticePageState implements NoticePageState {
-  const _NoticePageState({required this.id, required this.isSaved, this.notice});
+  const _NoticePageState({required this.id, required this.isSaved});
   factory _NoticePageState.fromJson(Map<String, dynamic> json) => _$NoticePageStateFromJson(json);
 
 @override final  String id;
 @override final  bool isSaved;
-@override final  Notice? notice;
 
 /// Create a copy of NoticePageState
 /// with the given fields replaced by the non-null parameter values.
@@ -114,16 +100,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NoticePageState&&(identical(other.id, id) || other.id == id)&&(identical(other.isSaved, isSaved) || other.isSaved == isSaved)&&(identical(other.notice, notice) || other.notice == notice));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NoticePageState&&(identical(other.id, id) || other.id == id)&&(identical(other.isSaved, isSaved) || other.isSaved == isSaved));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,isSaved,notice);
+int get hashCode => Object.hash(runtimeType,id,isSaved);
 
 @override
 String toString() {
-  return 'NoticePageState(id: $id, isSaved: $isSaved, notice: $notice)';
+  return 'NoticePageState(id: $id, isSaved: $isSaved)';
 }
 
 
@@ -134,11 +120,11 @@ abstract mixin class _$NoticePageStateCopyWith<$Res> implements $NoticePageState
   factory _$NoticePageStateCopyWith(_NoticePageState value, $Res Function(_NoticePageState) _then) = __$NoticePageStateCopyWithImpl;
 @override @useResult
 $Res call({
- String id, bool isSaved, Notice? notice
+ String id, bool isSaved
 });
 
 
-@override $NoticeCopyWith<$Res>? get notice;
+
 
 }
 /// @nodoc
@@ -151,28 +137,15 @@ class __$NoticePageStateCopyWithImpl<$Res>
 
 /// Create a copy of NoticePageState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? isSaved = null,Object? notice = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? isSaved = null,}) {
   return _then(_NoticePageState(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,isSaved: null == isSaved ? _self.isSaved : isSaved // ignore: cast_nullable_to_non_nullable
-as bool,notice: freezed == notice ? _self.notice : notice // ignore: cast_nullable_to_non_nullable
-as Notice?,
+as bool,
   ));
 }
 
-/// Create a copy of NoticePageState
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$NoticeCopyWith<$Res>? get notice {
-    if (_self.notice == null) {
-    return null;
-  }
 
-  return $NoticeCopyWith<$Res>(_self.notice!, (value) {
-    return _then(_self.copyWith(notice: value));
-  });
-}
 }
 
 // dart format on

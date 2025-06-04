@@ -72,14 +72,7 @@ class NoticePage extends ConsumerWidget {
                       text: '공고 열기',
                     ),
                   ),
-                  Expanded(
-                    flex: 2,
-                    child: BookmarkButton(
-                      noticeId: id,
-                      padding: EdgeInsets.zero,
-                      iconSize: AppIconSize.medium,
-                    ),
-                  ),
+                  Expanded(flex: 2, child: BookmarkButton(noticeId: id)),
                 ],
               ),
             ),

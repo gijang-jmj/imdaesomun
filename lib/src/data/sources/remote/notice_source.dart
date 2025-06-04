@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:imdaesomun/src/core/enums/notice_enum.dart';
 import 'package:imdaesomun/src/data/models/notice.dart';
+import 'package:imdaesomun/src/data/models/notice_pagination.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NoticeException implements Exception {
@@ -121,7 +122,7 @@ class NoticeSource {
     );
   }
 
-  Future<bool> isNoticeSaved(String id) async {
+  Future<bool> getNoticeSaved(String id) async {
     if (_user == null) {
       throw NoticeException(
         code: 'user-not-authenticated',
@@ -130,10 +131,36 @@ class NoticeSource {
     }
 
     final response = await _dio.get(
-      '/isNoticeSaved',
+      '/getNoticeSaved',
       queryParameters: {'noticeId': id, 'userId': _user.uid},
     );
 
     return response.data['saved'] as bool;
+  }
+
+  Future<NoticePagination> getSavedNotices({
+    required int offset,
+    int? limit,
+    String? corporation,
+  }) async {
+    if (_user == null) {
+      throw NoticeException(
+        code: 'user-not-authenticated',
+        message: 'User not authenticated',
+      );
+    }
+
+    final response = await _dio.get(
+      '/getSavedNotices',
+      queryParameters: {
+        'userId': _user.uid,
+        'offset': offset,
+        'limit': limit,
+        'corporation': corporation,
+      },
+    );
+    final results = response.data as Map<String, dynamic>;
+
+    return NoticePagination.fromJson(results);
   }
 }

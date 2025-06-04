@@ -13,8 +13,9 @@ import 'package:imdaesomun/src/core/theme/app_text_style.dart';
 import 'package:imdaesomun/src/core/utils/text_util.dart';
 import 'package:imdaesomun/src/data/providers/user_provider.dart';
 import 'package:imdaesomun/src/ui/components/button/app_text_line_button.dart';
-import 'package:imdaesomun/src/ui/components/switch/app_switch.dart';
 import 'package:imdaesomun/src/ui/pages/profile/profile_page_view_model.dart';
+import 'package:imdaesomun/src/ui/pages/profile/widgets/profile_menu_item.dart';
+import 'package:imdaesomun/src/ui/pages/profile/widgets/profile_switch_item.dart';
 import 'package:imdaesomun/src/ui/widgets/dialog/confirm_dialog.dart';
 import 'package:imdaesomun/src/ui/widgets/dialog/default_input_dialog.dart';
 import 'package:imdaesomun/src/ui/widgets/dialog/password_input_dialog.dart';
@@ -26,7 +27,6 @@ class ProfilePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider);
-    final pushAllowed = ref.watch(profilePageViewModelProvider).value ?? false;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: AppStatusBarStyle.light,
@@ -294,45 +294,30 @@ class ProfilePage extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(AppRadius.medium),
                     child: Column(
                       children: [
-                        InkWell(
-                          borderRadius: BorderRadius.circular(AppRadius.medium),
-                          onTap:
-                              () => ref
-                                  .read(profilePageViewModelProvider.notifier)
-                                  .togglePushAllowed(allowed: !pushAllowed),
-                          child: Padding(
-                            padding: const EdgeInsets.all(AppMargin.medium),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  spacing: AppMargin.small,
-                                  children: [
-                                    const AppIcon(
-                                      AppIcons.bell,
-                                      color: AppColors.teal500,
-                                      size: AppIconSize.medium,
-                                    ),
-                                    Text(
-                                      '공고 알림',
-                                      style: AppTextStyle.body1.copyWith(
-                                        color: AppColors.gray900,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                AppSwitch(value: pushAllowed),
-                              ],
-                            ),
-                          ),
+                        Consumer(
+                          builder: (context, ref, child) {
+                            final toggle = ref.watch(
+                              profilePageViewModelProvider,
+                            );
+                            final pushAllowed = toggle.value ?? false;
+                            return ProfileSwitchItem(
+                              icon: AppIcons.bell,
+                              toggle: toggle,
+                              onTap:
+                                  () => ref
+                                      .read(
+                                        profilePageViewModelProvider.notifier,
+                                      )
+                                      .togglePushAllowed(allowed: !pushAllowed),
+                            );
+                          },
                         ),
                         Container(
                           width: double.infinity,
                           height: 1,
                           color: AppColors.gray100,
                         ),
-                        _ProfileMenuItem(
+                        ProfileMenuItem(
                           icon: AppIcons.edit,
                           label: '닉네임 변경',
                           onTap: () {
@@ -383,7 +368,7 @@ class ProfilePage extends ConsumerWidget {
                             color: AppColors.gray100,
                           ),
                         if (user != null)
-                          _ProfileMenuItem(
+                          ProfileMenuItem(
                             icon: AppIcons.out,
                             label: '로그아웃',
                             onTap:
@@ -425,7 +410,7 @@ class ProfilePage extends ConsumerWidget {
                             height: 1,
                             color: AppColors.gray100,
                           ),
-                          _ProfileMenuItem(
+                          ProfileMenuItem(
                             icon: AppIcons.delete,
                             label: '회원 탈퇴',
                             isDestructive: true,
@@ -486,54 +471,6 @@ class ProfilePage extends ConsumerWidget {
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _ProfileMenuItem extends StatelessWidget {
-  final String icon;
-  final String label;
-  final VoidCallback onTap;
-  final bool isDestructive;
-
-  const _ProfileMenuItem({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-    this.isDestructive = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final destructiveColor = isDestructive ? Colors.red : AppColors.teal500;
-    final textColor = isDestructive ? Colors.red : AppColors.gray900;
-    return InkWell(
-      borderRadius: BorderRadius.circular(AppRadius.medium),
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.all(AppMargin.medium),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              spacing: AppMargin.small,
-              children: [
-                AppIcon(
-                  icon,
-                  size: AppIconSize.medium,
-                  color: destructiveColor,
-                ),
-                Text(
-                  label,
-                  style: AppTextStyle.body1.copyWith(color: textColor),
-                ),
-              ],
-            ),
-            const Icon(Icons.chevron_right_rounded, color: AppColors.gray400),
-          ],
         ),
       ),
     );

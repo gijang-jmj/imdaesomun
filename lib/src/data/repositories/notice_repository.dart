@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:imdaesomun/src/core/services/dio_service.dart';
 import 'package:imdaesomun/src/data/models/notice.dart';
+import 'package:imdaesomun/src/data/models/notice_pagination.dart';
 import 'package:imdaesomun/src/data/providers/user_provider.dart';
 import 'package:imdaesomun/src/data/sources/remote/notice_source.dart';
 import 'package:imdaesomun/src/data/sources/local/notice_local_source.dart';
@@ -11,7 +12,12 @@ abstract class NoticeRepository {
   Future<Notice> getNoticeById(String id);
   Future<void> saveNotice(String id);
   Future<void> deleteNotice(String id);
-  Future<bool> isNoticeSaved(String id);
+  Future<bool> getNoticeSaved(String id);
+  Future<NoticePagination> getSavedNotices({
+    required int offset,
+    int? limit,
+    String? corporation,
+  });
 }
 
 class NoticeRepositoryImpl implements NoticeRepository {
@@ -70,8 +76,21 @@ class NoticeRepositoryImpl implements NoticeRepository {
   }
 
   @override
-  Future<bool> isNoticeSaved(String id) async {
-    return await _noticeSource.isNoticeSaved(id);
+  Future<bool> getNoticeSaved(String id) async {
+    return await _noticeSource.getNoticeSaved(id);
+  }
+
+  @override
+  Future<NoticePagination> getSavedNotices({
+    required int offset,
+    int? limit,
+    String? corporation,
+  }) async {
+    return await _noticeSource.getSavedNotices(
+      offset: offset,
+      limit: limit,
+      corporation: corporation,
+    );
   }
 }
 

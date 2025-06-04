@@ -511,3 +511,113 @@ exports.getNoticeSaved = onRequest(
     }
   },
 );
+
+/**
+ * USER가 저장한 공고 목록 조회
+ * GET /getSavedNotices
+ * query: { userId: string, corporation?: string, limit?: number, offset?: number }
+ * return: { notices: Array<Notice> }
+ */
+exports.getSavedNotices = onRequest(
+  { region: 'asia-northeast1', secrets: ['IMDAESOMUN_API_KEY'] },
+  async (req, res) => {
+    try {
+      if (req.method !== 'GET') {
+        return res.status(404).send({ error: 'Not Found' });
+      }
+
+      const apiKey = req.headers['x-imdaesomun-api-key'];
+      const SECRET_KEY = process.env.IMDAESOMUN_API_KEY;
+
+      if (apiKey !== SECRET_KEY) {
+        return res.status(401).send({ error: 'Unauthorized' });
+      }
+
+      const { userId, corporation, limit = 5, offset = 0 } = req.query;
+
+      if (!userId) {
+        return res.status(400).send({ error: 'Missing parameter.' });
+      }
+
+      // 파라미터 타입 변환 및 검증
+      const limitNum = Math.max(1, Math.min(parseInt(limit, 10) || 5, 50));
+      const offsetNum = Math.max(0, parseInt(offset, 10) || 0);
+
+      const db = getFirestore();
+
+      // 1. 저장된 공고 ID들을 가져오기 (페이지네이션 적용)
+      const saveQuery = db
+        .collection('save')
+        .where('userId', '==', userId)
+        .orderBy('createdAt', 'desc')
+        .offset(offsetNum)
+        .limit(limitNum);
+
+      const saveSnapshot = await saveQuery.get();
+
+      if (saveSnapshot.empty) {
+        return res.status(200).send({
+          notices: [],
+          hasMore: false,
+          nextOffset: offsetNum,
+        });
+      }
+
+      const noticeIds = saveSnapshot.docs.map((doc) => doc.data().noticeId);
+
+      // 2. 각 공고의 상세 정보를 병렬로 조회
+      const noticePromises = noticeIds.map(async (noticeId) => {
+        const [shDoc, ghDoc] = await Promise.all([
+          db.collection('sh').doc(noticeId).get(),
+          db.collection('gh').doc(noticeId).get(),
+        ]);
+
+        if (shDoc.exists) {
+          const data = { collection: 'sh', id: shDoc.id, ...shDoc.data() };
+          // corporation 필터 적용
+          if (corporation && data.collection !== corporation) {
+            return null;
+          }
+          return data;
+        }
+
+        if (ghDoc.exists) {
+          const data = { collection: 'gh', id: ghDoc.id, ...ghDoc.data() };
+          // corporation 필터 적용
+          if (corporation && data.collection !== corporation) {
+            return null;
+          }
+          return data;
+        }
+
+        return null; // 공고가 삭제된 경우
+      });
+
+      const noticeResults = await Promise.all(noticePromises);
+
+      // null 값 제거 및 corporation 필터링된 결과 처리
+      const notices = noticeResults.filter((notice) => notice !== null);
+
+      // 다음 페이지 존재 여부 확인을 위한 추가 쿼리
+      const nextPageQuery = db
+        .collection('save')
+        .where('userId', '==', userId)
+        .orderBy('createdAt', 'desc')
+        .offset(offsetNum + limitNum)
+        .limit(1);
+
+      const nextPageSnapshot = await nextPageQuery.get();
+      const hasMore = !nextPageSnapshot.empty;
+
+      return res.status(200).send({
+        notices,
+        hasMore,
+        nextOffset: offsetNum + limitNum,
+        totalFetched: notices.length,
+      });
+    } catch (error) {
+      res.status(500).send({ error: 'Failed to fetch saved notices.' });
+      logger.error('[SAVE] Error fetching saved notices:', error);
+    }
+  },
+);

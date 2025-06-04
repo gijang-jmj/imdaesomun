@@ -8,15 +8,8 @@ import 'package:imdaesomun/src/ui/pages/notice/notice_page_view_model.dart';
 
 class BookmarkButton extends ConsumerWidget {
   final String noticeId;
-  final EdgeInsetsGeometry? padding;
-  final double? iconSize;
 
-  const BookmarkButton({
-    super.key,
-    required this.noticeId,
-    this.padding = EdgeInsets.zero,
-    this.iconSize = AppIconSize.medium,
-  });
+  const BookmarkButton({super.key, required this.noticeId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -25,29 +18,36 @@ class BookmarkButton extends ConsumerWidget {
     return notice.when(
       data: (isSaved) {
         return AppIconActiveButton(
-          padding: padding!,
           isActive: isSaved,
-          icon: AppIcon(AppIcons.bookmark, size: iconSize),
-          activeIcon: AppIcon(AppIcons.bookmarkCheck, size: iconSize),
+          icon: AppIcon(AppIcons.bookmark, size: AppIconSize.medium),
+          activeIcon: AppIcon(AppIcons.bookmarkCheck, size: AppIconSize.medium),
           onPressed:
               () => ref
                   .read(noticeSavedProvider(noticeId).notifier)
-                  .toggleBookmark(isSaved: isSaved, noticeId: noticeId),
+                  .toggleBookmark(isSaved: !isSaved, noticeId: noticeId),
         );
       },
       error: (error, stackTrace) {
         return AppIconActiveButton(
-          padding: padding!,
           isActive: false,
-          icon: AppIcon(AppIcons.bookmark, size: iconSize),
-          activeIcon: AppIcon(AppIcons.bookmarkCheck, size: iconSize),
+          icon: AppIcon(AppIcons.bookmark, size: AppIconSize.medium),
+          activeIcon: AppIcon(AppIcons.bookmarkCheck, size: AppIconSize.medium),
           onPressed:
               () => ref
                   .read(globalToastProvider.notifier)
                   .showToast('북마크 상태를 가져오지 못했어요'),
         );
       },
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () {
+        return AppIconActiveButton(
+          isActive: false,
+          icon: AppIcon(AppIcons.bookmark, size: AppIconSize.medium),
+          activeIcon: AppIcon(AppIcons.bookmarkCheck, size: AppIconSize.medium),
+          onPressed: () {
+            // loading...
+          },
+        );
+      },
     );
   }
 }

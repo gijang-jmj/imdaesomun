@@ -33,7 +33,7 @@ final noticeDetailProvider = AsyncNotifierProvider.autoDispose
 class NoticeSaved extends AutoDisposeFamilyAsyncNotifier<bool, String> {
   @override
   Future<bool> build(String id) async {
-    return await ref.read(noticeRepositoryProvider).isNoticeSaved(id);
+    return await ref.read(noticeRepositoryProvider).getNoticeSaved(id);
   }
 
   void setNoticeSaved({required bool isSaved, required String noticeId}) {
