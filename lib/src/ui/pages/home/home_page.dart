@@ -4,13 +4,12 @@ import 'package:go_router/go_router.dart';
 import 'package:imdaesomun/src/core/constants/router_path_constant.dart';
 import 'package:imdaesomun/src/core/enums/notice_enum.dart';
 import 'package:imdaesomun/src/core/theme/app_color.dart';
-import 'package:imdaesomun/src/core/theme/app_icon.dart';
 import 'package:imdaesomun/src/core/theme/app_size.dart';
 import 'package:imdaesomun/src/core/theme/app_style.dart';
-import 'package:imdaesomun/src/core/theme/app_text_style.dart';
+import 'package:imdaesomun/src/ui/pages/home/widgets/gh_section.dart';
+import 'package:imdaesomun/src/ui/pages/home/widgets/sh_section.dart';
 import 'package:imdaesomun/src/ui/widgets/card/information_card.dart';
 import 'package:imdaesomun/src/ui/widgets/footer/copyright_footer.dart';
-import 'package:imdaesomun/src/ui/pages/home/widgets/notice_card.dart';
 import 'package:imdaesomun/src/ui/pages/home/home_page_view_model.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -70,6 +69,8 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final isReorderMode = ref.watch(reorderModeProvider);
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: AppStatusBarStyle.light,
       child: Scaffold(
@@ -81,148 +82,45 @@ class _HomePageState extends ConsumerState<HomePage> {
               ref.read(ghNoticesProvider.notifier).getNotices();
             },
             child: ListView(
-              physics: const AlwaysScrollableScrollPhysics(),
               padding: EdgeInsets.zero,
               children: [
                 InformationCard(
                   text:
                       '최근 10개 공고만 제공되며, 과거 공고 및 검색·정렬 기능은 각 공사의 공식 홈페이지를 이용해주세요',
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppMargin.medium,
-                    vertical: AppMargin.small,
-                  ),
-                  child: Column(
-                    spacing: AppMargin.small,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          AppIcon(
-                            AppIcons.sh,
-                            size: AppIconSize.extraLarge,
-                            special: true,
-                          ),
-                          const SizedBox(width: AppMargin.extraSmall),
-                          Text(
-                            CorporationType.sh.korean,
-                            style: AppTextStyle.title1.copyWith(
-                              color: AppColors.gray900,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Consumer(
-                        builder: (context, ref, _) {
-                          final shNotices = ref.watch(shNoticesProvider);
-                          return shNotices.when(
-                            loading:
-                                () => Column(
-                                  spacing: AppMargin.small,
-                                  children: List.generate(
-                                    10,
-                                    (index) => const NoticeCardSkeleton(),
-                                  ),
-                                ),
-                            error: (e, st) => Center(child: Text('오류: $e')),
-                            data:
-                                (notices) => Column(
-                                  spacing: AppMargin.small,
-                                  children:
-                                      notices
-                                          .map(
-                                            (notice) => NoticeCard(
-                                              title: notice.title,
-                                              regDate: notice.regDate,
-                                              hits: notice.hits,
-                                              department: notice.department,
-                                              onTap: () {
-                                                context.push(
-                                                  '${RouterPathConstant.notice.path}/${notice.id}',
-                                                );
-                                              },
-                                            ),
-                                          )
-                                          .toList(),
-                                ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppMargin.medium,
-                    vertical: AppMargin.small,
-                  ),
-                  child: Column(
-                    spacing: AppMargin.small,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          AppIcon(
-                            AppIcons.gh,
-                            size: AppIconSize.extraLarge,
-                            special: true,
-                          ),
-                          const SizedBox(width: AppMargin.extraSmall),
-                          Text(
-                            CorporationType.gh.korean,
-                            style: AppTextStyle.title1.copyWith(
-                              color: AppColors.gray900,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Consumer(
-                        builder: (context, ref, _) {
-                          final ghNotices = ref.watch(ghNoticesProvider);
-                          return ghNotices.when(
-                            loading:
-                                () => Column(
-                                  spacing: AppMargin.small,
-                                  children: List.generate(
-                                    10,
-                                    (index) => const NoticeCardSkeleton(),
-                                  ),
-                                ),
-                            error: (e, st) => Center(child: Text('오류: $e')),
-                            data:
-                                (notices) => Column(
-                                  spacing: AppMargin.small,
-                                  children:
-                                      notices
-                                          .map(
-                                            (notice) => NoticeCard(
-                                              title: notice.title,
-                                              regDate: notice.regDate,
-                                              hits: notice.hits,
-                                              department: notice.department,
-                                              onTap: () {
-                                                context.push(
-                                                  '${RouterPathConstant.notice.path}/${notice.id}',
-                                                );
-                                              },
-                                            ),
-                                          )
-                                          .toList(),
-                                ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
+                ReorderableListView(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  buildDefaultDragHandles: false,
+                  children:
+                      [CorporationType.sh, CorporationType.gh]
+                          .map(
+                            (corporationType) =>
+                                _getNoticeSection(corporationType),
+                          )
+                          .toList(),
+                  onReorder: (oldIndex, newIndex) {
+                    // ref
+                    //     .read(bannerOrderProvider.notifier)
+                    //     .reorderBanners(oldIndex, newIndex);
+                    ref.read(reorderModeProvider.notifier).state = false;
+                  },
                 ),
                 const SizedBox(height: AppMargin.extraLarge),
-                const CopyrightFooter(),
+                if (!isReorderMode) const CopyrightFooter(),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+}
+
+Widget _getNoticeSection(CorporationType corporationType) {
+  if (corporationType == CorporationType.sh) {
+    return ShSection(key: ValueKey(corporationType));
+  } else {
+    return GhSection(key: ValueKey(corporationType));
   }
 }

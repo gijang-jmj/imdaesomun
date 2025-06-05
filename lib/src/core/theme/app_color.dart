@@ -68,4 +68,10 @@ class AppColors {
 
   /// #11443F
   static const Color teal900 = Color(0xFF11443F);
+
+  /// sh color
+  static const Color sh = Color(0xFF2A8461);
+
+  /// gh color
+  static const Color gh = Color(0xFF004a9d);
 }

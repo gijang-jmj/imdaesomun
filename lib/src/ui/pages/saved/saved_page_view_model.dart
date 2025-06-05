@@ -1,15 +1,37 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:imdaesomun/src/core/services/log_service.dart';
 import 'package:imdaesomun/src/data/models/notice_pagination.dart';
 import 'package:imdaesomun/src/data/repositories/notice_repository.dart';
+import 'package:imdaesomun/src/data/sources/remote/notice_source.dart';
 
 class SavedNotices extends AsyncNotifier<NoticePagination> {
   static final int _limit = 10;
+  static final NoticePagination _initialPagination = NoticePagination(
+    notices: [],
+    nextOffset: 0,
+    hasMore: true,
+    totalFetched: 0,
+  );
 
   @override
   Future<NoticePagination> build() async {
-    return await ref
-        .read(noticeRepositoryProvider)
-        .getSavedNotices(offset: 0, limit: _limit);
+    try {
+      return await ref
+          .read(noticeRepositoryProvider)
+          .getSavedNotices(offset: 0, limit: _limit);
+    } on NoticeException catch (e) {
+      ref
+          .read(logProvider.notifier)
+          .log('SavedNotices.build', error: e.toString());
+
+      return _initialPagination;
+    } catch (e, st) {
+      ref
+          .read(logProvider.notifier)
+          .log('SavedNotices.build', error: e.toString(), stackTrace: st);
+
+      rethrow;
+    }
   }
 
   Future<void> refreshSavedNotices() async {
@@ -19,7 +41,21 @@ class SavedNotices extends AsyncNotifier<NoticePagination> {
           .read(noticeRepositoryProvider)
           .getSavedNotices(offset: 0, limit: _limit);
       state = AsyncValue.data(pagination);
+    } on NoticeException catch (e) {
+      ref
+          .read(logProvider.notifier)
+          .log('SavedNotices.refreshSavedNotices', error: e.toString());
+
+      state = AsyncValue.data(_initialPagination);
     } catch (e, st) {
+      ref
+          .read(logProvider.notifier)
+          .log(
+            'SavedNotices.refreshSavedNotices',
+            error: e.toString(),
+            stackTrace: st,
+          );
+
       state = AsyncValue.error(e, st);
     }
   }

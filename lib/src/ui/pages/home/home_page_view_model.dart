@@ -58,3 +58,7 @@ class GhNotices extends AsyncNotifier<List<Notice>> {
 final ghNoticesProvider = AsyncNotifierProvider<GhNotices, List<Notice>>(
   GhNotices.new,
 );
+
+final reorderModeProvider = StateProvider<bool>(
+  (ref) => false,
+); // Reorder mode state

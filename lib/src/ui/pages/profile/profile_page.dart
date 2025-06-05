@@ -16,6 +16,7 @@ import 'package:imdaesomun/src/ui/components/button/app_text_line_button.dart';
 import 'package:imdaesomun/src/ui/pages/profile/profile_page_view_model.dart';
 import 'package:imdaesomun/src/ui/pages/profile/widgets/profile_menu_item.dart';
 import 'package:imdaesomun/src/ui/pages/profile/widgets/profile_switch_item.dart';
+import 'package:imdaesomun/src/ui/widgets/card/login_card.dart';
 import 'package:imdaesomun/src/ui/widgets/dialog/confirm_dialog.dart';
 import 'package:imdaesomun/src/ui/widgets/dialog/default_input_dialog.dart';
 import 'package:imdaesomun/src/ui/widgets/dialog/password_input_dialog.dart';
@@ -150,54 +151,7 @@ class ProfilePage extends ConsumerWidget {
                     ),
                   ),
                 // 로그인 카드
-                if (user == null)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppMargin.medium,
-                      vertical: AppMargin.small,
-                    ),
-                    child: Material(
-                      color: Colors.white,
-                      elevation: AppBoxShadow.large.blurRadius,
-                      shadowColor: AppBoxShadow.large.color,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppRadius.medium),
-                        side: BorderSide(color: AppColors.teal500, width: 1),
-                      ),
-                      child: InkWell(
-                        splashColor: AppColors.teal500WithOpacity10,
-                        borderRadius: BorderRadius.circular(AppRadius.medium),
-                        onTap:
-                            () =>
-                                showCustomDialog(context, const LoginDialog()),
-                        child: Padding(
-                          padding: const EdgeInsets.all(AppIconSize.medium),
-                          child: Column(
-                            spacing: AppMargin.medium,
-                            children: [
-                              AppIcon(
-                                AppIcons.homeFill,
-                                size: AppIconSize.large,
-                                color: AppColors.teal500,
-                              ),
-                              Text(
-                                '로그인',
-                                style: AppTextStyle.title1.copyWith(
-                                  color: AppColors.gray900,
-                                ),
-                              ),
-                              Text(
-                                '다양한 서비스 이용하려면 로그인 해주세요',
-                                style: AppTextStyle.subBody2.copyWith(
-                                  color: AppColors.gray500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                if (user == null) const LoginCard(),
                 // 유저 카드
                 Padding(
                   padding: const EdgeInsets.symmetric(

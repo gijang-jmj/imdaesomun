@@ -1,7 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:imdaesomun/src/core/services/log_service.dart';
 import 'package:imdaesomun/src/core/utils/timing_util.dart';
 import 'package:imdaesomun/src/data/models/notice.dart';
 import 'package:imdaesomun/src/data/repositories/notice_repository.dart';
+import 'package:imdaesomun/src/data/sources/remote/notice_source.dart';
 import 'package:imdaesomun/src/ui/pages/saved/saved_page_view_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -34,7 +36,25 @@ final noticeDetailProvider = AsyncNotifierProvider.autoDispose
 class NoticeSaved extends AutoDisposeFamilyAsyncNotifier<bool, String> {
   @override
   Future<bool> build(String id) async {
-    return await ref.read(noticeRepositoryProvider).getNoticeSaved(id);
+    try {
+      return await ref.read(noticeRepositoryProvider).getNoticeSaved(id);
+    } on NoticeException catch (e) {
+      ref
+          .read(logProvider.notifier)
+          .log(
+            '[NoticeSaved]\n\ngetNoticeSaved failed\n\nid:\n$id\n\nError:\n$e',
+          );
+
+      return false;
+    } on Exception catch (e) {
+      ref
+          .read(logProvider.notifier)
+          .log(
+            '[NoticeSaved]\n\ngetNoticeSaved failed\n\nid:\n$id\n\nError:\n$e',
+          );
+
+      rethrow;
+    }
   }
 
   void setNoticeSaved({required bool isSaved, required String noticeId}) {

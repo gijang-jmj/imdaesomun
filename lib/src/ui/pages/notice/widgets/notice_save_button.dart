@@ -25,17 +25,6 @@ class NoticeSaveButton extends ConsumerWidget {
           isActive: isSaved,
           icon: AppIcon(AppIcons.bookmark, size: AppIconSize.medium),
           activeIcon: AppIcon(AppIcons.bookmarkCheck, size: AppIconSize.medium),
-          onPressed:
-              () => ref
-                  .read(noticeSavedProvider(noticeId).notifier)
-                  .toggleSave(isSaved: !isSaved, noticeId: noticeId),
-        );
-      },
-      error: (error, stackTrace) {
-        return AppIconActiveButton(
-          isActive: false,
-          icon: AppIcon(AppIcons.bookmark, size: AppIconSize.medium),
-          activeIcon: AppIcon(AppIcons.bookmarkCheck, size: AppIconSize.medium),
           onPressed: () {
             if (user == null) {
               ref
@@ -52,6 +41,18 @@ class NoticeSaveButton extends ConsumerWidget {
               return;
             }
 
+            ref
+                .read(noticeSavedProvider(noticeId).notifier)
+                .toggleSave(isSaved: !isSaved, noticeId: noticeId);
+          },
+        );
+      },
+      error: (error, stackTrace) {
+        return AppIconActiveButton(
+          isActive: false,
+          icon: AppIcon(AppIcons.bookmark, size: AppIconSize.medium),
+          activeIcon: AppIcon(AppIcons.bookmarkCheck, size: AppIconSize.medium),
+          onPressed: () {
             ref
                 .read(globalToastProvider.notifier)
                 .showToast('공고 저장에 실패했어요\n잠시 후 다시 시도해주세요');

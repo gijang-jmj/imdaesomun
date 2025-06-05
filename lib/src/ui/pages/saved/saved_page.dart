@@ -8,10 +8,12 @@ import 'package:imdaesomun/src/core/theme/app_size.dart';
 import 'package:imdaesomun/src/core/theme/app_style.dart';
 import 'package:imdaesomun/src/core/theme/app_text_style.dart';
 import 'package:imdaesomun/src/core/utils/timing_util.dart';
+import 'package:imdaesomun/src/data/providers/user_provider.dart';
 import 'package:imdaesomun/src/ui/components/button/app_text_line_button.dart';
-import 'package:imdaesomun/src/ui/pages/home/widgets/notice_card.dart';
 import 'package:imdaesomun/src/ui/pages/saved/saved_page_view_model.dart';
+import 'package:imdaesomun/src/ui/pages/saved/widgets/saved_card.dart';
 import 'package:imdaesomun/src/ui/widgets/card/information_card.dart';
+import 'package:imdaesomun/src/ui/widgets/card/login_card.dart';
 import 'package:imdaesomun/src/ui/widgets/footer/copyright_footer.dart';
 
 class SavedPage extends ConsumerStatefulWidget {
@@ -69,6 +71,12 @@ class _SavedPageState extends ConsumerState<SavedPage> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(userProvider, (previous, next) {
+      ref.read(savedNoticesProvider.notifier).refreshSavedNotices();
+    });
+
+    final user = ref.watch(userProvider);
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: AppStatusBarStyle.light,
       child: Scaffold(
@@ -77,88 +85,104 @@ class _SavedPageState extends ConsumerState<SavedPage> {
           child: CustomScrollView(
             controller: _scrollController,
             slivers: [
-              SliverToBoxAdapter(child: InformationCard(text: '저장 어쩌구 저쩌구')),
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppMargin.medium,
-                    vertical: AppMargin.small,
+              if (user == null) ...[
+                SliverToBoxAdapter(
+                  child: const InformationCard(
+                    text: '로그인하면 관심 있는 공고를 언제든 저장하고 공유할 수 있어요',
                   ),
-                  child: Consumer(
-                    builder: (context, ref, _) {
-                      final savedNotices = ref.watch(savedNoticesProvider);
-                      return savedNotices.when(
-                        loading:
-                            () => Column(
-                              spacing: AppMargin.small,
-                              children: List.generate(
-                                10,
-                                (index) => const NoticeCardSkeleton(),
-                              ),
-                            ),
-                        error: (e, st) => Center(child: Text('오류: $e')),
-                        data:
-                            (page) => Column(
-                              spacing: AppMargin.small,
-                              children: [
-                                ...page.notices.map(
-                                  (notice) => NoticeCard(
-                                    title: notice.title,
-                                    regDate: notice.regDate,
-                                    hits: notice.hits,
-                                    department: notice.department,
-                                    onTap: () {
-                                      context.push(
-                                        '${RouterPathConstant.notice.path}/${notice.id}',
-                                      );
-                                    },
-                                  ),
+                ),
+                SliverToBoxAdapter(
+                  child: const LoginCard(
+                    description: '비회원이신가요?\n이메일로 간단하게 가입할 수 있어요',
+                  ),
+                ),
+              ],
+              if (user != null) ...[
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppMargin.medium,
+                      vertical: AppMargin.small,
+                    ),
+                    child: Consumer(
+                      builder: (context, ref, _) {
+                        final savedNotices = ref.watch(savedNoticesProvider);
+                        return savedNotices.when(
+                          loading:
+                              () => Column(
+                                spacing: AppMargin.small,
+                                children: List.generate(
+                                  10,
+                                  (index) => const NoticeCardSkeleton(),
                                 ),
-                                // 더보기 버튼 또는 로딩 인디케이터
-                                if (page.hasMore)
-                                  Padding(
-                                    padding: const EdgeInsets.all(
-                                      AppMargin.medium,
-                                    ),
-                                    child: Center(
-                                      child:
-                                          _isLoadingMore
-                                              ? const CircularProgressIndicator()
-                                              : AppTextLineButton(
-                                                width: null,
-                                                height:
-                                                    AppButtonHeight.extraSmall,
-                                                padding: EdgeInsets.symmetric(
-                                                  horizontal: AppMargin.medium,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                      AppRadius.extraLarge,
-                                                    ),
-                                                onPressed: _loadMore,
-                                                text: '더보기',
-                                                textStyle:
-                                                    AppTextStyle.subBody1,
-                                              ),
+                              ),
+                          error: (e, st) => Center(child: Text('오류: $e')),
+                          data:
+                              (page) => Column(
+                                spacing: AppMargin.small,
+                                children: [
+                                  ...page.notices.map(
+                                    (notice) => SavedCard(
+                                      title: notice.title,
+                                      regDate: notice.regDate,
+                                      hits: notice.hits,
+                                      department: notice.department,
+                                      corporation: notice.corporation,
+                                      onTap: () {
+                                        context.push(
+                                          '${RouterPathConstant.notice.path}/${notice.id}',
+                                        );
+                                      },
                                     ),
                                   ),
-                              ],
-                            ),
-                      );
-                    },
+                                  // 더보기 버튼 또는 로딩 인디케이터
+                                  if (page.hasMore)
+                                    Padding(
+                                      padding: const EdgeInsets.all(
+                                        AppMargin.medium,
+                                      ),
+                                      child: Center(
+                                        child:
+                                            _isLoadingMore
+                                                ? const CircularProgressIndicator()
+                                                : AppTextLineButton(
+                                                  width: null,
+                                                  height:
+                                                      AppButtonHeight
+                                                          .extraSmall,
+                                                  padding: EdgeInsets.symmetric(
+                                                    horizontal:
+                                                        AppMargin.medium,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                        AppRadius.extraLarge,
+                                                      ),
+                                                  onPressed: _loadMore,
+                                                  text: '더보기',
+                                                  textStyle:
+                                                      AppTextStyle.subBody1,
+                                                ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                        );
+                      },
+                    ),
                   ),
                 ),
-              ),
-              SliverFillRemaining(
-                hasScrollBody: false,
-                child: Column(
-                  children: [
-                    const Spacer(),
-                    const SizedBox(height: AppMargin.extraLarge),
-                    const CopyrightFooter(),
-                  ],
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Column(
+                    children: [
+                      const Spacer(),
+                      const SizedBox(height: AppMargin.extraLarge),
+                      const CopyrightFooter(),
+                    ],
+                  ),
                 ),
-              ),
+              ],
             ],
           ),
         ),

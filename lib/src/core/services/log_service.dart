@@ -22,10 +22,20 @@ class LogService {
     return logs;
   }
 
-  static Future<void> log(String message, {LogType type = LogType.info}) async {
+  static Future<void> log(
+    String message, {
+    LogType type = LogType.info,
+    String? error,
+    StackTrace? stackTrace,
+  }) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final logs = await getLogs();
+
+      if (error != null || stackTrace != null) {
+        message = '$message\n\nError:\n$error\n\nStackTrace:\n$stackTrace';
+        type = LogType.error;
+      }
 
       logs.add(
         LogEntry(message: message, type: type, timestamp: DateTime.now()),
@@ -72,8 +82,18 @@ class LogNotifier extends AutoDisposeAsyncNotifier<List<LogEntry>> {
     }
   }
 
-  Future<void> log(String message, {LogType type = LogType.info}) async {
-    await LogService.log(message, type: type);
+  Future<void> log(
+    String message, {
+    LogType type = LogType.info,
+    String? error,
+    StackTrace? stackTrace,
+  }) async {
+    await LogService.log(
+      message,
+      type: type,
+      error: error,
+      stackTrace: stackTrace,
+    );
   }
 
   Future<void> clearLogs() async {
