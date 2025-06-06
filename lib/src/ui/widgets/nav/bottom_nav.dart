@@ -21,7 +21,7 @@ class BottomNav extends StatelessWidget {
         child: BottomNavigationBar(
           elevation: 0,
           currentIndex: navigationShell.currentIndex,
-          onTap: (index) => _onItemTapped(index, context),
+          onTap: (index) => _onItemTapped(index),
           type: BottomNavigationBarType.fixed,
           backgroundColor: Colors.white,
           selectedItemColor: AppColors.teal500,
@@ -47,10 +47,7 @@ class BottomNav extends StatelessWidget {
     );
   }
 
-  void _onItemTapped(int index, BuildContext context) {
-    navigationShell.goBranch(
-      index,
-      initialLocation: index == navigationShell.currentIndex,
-    );
+  void _onItemTapped(int index) {
+    navigationShell.goBranch(index);
   }
 }

@@ -545,7 +545,17 @@ exports.getSavedNotices = onRequest(
 
       const db = getFirestore();
 
-      // 1. 저장된 공고 ID들을 가져오기 (페이지네이션 적용)
+      // 1. 전체 저장된 공고 개수 조회를 위한 쿼리
+      const totalSaveQuery = db
+        .collection('save')
+        .where('userId', '==', userId);
+
+      const totalSaveSnapshot = await totalSaveQuery.get();
+      const allSavedNoticeIds = totalSaveSnapshot.docs.map(
+        (doc) => doc.data().noticeId,
+      );
+
+      // 2. 저장된 공고 ID들을 가져오기 (페이지네이션 적용)
       const saveQuery = db
         .collection('save')
         .where('userId', '==', userId)
@@ -555,17 +565,45 @@ exports.getSavedNotices = onRequest(
 
       const saveSnapshot = await saveQuery.get();
 
+      // 3. 전체 저장된 공고의 sh/gh 분류를 위한 조회
+      const allNoticePromises = allSavedNoticeIds.map(async (noticeId) => {
+        const [shDoc, ghDoc] = await Promise.all([
+          db.collection('sh').doc(noticeId).get(),
+          db.collection('gh').doc(noticeId).get(),
+        ]);
+
+        if (shDoc.exists) {
+          return 'sh';
+        }
+        if (ghDoc.exists) {
+          return 'gh';
+        }
+        return null; // 공고가 삭제된 경우
+      });
+
+      const allNoticeTypes = await Promise.all(allNoticePromises);
+      const validNoticeTypes = allNoticeTypes.filter((type) => type !== null);
+
+      // 카운트 계산
+      const totalCount = validNoticeTypes.length;
+      const shCount = validNoticeTypes.filter((type) => type === 'sh').length;
+      const ghCount = validNoticeTypes.filter((type) => type === 'gh').length;
+
       if (saveSnapshot.empty) {
         return res.status(200).send({
           notices: [],
           hasMore: false,
           nextOffset: offsetNum,
+          totalFetched: 0,
+          totalCount,
+          shCount,
+          ghCount,
         });
       }
 
       const noticeIds = saveSnapshot.docs.map((doc) => doc.data().noticeId);
 
-      // 2. 각 공고의 상세 정보를 병렬로 조회
+      // 4. 각 공고의 상세 정보를 병렬로 조회
       const noticePromises = noticeIds.map(async (noticeId) => {
         const [shDoc, ghDoc] = await Promise.all([
           db.collection('sh').doc(noticeId).get(),
@@ -614,6 +652,9 @@ exports.getSavedNotices = onRequest(
         hasMore,
         nextOffset: offsetNum + limitNum,
         totalFetched: notices.length,
+        totalCount,
+        shCount,
+        ghCount,
       });
     } catch (error) {
       res.status(500).send({ error: 'Failed to fetch saved notices.' });

@@ -5,6 +5,7 @@ import 'package:imdaesomun/src/core/theme/app_size.dart';
 import 'package:imdaesomun/src/core/theme/app_style.dart';
 import 'package:imdaesomun/src/core/theme/app_text_style.dart';
 import 'package:imdaesomun/src/core/utils/text_util.dart';
+import 'package:shimmer/shimmer.dart';
 
 class InformationCard extends StatelessWidget {
   final String text;
@@ -45,6 +46,32 @@ class InformationCard extends StatelessWidget {
                 ),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class InformationCardSkeleton extends StatelessWidget {
+  const InformationCardSkeleton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppMargin.medium,
+        vertical: AppMargin.small,
+      ),
+      child: Shimmer.fromColors(
+        baseColor: AppColors.gray100,
+        highlightColor: AppColors.gray200,
+        child: Container(
+          width: 328,
+          height: 72,
+          decoration: BoxDecoration(
+            color: AppColors.gray100,
+            borderRadius: BorderRadius.circular(AppRadius.medium),
           ),
         ),
       ),

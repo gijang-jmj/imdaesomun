@@ -14,6 +14,7 @@ import 'package:imdaesomun/src/ui/pages/webview/document_viewer.dart';
 import 'package:imdaesomun/src/ui/widgets/dev_tools/dev_tools_overlay.dart';
 import 'package:imdaesomun/src/ui/widgets/dialog/error_dialog.dart';
 import 'package:imdaesomun/src/ui/widgets/nav/bottom_nav.dart';
+import 'package:imdaesomun/src/core/providers/navigation_provider.dart';
 
 // GoRouter configuration
 final appRouter = GoRouter(
@@ -41,7 +42,10 @@ final appRouter = GoRouter(
                 StatefulShellRoute.indexedStack(
                   builder:
                       (context, state, navigationShell) =>
-                          BottomNav(navigationShell: navigationShell),
+                          NavigationShellProvider(
+                            navigationShell: navigationShell,
+                            child: BottomNav(navigationShell: navigationShell),
+                          ),
                   branches: [
                     StatefulShellBranch(
                       routes: [
@@ -92,8 +96,7 @@ final appRouter = GoRouter(
                 GoRoute(
                   path: RouterPathConstant.dialog.path,
                   pageBuilder: (context, state) {
-                    final extra = state.extra as Map<String, dynamic>?;
-                    final dialog = extra?['dialog'] as Widget?;
+                    final dialog = state.extra as Widget?;
                     return CustomTransitionPage(
                       opaque: false,
                       child: DialogPage(dialog: dialog ?? const ErrorDialog()),

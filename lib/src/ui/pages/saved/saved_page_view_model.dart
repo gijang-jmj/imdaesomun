@@ -11,6 +11,9 @@ class SavedNotices extends AsyncNotifier<NoticePagination> {
     nextOffset: 0,
     hasMore: true,
     totalFetched: 0,
+    totalCount: 0,
+    shCount: 0,
+    ghCount: 0,
   );
 
   @override
@@ -34,12 +37,17 @@ class SavedNotices extends AsyncNotifier<NoticePagination> {
     }
   }
 
-  Future<void> refreshSavedNotices() async {
+  Future<void> refreshSavedNotices({String? filter}) async {
     try {
       state = AsyncValue.loading();
+      filter = filter ?? ref.read(savedFilterProvider);
       final pagination = await ref
           .read(noticeRepositoryProvider)
-          .getSavedNotices(offset: 0, limit: _limit);
+          .getSavedNotices(
+            offset: 0,
+            limit: _limit,
+            corporation: filter == 'all' ? null : filter,
+          );
       state = AsyncValue.data(pagination);
     } on NoticeException catch (e) {
       ref
@@ -70,9 +78,14 @@ class SavedNotices extends AsyncNotifier<NoticePagination> {
       }
 
       final offset = currentState?.nextOffset ?? 0;
+      final filter = ref.read(savedFilterProvider);
       final pagination = await ref
           .read(noticeRepositoryProvider)
-          .getSavedNotices(offset: offset, limit: _limit);
+          .getSavedNotices(
+            offset: offset,
+            limit: _limit,
+            corporation: filter == 'all' ? null : filter,
+          );
 
       // 기존 데이터와 새 데이터를 병합
       if (currentState != null) {
@@ -95,3 +108,7 @@ class SavedNotices extends AsyncNotifier<NoticePagination> {
 
 final savedNoticesProvider =
     AsyncNotifierProvider<SavedNotices, NoticePagination>(SavedNotices.new);
+
+final savedFilterProvider = StateProvider<String>((ref) {
+  return 'all';
+});

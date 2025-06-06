@@ -112,8 +112,8 @@ class SavedCard extends StatelessWidget {
   }
 }
 
-class NoticeCardSkeleton extends StatelessWidget {
-  const NoticeCardSkeleton({super.key});
+class SavedCardSkeleton extends StatelessWidget {
+  const SavedCardSkeleton({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -144,19 +144,6 @@ class NoticeCardSkeleton extends StatelessWidget {
             const SizedBox(height: AppMargin.small),
             Row(
               children: [
-                Shimmer.fromColors(
-                  baseColor: AppColors.gray100,
-                  highlightColor: AppColors.gray200,
-                  child: Container(
-                    height: 20,
-                    width: 60,
-                    decoration: BoxDecoration(
-                      color: AppColors.gray100,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: AppMargin.small),
                 Shimmer.fromColors(
                   baseColor: AppColors.gray100,
                   highlightColor: AppColors.gray200,

@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:imdaesomun/src/core/constants/router_path_constant.dart';
 import 'package:imdaesomun/src/core/theme/app_color.dart';
-import 'package:imdaesomun/src/core/theme/app_size.dart';
 import 'package:imdaesomun/src/core/theme/app_style.dart';
-import 'package:imdaesomun/src/core/theme/app_text_style.dart';
 import 'package:imdaesomun/src/core/utils/timing_util.dart';
 import 'package:imdaesomun/src/data/providers/user_provider.dart';
-import 'package:imdaesomun/src/ui/components/button/app_text_line_button.dart';
 import 'package:imdaesomun/src/ui/pages/saved/saved_page_view_model.dart';
-import 'package:imdaesomun/src/ui/pages/saved/widgets/saved_card.dart';
+import 'package:imdaesomun/src/ui/pages/saved/widgets/saved_footer.dart';
+import 'package:imdaesomun/src/ui/pages/saved/widgets/saved_header.dart';
+import 'package:imdaesomun/src/ui/pages/saved/widgets/saved_section.dart';
+import 'package:imdaesomun/src/ui/pages/saved/widgets/saved_top.dart';
 import 'package:imdaesomun/src/ui/widgets/card/information_card.dart';
 import 'package:imdaesomun/src/ui/widgets/card/login_card.dart';
-import 'package:imdaesomun/src/ui/widgets/footer/copyright_footer.dart';
 
 class SavedPage extends ConsumerStatefulWidget {
   const SavedPage({super.key});
@@ -87,9 +84,7 @@ class _SavedPageState extends ConsumerState<SavedPage> {
             slivers: [
               if (user == null) ...[
                 SliverToBoxAdapter(
-                  child: const InformationCard(
-                    text: '로그인하면 관심 있는 공고를 언제든 저장하고 공유할 수 있어요',
-                  ),
+                  child: const InformationCard(text: '관심 있는 공고를 언제든 저장할 수 있어요'),
                 ),
                 SliverToBoxAdapter(
                   child: const LoginCard(
@@ -98,89 +93,24 @@ class _SavedPageState extends ConsumerState<SavedPage> {
                 ),
               ],
               if (user != null) ...[
+                SliverToBoxAdapter(child: SavedTop()),
+                SliverPersistentHeader(
+                  pinned: true,
+                  delegate: SliverAppBarDelegate(
+                    minHeight: 48,
+                    maxHeight: 48,
+                    child: SavedHeader(),
+                  ),
+                ),
                 SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppMargin.medium,
-                      vertical: AppMargin.small,
-                    ),
-                    child: Consumer(
-                      builder: (context, ref, _) {
-                        final savedNotices = ref.watch(savedNoticesProvider);
-                        return savedNotices.when(
-                          loading:
-                              () => Column(
-                                spacing: AppMargin.small,
-                                children: List.generate(
-                                  10,
-                                  (index) => const NoticeCardSkeleton(),
-                                ),
-                              ),
-                          error: (e, st) => Center(child: Text('오류: $e')),
-                          data:
-                              (page) => Column(
-                                spacing: AppMargin.small,
-                                children: [
-                                  ...page.notices.map(
-                                    (notice) => SavedCard(
-                                      title: notice.title,
-                                      regDate: notice.regDate,
-                                      hits: notice.hits,
-                                      department: notice.department,
-                                      corporation: notice.corporation,
-                                      onTap: () {
-                                        context.push(
-                                          '${RouterPathConstant.notice.path}/${notice.id}',
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                  // 더보기 버튼 또는 로딩 인디케이터
-                                  if (page.hasMore)
-                                    Padding(
-                                      padding: const EdgeInsets.all(
-                                        AppMargin.medium,
-                                      ),
-                                      child: Center(
-                                        child:
-                                            _isLoadingMore
-                                                ? const CircularProgressIndicator()
-                                                : AppTextLineButton(
-                                                  width: null,
-                                                  height:
-                                                      AppButtonHeight
-                                                          .extraSmall,
-                                                  padding: EdgeInsets.symmetric(
-                                                    horizontal:
-                                                        AppMargin.medium,
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                        AppRadius.extraLarge,
-                                                      ),
-                                                  onPressed: _loadMore,
-                                                  text: '더보기',
-                                                  textStyle:
-                                                      AppTextStyle.subBody1,
-                                                ),
-                                      ),
-                                    ),
-                                ],
-                              ),
-                        );
-                      },
-                    ),
+                  child: SavedSection(
+                    isLoadingMore: _isLoadingMore,
+                    onPressed: _loadMore,
                   ),
                 ),
                 SliverFillRemaining(
                   hasScrollBody: false,
-                  child: Column(
-                    children: [
-                      const Spacer(),
-                      const SizedBox(height: AppMargin.extraLarge),
-                      const CopyrightFooter(),
-                    ],
-                  ),
+                  child: const SavedFooter(),
                 ),
               ],
             ],
@@ -188,5 +118,40 @@ class _SavedPageState extends ConsumerState<SavedPage> {
         ),
       ),
     );
+  }
+}
+
+class SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
+  final double minHeight;
+  final double maxHeight;
+  final Widget child;
+
+  SliverAppBarDelegate({
+    required this.minHeight,
+    required this.maxHeight,
+    required this.child,
+  });
+
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    return Container(
+      color: shrinkOffset > 0 ? Colors.white : Colors.transparent,
+      child: SizedBox.expand(child: child),
+    );
+  }
+
+  @override
+  double get maxExtent => maxHeight;
+
+  @override
+  double get minExtent => minHeight;
+
+  @override
+  bool shouldRebuild(SliverAppBarDelegate oldDelegate) {
+    return false;
   }
 }

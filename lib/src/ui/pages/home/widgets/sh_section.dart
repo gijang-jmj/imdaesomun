@@ -18,10 +18,7 @@ class ShSection extends ConsumerWidget {
     final isReorderMode = ref.watch(reorderModeProvider);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppMargin.medium,
-        vertical: AppMargin.small,
-      ),
+      padding: const EdgeInsets.all(AppMargin.medium),
       child: Column(
         spacing: AppMargin.small,
         children: [
