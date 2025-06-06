@@ -58,9 +58,6 @@ class DevTools extends ConsumerWidget {
                   spacing: 10,
                   children: [
                     ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black,
-                      ),
                       onPressed: () {
                         ref
                             .read(logProvider.notifier)
@@ -76,9 +73,6 @@ class DevTools extends ConsumerWidget {
                       child: Text('FCM Token'),
                     ),
                     ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black,
-                      ),
                       onPressed: () {
                         ref
                             .read(logProvider.notifier)
@@ -118,9 +112,6 @@ class DevTools extends ConsumerWidget {
                       child: Text('User Info'),
                     ),
                     ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black,
-                      ),
                       onPressed: () {
                         context.pop();
                         context.push(
@@ -130,9 +121,6 @@ class DevTools extends ConsumerWidget {
                       child: Text('Notice Detail Page'),
                     ),
                     ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black,
-                      ),
                       onPressed: () {
                         context.pop();
                         context.push(
@@ -143,9 +131,6 @@ class DevTools extends ConsumerWidget {
                       child: Text('Document Viewer'),
                     ),
                     ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black,
-                      ),
                       onPressed: () {
                         context.pop();
                         context.push(RouterPathConstant.log.path);
@@ -153,9 +138,6 @@ class DevTools extends ConsumerWidget {
                       child: Text('Log Page'),
                     ),
                     ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black,
-                      ),
                       onPressed: () {
                         final TextEditingController toastTextController =
                             TextEditingController();

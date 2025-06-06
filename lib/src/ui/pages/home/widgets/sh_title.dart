@@ -1,0 +1,44 @@
+import 'package:flutter/material.dart';
+import 'package:imdaesomun/src/core/enums/notice_enum.dart';
+import 'package:imdaesomun/src/core/theme/app_color.dart';
+import 'package:imdaesomun/src/core/theme/app_icon.dart';
+import 'package:imdaesomun/src/core/theme/app_size.dart';
+import 'package:imdaesomun/src/core/theme/app_text_style.dart';
+import 'package:imdaesomun/src/ui/components/button/app_icon_button.dart';
+
+class ShTitle extends StatelessWidget {
+  final bool isReorderMode;
+  final VoidCallback? onPressed;
+
+  const ShTitle({super.key, required this.isReorderMode, this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Row(
+          spacing: AppMargin.extraSmall,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            AppIcon(AppIcons.sh, size: AppIconSize.extraLarge, special: true),
+            Text(
+              CorporationType.sh.korean,
+              style: AppTextStyle.title1.copyWith(color: AppColors.gray900),
+            ),
+          ],
+        ),
+        AppIconButton(
+          minimumSize: const Size(28, 28),
+          icon: AppIcon(
+            isReorderMode ? AppIcons.change : AppIcons.order,
+            size: AppIconSize.large,
+            color: AppColors.teal500,
+          ),
+          onPressed: onPressed,
+        ),
+      ],
+    );
+  }
+}

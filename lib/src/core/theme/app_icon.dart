@@ -47,6 +47,7 @@ class AppIcons {
   static const String bell = '$_iconPath/bell.svg';
   static const String bookmarkCheck = '$_iconPath/bookmark_check.svg';
   static const String bookmark = '$_iconPath/bookmark.svg';
+  static const String change = '$_iconPath/change.svg';
   static const String comment = '$_iconPath/comment.svg';
   static const String community = '$_iconPath/community.svg';
   static const String date = '$_iconPath/date.svg';
@@ -57,6 +58,7 @@ class AppIcons {
   static const String home = '$_iconPath/home.svg';
   static const String link = '$_iconPath/link.svg';
   static const String mail = '$_iconPath/mail.svg';
+  static const String order = '$_iconPath/order.svg';
   static const String out = '$_iconPath/out.svg';
   static const String post = '$_iconPath/post.svg';
   static const String profile = '$_iconPath/profile.svg';

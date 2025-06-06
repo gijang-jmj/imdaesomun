@@ -50,7 +50,7 @@ class NoticePage extends ConsumerWidget {
             Padding(
               padding: AppEdgeInsets.bottomButtonMargin,
               child: Row(
-                spacing: AppMargin.smallMedium,
+                spacing: AppMargin.small,
                 children: [
                   Expanded(
                     flex: 8,

@@ -10,9 +10,7 @@ import 'package:imdaesomun/src/core/theme/app_icon.dart';
 import 'package:imdaesomun/src/core/theme/app_size.dart';
 import 'package:imdaesomun/src/core/theme/app_style.dart';
 import 'package:imdaesomun/src/core/theme/app_text_style.dart';
-import 'package:imdaesomun/src/core/utils/text_util.dart';
 import 'package:imdaesomun/src/data/providers/user_provider.dart';
-import 'package:imdaesomun/src/ui/components/button/app_text_line_button.dart';
 import 'package:imdaesomun/src/ui/pages/profile/profile_page_view_model.dart';
 import 'package:imdaesomun/src/ui/pages/profile/widgets/profile_menu_item.dart';
 import 'package:imdaesomun/src/ui/pages/profile/widgets/profile_switch_item.dart';
@@ -21,6 +19,7 @@ import 'package:imdaesomun/src/ui/widgets/dialog/confirm_dialog.dart';
 import 'package:imdaesomun/src/ui/widgets/dialog/default_input_dialog.dart';
 import 'package:imdaesomun/src/ui/widgets/dialog/password_input_dialog.dart';
 import 'package:imdaesomun/src/ui/widgets/login/login_dialog.dart';
+import 'package:imdaesomun/src/ui/widgets/card/information_button_card.dart';
 
 class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
@@ -40,115 +39,42 @@ class ProfilePage extends ConsumerWidget {
               children: [
                 // 이메일 인증 안내
                 if (user != null && !user.emailVerified)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppMargin.medium,
-                      vertical: AppMargin.small,
-                    ),
-                    child: Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: [AppBoxShadow.medium],
-                        borderRadius: BorderRadius.circular(AppRadius.medium),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(AppMargin.medium),
-                        child: Column(
-                          spacing: AppMargin.medium,
-                          children: [
-                            Row(
-                              spacing: AppMargin.small,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                const AppIcon(
-                                  AppIcons.homeFill,
-                                  size: AppIconSize.medium,
-                                  color: AppColors.teal500,
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    TextUtil.keepWord(
-                                      '이메일(${user.email})로 전송된 인증 링크를 클릭해 가입을 완료해 주세요',
-                                    ),
-                                    style: AppTextStyle.subBody1.copyWith(
-                                      color: AppColors.gray500,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              spacing: AppMargin.medium,
-                              children: [
-                                Expanded(
-                                  child: AppTextLineButton(
-                                    height: AppButtonHeight.extraSmall,
-                                    text: '인증 완료',
-                                    textStyle: AppTextStyle.caption1,
-                                    onPressed:
-                                        () => ref
-                                            .read(
-                                              profilePageViewModelProvider
-                                                  .notifier,
-                                            )
-                                            .verifyEmail(
-                                              onSuccess: (msg) {
-                                                ref
-                                                    .read(
-                                                      globalToastProvider
-                                                          .notifier,
-                                                    )
-                                                    .showToast(msg);
-                                              },
-                                              onError: (msg) {
-                                                ref
-                                                    .read(
-                                                      globalToastProvider
-                                                          .notifier,
-                                                    )
-                                                    .showToast(msg);
-                                              },
-                                            ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: AppTextLineButton(
-                                    height: AppButtonHeight.extraSmall,
-                                    text: '재발송',
-                                    textStyle: AppTextStyle.caption1,
-                                    onPressed:
-                                        () => ref
-                                            .read(
-                                              profilePageViewModelProvider
-                                                  .notifier,
-                                            )
-                                            .sendEmailVerification(
-                                              onSuccess: (msg) {
-                                                ref
-                                                    .read(
-                                                      globalToastProvider
-                                                          .notifier,
-                                                    )
-                                                    .showToast(msg);
-                                              },
-                                              onError: (msg) {
-                                                ref
-                                                    .read(
-                                                      globalToastProvider
-                                                          .notifier,
-                                                    )
-                                                    .showToast(msg);
-                                              },
-                                            ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                  InformationButtonCard(
+                    text: '이메일(${user.email})로 전송된 인증 링크를 클릭해 가입을 완료해 주세요',
+                    leftText: '인증 완료',
+                    rightText: '재발송',
+                    onLeft: () {
+                      ref
+                          .read(profilePageViewModelProvider.notifier)
+                          .verifyEmail(
+                            onSuccess: (msg) {
+                              ref
+                                  .read(globalToastProvider.notifier)
+                                  .showToast(msg);
+                            },
+                            onError: (msg) {
+                              ref
+                                  .read(globalToastProvider.notifier)
+                                  .showToast(msg);
+                            },
+                          );
+                    },
+                    onRight: () {
+                      ref
+                          .read(profilePageViewModelProvider.notifier)
+                          .sendEmailVerification(
+                            onSuccess: (msg) {
+                              ref
+                                  .read(globalToastProvider.notifier)
+                                  .showToast(msg);
+                            },
+                            onError: (msg) {
+                              ref
+                                  .read(globalToastProvider.notifier)
+                                  .showToast(msg);
+                            },
+                          );
+                    },
                   ),
                 // 로그인 카드
                 if (user == null) const LoginCard(),
@@ -273,6 +199,13 @@ class ProfilePage extends ConsumerWidget {
                           onTap: () {
                             if (user == null) {
                               showCustomDialog(context, const LoginDialog());
+                              return;
+                            }
+
+                            if (!user.emailVerified) {
+                              ref
+                                  .read(globalToastProvider.notifier)
+                                  .showToast('내정보 이메일 인증 후 이용할 수 있어요');
                               return;
                             }
 

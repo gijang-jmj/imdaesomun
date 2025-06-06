@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:imdaesomun/src/core/constants/router_path_constant.dart';
 import 'package:imdaesomun/src/core/theme/app_size.dart';
 import 'package:imdaesomun/src/ui/pages/home/home_page_view_model.dart';
-import 'package:imdaesomun/src/ui/pages/home/widgets/gh_banner.dart';
+import 'package:imdaesomun/src/ui/pages/home/widgets/gh_title.dart';
 import 'package:imdaesomun/src/ui/pages/home/widgets/notice_card.dart';
 
 class GhSection extends ConsumerWidget {
@@ -22,15 +23,19 @@ class GhSection extends ConsumerWidget {
       child: Column(
         spacing: AppMargin.small,
         children: [
-          ReorderableDragStartListener(
-            index: 1,
-            child: GestureDetector(
-              onTapDown: (TapDownDetails details) {
+          if (isReorderMode)
+            ReorderableDragStartListener(
+              index: 1,
+              child: const GhTitle(isReorderMode: true),
+            ),
+          if (!isReorderMode)
+            GhTitle(
+              isReorderMode: false,
+              onPressed: () {
+                HapticFeedback.lightImpact();
                 ref.read(reorderModeProvider.notifier).state = true;
               },
-              child: const GhBanner(),
             ),
-          ),
           if (!isReorderMode)
             Consumer(
               builder: (context, ref, _) {

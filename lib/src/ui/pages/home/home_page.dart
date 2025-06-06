@@ -8,6 +8,7 @@ import 'package:imdaesomun/src/core/theme/app_size.dart';
 import 'package:imdaesomun/src/core/theme/app_style.dart';
 import 'package:imdaesomun/src/ui/pages/home/widgets/gh_section.dart';
 import 'package:imdaesomun/src/ui/pages/home/widgets/sh_section.dart';
+import 'package:imdaesomun/src/ui/widgets/card/information_button_card.dart';
 import 'package:imdaesomun/src/ui/widgets/card/information_card.dart';
 import 'package:imdaesomun/src/ui/widgets/footer/copyright_footer.dart';
 import 'package:imdaesomun/src/ui/pages/home/home_page_view_model.dart';
@@ -83,11 +84,28 @@ class _HomePageState extends ConsumerState<HomePage> {
             },
             child: ListView(
               padding: EdgeInsets.zero,
+              physics:
+                  isReorderMode
+                      ? const NeverScrollableScrollPhysics()
+                      : const AlwaysScrollableScrollPhysics(),
               children: [
-                InformationCard(
-                  text:
-                      '최근 10개 공고만 제공되며, 과거 공고 및 검색·정렬 기능은 각 공사의 공식 홈페이지를 이용해주세요',
-                ),
+                if (!isReorderMode)
+                  InformationCard(
+                    text:
+                        '최근 10개 공고만 제공되며, 과거 공고 및 검색·정렬 기능은 각 공사의 공식 홈페이지를 이용해주세요',
+                  ),
+                if (isReorderMode)
+                  InformationButtonCard(
+                    text: '항목을 드래그해서 순서를 변경할 수 있어요',
+                    leftText: '수정',
+                    rightText: '취소',
+                    onLeft: () {
+                      ref.read(reorderModeProvider.notifier).state = false;
+                    },
+                    onRight: () {
+                      ref.read(reorderModeProvider.notifier).state = false;
+                    },
+                  ),
                 ReorderableListView(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
@@ -103,7 +121,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                     // ref
                     //     .read(bannerOrderProvider.notifier)
                     //     .reorderBanners(oldIndex, newIndex);
-                    ref.read(reorderModeProvider.notifier).state = false;
                   },
                 ),
                 const SizedBox(height: AppMargin.extraLarge),
