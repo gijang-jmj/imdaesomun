@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:imdaesomun/src/core/enums/notice_enum.dart';
+import 'package:imdaesomun/src/core/services/notice_order_service.dart';
 import 'package:imdaesomun/src/core/utils/timing_util.dart';
 import 'package:imdaesomun/src/data/models/notice.dart';
 import 'package:imdaesomun/src/data/repositories/notice_repository.dart';
@@ -59,6 +61,41 @@ final ghNoticesProvider = AsyncNotifierProvider<GhNotices, List<Notice>>(
   GhNotices.new,
 );
 
-final reorderModeProvider = StateProvider<bool>(
-  (ref) => false,
-); // Reorder mode state
+class NoticeOrderList extends AsyncNotifier<List<CorporationType>> {
+  final List<CorporationType> _defaultOrder = NoticeOrderService.defaultOrder;
+
+  @override
+  Future<List<CorporationType>> build() async {
+    return NoticeOrderService.getNoticeOrder();
+  }
+
+  updateOrder({required int oldIndex, required int newIndex}) async {
+    if (oldIndex == newIndex) return;
+    if (oldIndex < newIndex) {
+      newIndex -= 1;
+    }
+
+    final currentOrder = state.value ?? _defaultOrder;
+    final item = currentOrder.removeAt(oldIndex);
+    currentOrder.insert(newIndex, item);
+
+    state = AsyncValue.data(currentOrder);
+  }
+
+  saveOrder() {
+    NoticeOrderService.setNoticeOrder(state.value ?? _defaultOrder);
+  }
+
+  Future<void> cancelOrder() async {
+    final previousOrder = await NoticeOrderService.getNoticeOrder();
+
+    state = AsyncValue.data(previousOrder);
+  }
+}
+
+final noticeOrderListProvider =
+    AsyncNotifierProvider<NoticeOrderList, List<CorporationType>>(
+      NoticeOrderList.new,
+    );
+
+final reorderModeProvider = StateProvider<bool>((ref) => false);

@@ -100,27 +100,49 @@ class _HomePageState extends ConsumerState<HomePage> {
                     leftText: '수정',
                     rightText: '취소',
                     onLeft: () {
+                      ref.read(noticeOrderListProvider.notifier).saveOrder();
                       ref.read(reorderModeProvider.notifier).state = false;
                     },
                     onRight: () {
+                      ref.read(noticeOrderListProvider.notifier).cancelOrder();
                       ref.read(reorderModeProvider.notifier).state = false;
                     },
                   ),
-                ReorderableListView(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  buildDefaultDragHandles: false,
-                  children:
-                      [CorporationType.sh, CorporationType.gh]
-                          .map(
-                            (corporationType) =>
-                                _getNoticeSection(corporationType),
-                          )
-                          .toList(),
-                  onReorder: (oldIndex, newIndex) {
-                    // ref
-                    //     .read(bannerOrderProvider.notifier)
-                    //     .reorderBanners(oldIndex, newIndex);
+                Consumer(
+                  builder: (context, ref, child) {
+                    final noticeOrder = ref.watch(noticeOrderListProvider);
+
+                    return noticeOrder.when(
+                      data:
+                          (list) => ReorderableListView(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            buildDefaultDragHandles: false,
+                            children: [
+                              for (
+                                int index = 0;
+                                index < list.length;
+                                index += 1
+                              )
+                                _getNoticeSection(
+                                  corporationType: list[index],
+                                  index: index,
+                                ),
+                            ],
+                            onReorder: (oldIndex, newIndex) {
+                              ref
+                                  .read(noticeOrderListProvider.notifier)
+                                  .updateOrder(
+                                    oldIndex: oldIndex,
+                                    newIndex: newIndex,
+                                  );
+                            },
+                          ),
+                      error: (e, st) => Center(child: Text('오류: $e')),
+                      loading:
+                          () =>
+                              Center(child: const CircularProgressIndicator()),
+                    );
                   },
                 ),
                 const SizedBox(height: AppMargin.extraLarge),
@@ -134,10 +156,13 @@ class _HomePageState extends ConsumerState<HomePage> {
   }
 }
 
-Widget _getNoticeSection(CorporationType corporationType) {
+Widget _getNoticeSection({
+  required CorporationType corporationType,
+  required int index,
+}) {
   if (corporationType == CorporationType.sh) {
-    return ShSection(key: ValueKey(corporationType));
+    return ShSection(key: ValueKey(corporationType), index: index);
   } else {
-    return GhSection(key: ValueKey(corporationType));
+    return GhSection(key: ValueKey(corporationType), index: index);
   }
 }

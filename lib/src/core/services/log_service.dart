@@ -9,17 +9,23 @@ class LogService {
   static const String _logsKey = 'app_logs';
 
   static Future<List<LogEntry>> getLogs() async {
-    final prefs = await SharedPreferences.getInstance();
-    final String? logsJson = prefs.getString(_logsKey);
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final String? logsJson = prefs.getString(_logsKey);
 
-    if (logsJson == null) return [];
+      if (logsJson == null) return [];
 
-    List<dynamic> decodedLogs = jsonDecode(logsJson);
-    final logs = decodedLogs.map((log) => LogEntry.fromJson(log)).toList();
+      List<dynamic> decodedLogs = jsonDecode(logsJson);
+      final logs = decodedLogs.map((log) => LogEntry.fromJson(log)).toList();
 
-    // 최신순으로 timestamp 기준 정렬
-    logs.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-    return logs;
+      // 최신순으로 timestamp 기준 정렬
+      logs.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+      return logs;
+    } catch (e) {
+      // ignore: avoid_print
+      print('Error getting logs: $e');
+      return [];
+    }
   }
 
   static Future<void> log(

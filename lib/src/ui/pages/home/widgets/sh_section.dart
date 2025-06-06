@@ -9,7 +9,9 @@ import 'package:imdaesomun/src/ui/pages/home/widgets/notice_card.dart';
 import 'package:imdaesomun/src/ui/pages/home/widgets/sh_title.dart';
 
 class ShSection extends ConsumerWidget {
-  const ShSection({super.key});
+  final int index;
+
+  const ShSection({super.key, required this.index});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -25,7 +27,7 @@ class ShSection extends ConsumerWidget {
         children: [
           if (isReorderMode)
             ReorderableDragStartListener(
-              index: 0,
+              index: index,
               child: const ShTitle(isReorderMode: true),
             ),
           if (!isReorderMode)
