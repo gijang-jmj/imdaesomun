@@ -120,13 +120,23 @@ const scrapeShNotices = async () => {
       notices.push(notice);
     }
 
-    // Save to Firestore
+    // Check for new notices and save to Firestore
     const db = getFirestore();
     const batch = db.batch();
-    notices.forEach((notice) => {
+    const newNotices = [];
+
+    for (const notice of notices) {
       const docRef = db.collection('sh').doc(notice.id);
+      const docSnapshot = await docRef.get();
+
+      if (!docSnapshot.exists) {
+        // This is a new notice
+        newNotices.push(notice);
+      }
+
       batch.set(docRef, notice);
-    });
+    }
+
     await batch.commit();
 
     await db.collection('log').doc('sh').set({
@@ -135,6 +145,7 @@ const scrapeShNotices = async () => {
     });
 
     logger.log('[SH] Notices scraped and saved!');
+    return newNotices;
   } catch (error) {
     logger.error('[SH] Error scraping notices!');
     throw error;
@@ -282,13 +293,23 @@ const scrapeGhNotices = async () => {
       notices.push(notice);
     }
 
-    // Save to Firestore
+    // Check for new notices and save to Firestore
     const db = getFirestore();
     const batch = db.batch();
-    notices.forEach((notice) => {
+    const newNotices = [];
+
+    for (const notice of notices) {
       const docRef = db.collection('gh').doc(notice.id);
+      const docSnapshot = await docRef.get();
+
+      if (!docSnapshot.exists) {
+        // This is a new notice
+        newNotices.push(notice);
+      }
+
       batch.set(docRef, notice);
-    });
+    }
+
     await batch.commit();
 
     await db.collection('log').doc('gh').set({
@@ -297,6 +318,7 @@ const scrapeGhNotices = async () => {
     });
 
     logger.log('[GH] Notices scraped and saved!');
+    return newNotices;
   } catch (error) {
     logger.error('[GH] Error scraping notices!');
     throw error;
