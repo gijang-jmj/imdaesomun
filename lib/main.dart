@@ -7,7 +7,6 @@ import 'package:imdaesomun/firebase_options.dart';
 import 'package:imdaesomun/src/core/enums/log_enum.dart';
 import 'package:imdaesomun/src/core/providers/log_provider.dart';
 import 'package:imdaesomun/src/core/router/app_router.dart';
-import 'package:imdaesomun/src/core/services/permission_service.dart';
 import 'package:imdaesomun/src/core/theme/app_theme.dart';
 import 'package:imdaesomun/src/data/providers/firebase_provider.dart';
 import 'package:imdaesomun/src/data/providers/user_provider.dart';
@@ -35,9 +34,6 @@ void main() async {
 
   // init firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
-  // request push notification permission
-  await PermissionService.requestPushPermission();
 
   runApp(ProviderScope(child: MyApp()));
 }

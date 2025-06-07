@@ -75,7 +75,9 @@ class NoticeOrderList extends AsyncNotifier<List<CorporationType>> {
       newIndex -= 1;
     }
 
-    final currentOrder = state.value ?? _defaultOrder;
+    final currentOrder = List<CorporationType>.from(
+      state.value ?? _defaultOrder,
+    );
     final item = currentOrder.removeAt(oldIndex);
     currentOrder.insert(newIndex, item);
 

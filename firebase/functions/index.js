@@ -178,7 +178,7 @@ exports.registerFcmToken = onRequest(
       const db = getFirestore();
       const tokenRef = db.collection('fcm').doc(token);
 
-      // allowed가 undefined인 경우 true로 설정
+      // allowed가 undefined인 경우 false로 설정
       const docSnap = await tokenRef.get();
       const dataToSet = {
         token,
@@ -186,7 +186,7 @@ exports.registerFcmToken = onRequest(
         device: device || null,
         createdAt: FieldValue.serverTimestamp(),
         ...((!docSnap.exists || docSnap.data().allowed === undefined) && {
-          allowed: true,
+          allowed: false,
         }),
       };
 
@@ -338,9 +338,9 @@ exports.getPushAllowed = onRequest(
 
       const db = getFirestore();
       const doc = await db.collection('fcm').doc(token).get();
-      let allowed = true;
+      let allowed = false;
 
-      if (doc.exists) {
+      if (doc.exists && doc.data().allowed !== undefined) {
         allowed = doc.data().allowed;
       }
 
@@ -372,14 +372,21 @@ exports.setPushAllowed = onRequest(
         return res.status(401).send({ error: 'Unauthorized' });
       }
 
-      const { token, allowed } = req.body;
+      const { token, allowed, userId, device } = req.body;
 
       if (!token || typeof allowed !== 'boolean') {
         return res.status(400).send({ error: 'Missing parameter.' });
       }
 
       const db = getFirestore();
-      await db.collection('fcm').doc(token).set({ allowed }, { merge: true });
+      const tokenRef = db.collection('fcm').doc(token);
+      const docSnap = await tokenRef.get();
+
+      if (!docSnap.exists) {
+        await registerFcmTokenLogic({ token, userId, device });
+      }
+
+      await tokenRef.set({ allowed }, { merge: true });
 
       return res.status(200).send({ message: 'Push allowed updated.' });
     } catch (error) {
@@ -674,3 +681,20 @@ exports.getSavedNotices = onRequest(
     }
   },
 );
+
+// registerFcmToken의 내부 로직을 함수로 분리
+async function registerFcmTokenLogic({ token, userId, device }) {
+  const db = getFirestore();
+  const tokenRef = db.collection('fcm').doc(token);
+  const docSnap = await tokenRef.get();
+  const dataToSet = {
+    token,
+    userId: userId || null,
+    device: device || null,
+    createdAt: FieldValue.serverTimestamp(),
+    ...((!docSnap.exists || docSnap.data().allowed === undefined) && {
+      allowed: false,
+    }),
+  };
+  await tokenRef.set(dataToSet, { merge: true });
+}

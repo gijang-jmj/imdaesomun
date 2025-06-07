@@ -9,6 +9,7 @@ import 'package:imdaesomun/src/ui/components/button/app_text_button.dart';
 import 'package:imdaesomun/src/ui/pages/notice/notice_page_view_model.dart';
 import 'package:imdaesomun/src/ui/pages/notice/widgets/notice_save_button.dart';
 import 'package:imdaesomun/src/ui/pages/notice/widgets/notice_detail_card.dart';
+import 'package:imdaesomun/src/ui/widgets/error/default_error.dart';
 
 class NoticePage extends ConsumerWidget {
   final String id;
@@ -38,7 +39,9 @@ class NoticePage extends ConsumerWidget {
                           return NoticeDetailCard(notice: data);
                         },
                         error: (error, stackTrace) {
-                          return Center(child: Text('Error: $error'));
+                          return const DefaultError(
+                            message: '공고 상세 불러오기에 실패했어요',
+                          );
                         },
                         loading: () => const NoticeDetailCardSkeleton(),
                       );

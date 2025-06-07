@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:imdaesomun/src/core/enums/log_enum.dart';
 import 'package:imdaesomun/src/core/helpers/exception_helper.dart';
 import 'package:imdaesomun/src/core/providers/loading_provider.dart';
 import 'package:imdaesomun/src/core/providers/log_provider.dart';
+import 'package:imdaesomun/src/core/providers/toast_provider.dart';
 import 'package:imdaesomun/src/core/services/permission_service.dart';
 import 'package:imdaesomun/src/core/utils/timing_util.dart';
 import 'package:imdaesomun/src/core/utils/validate_util.dart';
@@ -46,10 +50,9 @@ class ProfilePageViewModel extends AsyncNotifier<bool> {
   @override
   Future<bool> build() async {
     try {
-      final permission = await PermissionService.requestPushPermission();
-      ref.read(pushPermissionProvider.notifier).state = permission;
+      final status = await PermissionService.getPushStatus();
 
-      if (!permission) {
+      if (status != AuthorizationStatus.authorized) {
         return false;
       }
 
@@ -271,10 +274,18 @@ class ProfilePageViewModel extends AsyncNotifier<bool> {
   }
 
   void togglePushAllowed({required bool allowed}) async {
+    final status = await PermissionService.getPushStatus();
     final permission = await PermissionService.requestPushPermission();
 
-    if (!permission) {
+    if (Platform.isIOS &&
+        status == AuthorizationStatus.notDetermined &&
+        permission == false) {
       state = AsyncValue.data(false);
+      ref.read(globalToastProvider.notifier).showToast('푸시 알림 권한을 허용해주세요');
+      return;
+    }
+
+    if (status == AuthorizationStatus.denied && permission == false) {
       openAppSettings();
       return;
     }
@@ -286,7 +297,3 @@ class ProfilePageViewModel extends AsyncNotifier<bool> {
 
 final profilePageViewModelProvider =
     AsyncNotifierProvider<ProfilePageViewModel, bool>(ProfilePageViewModel.new);
-
-final pushPermissionProvider = StateProvider<bool>((ref) {
-  return false;
-});

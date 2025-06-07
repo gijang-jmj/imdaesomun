@@ -44,4 +44,19 @@ class PermissionService {
       return false;
     }
   }
+
+  /// 푸시 알림 권한 상태 확인
+  static Future<AuthorizationStatus> getPushStatus() async {
+    try {
+      final settings =
+          await FirebaseMessaging.instance.getNotificationSettings();
+      return settings.authorizationStatus;
+    } catch (e) {
+      LogService.log(
+        '[PermissionService]\n\nError checking push notification permission: $e',
+        type: LogType.error,
+      );
+      return AuthorizationStatus.denied;
+    }
+  }
 }
