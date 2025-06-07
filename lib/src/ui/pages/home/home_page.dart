@@ -28,22 +28,6 @@ class _HomePageState extends ConsumerState<HomePage> {
   void initState() {
     super.initState();
 
-    // 앱 시작 시 메시지 등록
-    FirebaseMessaging.instance.getInitialMessage().then((
-      RemoteMessage? message,
-    ) {
-      if (message != null) {
-        if (mounted && message.data['noticeId'] != null) {
-          context.push(
-            '${RouterPathConstant.notice.path}/${message.data['noticeId']}',
-          );
-        }
-        ref
-            .read(logProvider.notifier)
-            .log('[getInitialMessage]\n\nmessage:\n${message.data}');
-      }
-    });
-
     // 백그라운드 메시지 리스너 등록
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       if (mounted && message.data['noticeId'] != null) {
@@ -51,6 +35,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           '${RouterPathConstant.notice.path}/${message.data['noticeId']}',
         );
       }
+
       ref.read(shNoticesProvider.notifier).getNotices(throttle: false);
       ref.read(ghNoticesProvider.notifier).getNotices(throttle: false);
       ref
