@@ -60,7 +60,7 @@ class NoticeSaved extends AutoDisposeFamilyAsyncNotifier<bool, String> {
   void setNoticeSaved({required bool isSaved, required String noticeId}) {
     Debounce.call(
       'setNoticeSaved',
-      const Duration(milliseconds: 300),
+      const Duration(milliseconds: 200),
       () async {
         if (isSaved) {
           await ref.read(noticeRepositoryProvider).saveNotice(noticeId);

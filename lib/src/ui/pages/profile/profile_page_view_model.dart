@@ -4,44 +4,60 @@ import 'package:imdaesomun/src/core/enums/log_enum.dart';
 import 'package:imdaesomun/src/core/helpers/exception_helper.dart';
 import 'package:imdaesomun/src/core/services/loading_service.dart';
 import 'package:imdaesomun/src/core/services/log_service.dart';
+import 'package:imdaesomun/src/core/services/permission_service.dart';
 import 'package:imdaesomun/src/core/utils/timing_util.dart';
 import 'package:imdaesomun/src/core/utils/validate_util.dart';
 import 'package:imdaesomun/src/data/providers/firebase_provider.dart';
 import 'package:imdaesomun/src/data/providers/user_provider.dart';
 import 'package:imdaesomun/src/data/repositories/user_repository.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class ProfilePageViewModel extends AsyncNotifier<bool> {
   void setPushAllowed({required bool allowed}) {
-    Debounce.call('setPushAllowed', const Duration(seconds: 3), () async {
-      try {
-        final token = ref.read(fcmTokenProvider);
-        if (token == null) {
+    Debounce.call(
+      'setPushAllowed',
+      const Duration(milliseconds: 500),
+      () async {
+        try {
+          final token = ref.read(fcmTokenProvider);
+
+          if (token == null) {
+            state = AsyncValue.data(false);
+            return;
+          }
+
+          await ref
+              .read(userRepositoryProvider)
+              .setPushAllowed(token: token, allowed: allowed);
+        } catch (e, st) {
+          ref
+              .read(logProvider.notifier)
+              .log(
+                '[ProfilePageViewModel]\n\nsetPushAllowed failed',
+                error: e.toString(),
+                stackTrace: st,
+              );
           state = AsyncValue.data(false);
-          return;
         }
-        await ref
-            .read(userRepositoryProvider)
-            .setPushAllowed(token: token, allowed: allowed);
-      } catch (e, st) {
-        ref
-            .read(logProvider.notifier)
-            .log(
-              '[ProfilePageViewModel]\n\nsetPushAllowed failed',
-              error: e.toString(),
-              stackTrace: st,
-            );
-        state = AsyncValue.data(false);
-      }
-    });
+      },
+    );
   }
 
   @override
   Future<bool> build() async {
     try {
+      final permission = await PermissionService.requestPushPermission();
+
+      if (!permission) {
+        return false;
+      }
+
       final token = ref.read(fcmTokenProvider);
+
       if (token == null) {
         return false;
       }
+
       return await ref
           .read(userRepositoryProvider)
           .getPushAllowed(token: token);
@@ -254,6 +270,14 @@ class ProfilePageViewModel extends AsyncNotifier<bool> {
   }
 
   void togglePushAllowed({required bool allowed}) async {
+    final permission = await PermissionService.requestPushPermission();
+
+    if (!permission) {
+      state = AsyncValue.data(false);
+      openAppSettings();
+      return;
+    }
+
     state = AsyncValue.data(allowed);
     setPushAllowed(allowed: allowed);
   }
