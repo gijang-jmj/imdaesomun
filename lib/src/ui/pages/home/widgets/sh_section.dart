@@ -7,6 +7,7 @@ import 'package:imdaesomun/src/core/theme/app_size.dart';
 import 'package:imdaesomun/src/ui/pages/home/home_page_view_model.dart';
 import 'package:imdaesomun/src/ui/pages/home/widgets/notice_card.dart';
 import 'package:imdaesomun/src/ui/pages/home/widgets/sh_title.dart';
+import 'package:imdaesomun/src/ui/widgets/error/default_error.dart';
 
 class ShSection extends ConsumerWidget {
   final int index;
@@ -48,7 +49,7 @@ class ShSection extends ConsumerWidget {
                           (index) => const NoticeCardSkeleton(),
                         ),
                       ),
-                  error: (e, st) => Center(child: Text('오류: $e')),
+                  error: (e, st) => DefaultError(message: '공고 불러오기에 실패했어요'),
                   data:
                       (notices) => Column(
                         spacing: AppMargin.small,

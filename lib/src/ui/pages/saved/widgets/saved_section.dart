@@ -7,6 +7,7 @@ import 'package:imdaesomun/src/core/theme/app_text_style.dart';
 import 'package:imdaesomun/src/ui/components/button/app_text_line_button.dart';
 import 'package:imdaesomun/src/ui/pages/saved/saved_page_view_model.dart';
 import 'package:imdaesomun/src/ui/pages/saved/widgets/saved_card.dart';
+import 'package:imdaesomun/src/ui/widgets/error/default_error.dart';
 
 class SavedSection extends ConsumerWidget {
   final bool isLoadingMore;
@@ -34,7 +35,7 @@ class SavedSection extends ConsumerWidget {
               children: List.generate(10, (index) => const SavedCardSkeleton()),
             ),
           ),
-      error: (e, st) => Center(child: Text('오류: $e')),
+      error: (e, st) => const DefaultError(message: '저장된 공고 불러오기에 실패했어요'),
       data:
           (page) =>
               page.notices.isNotEmpty

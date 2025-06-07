@@ -82,71 +82,87 @@ class _HomePageState extends ConsumerState<HomePage> {
               ref.read(shNoticesProvider.notifier).getNotices();
               ref.read(ghNoticesProvider.notifier).getNotices();
             },
-            child: ListView(
-              padding: EdgeInsets.zero,
+            child: CustomScrollView(
               physics:
                   isReorderMode
                       ? const NeverScrollableScrollPhysics()
                       : const AlwaysScrollableScrollPhysics(),
-              children: [
+              slivers: [
                 if (!isReorderMode)
-                  InformationCard(
-                    text:
-                        '최근 10개 공고만 제공되며, 과거 공고 및 검색·정렬 기능은 각 공사의 공식 홈페이지를 이용해주세요',
+                  SliverToBoxAdapter(
+                    child: InformationCard(
+                      text:
+                          '최근 10개 공고만 제공되며, 과거 공고 및 검색·정렬 기능은 각 공사의 공식 홈페이지를 이용해주세요',
+                    ),
                   ),
                 if (isReorderMode)
-                  InformationButtonCard(
-                    text: '항목을 드래그해서 순서를 변경할 수 있어요',
-                    leftText: '수정',
-                    rightText: '취소',
-                    onLeft: () {
-                      ref.read(noticeOrderListProvider.notifier).saveOrder();
-                      ref.read(reorderModeProvider.notifier).state = false;
-                    },
-                    onRight: () {
-                      ref.read(noticeOrderListProvider.notifier).cancelOrder();
-                      ref.read(reorderModeProvider.notifier).state = false;
+                  SliverToBoxAdapter(
+                    child: InformationButtonCard(
+                      text: '항목을 드래그해서 순서를 변경할 수 있어요',
+                      leftText: '수정',
+                      rightText: '취소',
+                      onLeft: () {
+                        ref.read(noticeOrderListProvider.notifier).saveOrder();
+                        ref.read(reorderModeProvider.notifier).state = false;
+                      },
+                      onRight: () {
+                        ref
+                            .read(noticeOrderListProvider.notifier)
+                            .cancelOrder();
+                        ref.read(reorderModeProvider.notifier).state = false;
+                      },
+                    ),
+                  ),
+                SliverToBoxAdapter(
+                  child: Consumer(
+                    builder: (context, ref, child) {
+                      final noticeOrder = ref.watch(noticeOrderListProvider);
+
+                      return noticeOrder.when(
+                        data:
+                            (list) => ReorderableListView(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              buildDefaultDragHandles: false,
+                              children: [
+                                for (
+                                  int index = 0;
+                                  index < list.length;
+                                  index += 1
+                                )
+                                  _getNoticeSection(
+                                    corporationType: list[index],
+                                    index: index,
+                                  ),
+                              ],
+                              onReorder: (oldIndex, newIndex) {
+                                ref
+                                    .read(noticeOrderListProvider.notifier)
+                                    .updateOrder(
+                                      oldIndex: oldIndex,
+                                      newIndex: newIndex,
+                                    );
+                              },
+                            ),
+                        error: (e, st) => Center(child: Text('오류: $e')),
+                        loading:
+                            () => Center(
+                              child: const CircularProgressIndicator(),
+                            ),
+                      );
                     },
                   ),
-                Consumer(
-                  builder: (context, ref, child) {
-                    final noticeOrder = ref.watch(noticeOrderListProvider);
-
-                    return noticeOrder.when(
-                      data:
-                          (list) => ReorderableListView(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            buildDefaultDragHandles: false,
-                            children: [
-                              for (
-                                int index = 0;
-                                index < list.length;
-                                index += 1
-                              )
-                                _getNoticeSection(
-                                  corporationType: list[index],
-                                  index: index,
-                                ),
-                            ],
-                            onReorder: (oldIndex, newIndex) {
-                              ref
-                                  .read(noticeOrderListProvider.notifier)
-                                  .updateOrder(
-                                    oldIndex: oldIndex,
-                                    newIndex: newIndex,
-                                  );
-                            },
-                          ),
-                      error: (e, st) => Center(child: Text('오류: $e')),
-                      loading:
-                          () =>
-                              Center(child: const CircularProgressIndicator()),
-                    );
-                  },
                 ),
-                const SizedBox(height: AppMargin.extraLarge),
-                if (!isReorderMode) const CopyrightFooter(),
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Column(
+                    children: [
+                      const Spacer(),
+                      const SizedBox(height: AppMargin.extraLarge),
+                      const CopyrightFooter(),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),

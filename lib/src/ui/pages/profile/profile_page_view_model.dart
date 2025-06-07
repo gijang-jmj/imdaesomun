@@ -22,12 +22,13 @@ class ProfilePageViewModel extends AsyncNotifier<bool> {
         await ref
             .read(userRepositoryProvider)
             .setPushAllowed(token: token, allowed: allowed);
-      } catch (e) {
+      } catch (e, st) {
         ref
             .read(logProvider.notifier)
             .log(
-              '[ProfilePageViewModel]\n\nsetPushAllowed failed\n\nerror:\n$e',
-              type: LogType.error,
+              '[ProfilePageViewModel]\n\nsetPushAllowed failed',
+              error: e.toString(),
+              stackTrace: st,
             );
         state = AsyncValue.data(false);
       }
@@ -36,11 +37,24 @@ class ProfilePageViewModel extends AsyncNotifier<bool> {
 
   @override
   Future<bool> build() async {
-    final token = ref.read(fcmTokenProvider);
-    if (token == null) {
+    try {
+      final token = ref.read(fcmTokenProvider);
+      if (token == null) {
+        return false;
+      }
+      return await ref
+          .read(userRepositoryProvider)
+          .getPushAllowed(token: token);
+    } catch (e, st) {
+      ref
+          .read(logProvider.notifier)
+          .log(
+            '[ProfilePageViewModel]\n\nbuild failed',
+            error: e.toString(),
+            stackTrace: st,
+          );
       return false;
     }
-    return await ref.read(userRepositoryProvider).getPushAllowed(token: token);
   }
 
   void signOut({

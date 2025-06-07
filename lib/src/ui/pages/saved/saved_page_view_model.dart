@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:imdaesomun/src/core/services/log_service.dart';
+import 'package:imdaesomun/src/core/services/toast_service.dart';
 import 'package:imdaesomun/src/data/models/notice_pagination.dart';
 import 'package:imdaesomun/src/data/repositories/notice_repository.dart';
 import 'package:imdaesomun/src/data/sources/remote/notice_source.dart';
@@ -32,8 +33,9 @@ class SavedNotices extends AsyncNotifier<NoticePagination> {
       ref
           .read(logProvider.notifier)
           .log('SavedNotices.build', error: e.toString(), stackTrace: st);
+      ref.read(globalToastProvider.notifier).showToast('저장된 공고 불러오기에 실패했어요');
 
-      rethrow;
+      return _initialPagination;
     }
   }
 

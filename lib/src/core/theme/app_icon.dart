@@ -54,6 +54,7 @@ class AppIcons {
   static const String delete = '$_iconPath/delete.svg';
   static const String department = '$_iconPath/department.svg';
   static const String edit = '$_iconPath/edit.svg';
+  static const String error = '$_iconPath/error.svg';
   static const String homeFill = '$_iconPath/home_fill.svg';
   static const String home = '$_iconPath/home.svg';
   static const String link = '$_iconPath/link.svg';
