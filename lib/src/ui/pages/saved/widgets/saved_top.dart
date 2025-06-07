@@ -10,28 +10,20 @@ class SavedTop extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final savedNotices = ref.watch(savedNoticesProvider);
+    final savedNotices = ref.watch(savedNoticesProvider).value;
 
-    return savedNotices.when(
-      data:
-          (page) =>
-              page.notices.isNotEmpty
-                  ? InformationCard(text: '최근에 저장된 공고순으로 저장되어 있어요')
-                  : InformationButtonCard(
-                    text: '저장된 공고가 없어요\n관심 있는 공고를 저장할 수 있어요',
-                    leftText: '공고 보러가기',
-                    rightText: '새로고침',
-                    onLeft: () {
-                      ref.read(navigationShellProvider)?.goBranch(0);
-                    },
-                    onRight: () {
-                      ref
-                          .read(savedNoticesProvider.notifier)
-                          .refreshSavedNotices();
-                    },
-                  ),
-      error: (e, st) => Center(child: Text('오류: $e')),
-      loading: () => const InformationCardSkeleton(),
-    );
+    return savedNotices != null && savedNotices.notices.isEmpty
+        ? InformationButtonCard(
+          text: '저장된 공고가 없어요\n관심 있는 공고를 저장할 수 있어요',
+          leftText: '공고 보러가기',
+          rightText: '새로고침',
+          onLeft: () {
+            ref.read(navigationShellProvider)?.goBranch(0);
+          },
+          onRight: () {
+            ref.read(savedNoticesProvider.notifier).refreshSavedNotices();
+          },
+        )
+        : const InformationCard(text: '최근에 저장된 공고순으로 저장되어 있어요');
   }
 }

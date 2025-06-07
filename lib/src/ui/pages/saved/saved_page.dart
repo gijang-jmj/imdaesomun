@@ -99,7 +99,11 @@ class _SavedPageState extends ConsumerState<SavedPage> {
                   delegate: SliverAppBarDelegate(
                     minHeight: 48,
                     maxHeight: 48,
-                    child: SavedHeader(),
+                    child: SavedHeader(
+                      scrollToTop: () {
+                        _scrollController.jumpTo(0);
+                      },
+                    ),
                   ),
                 ),
                 SliverToBoxAdapter(

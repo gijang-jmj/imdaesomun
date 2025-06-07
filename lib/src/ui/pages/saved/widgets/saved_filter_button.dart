@@ -26,7 +26,7 @@ class SavedFilterButton extends StatelessWidget {
       width: null,
       height: AppButtonHeight.extraSmall,
       padding: EdgeInsets.symmetric(horizontal: AppMargin.medium),
-      borderRadius: BorderRadius.circular(AppRadius.large),
+      borderRadius: BorderRadius.circular(AppRadius.extraLarge),
       text: text,
       textStyle: AppTextStyle.subBody1,
       onPressed: onPressed,

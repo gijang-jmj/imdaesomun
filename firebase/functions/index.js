@@ -416,11 +416,28 @@ exports.saveNotice = onRequest(
       }
 
       const db = getFirestore();
+
+      // 공고가 어느 컬렉션에 속하는지 확인
+      const [shDoc, ghDoc] = await Promise.all([
+        db.collection('sh').doc(noticeId).get(),
+        db.collection('gh').doc(noticeId).get(),
+      ]);
+
+      let corporation = null;
+      if (shDoc.exists) {
+        corporation = 'sh';
+      } else if (ghDoc.exists) {
+        corporation = 'gh';
+      } else {
+        return res.status(404).send({ error: 'Notice not found.' });
+      }
+
       const saveRef = db.collection('save').doc(`${userId}_${noticeId}`);
       await saveRef.set(
         {
           userId,
           noticeId,
+          corporation,
           createdAt: FieldValue.serverTimestamp(),
         },
         { merge: true },
@@ -545,49 +562,47 @@ exports.getSavedNotices = onRequest(
 
       const db = getFirestore();
 
-      // 1. 전체 저장된 공고 개수 조회를 위한 쿼리
+      // 1. 전체 저장된 공고 개수 조회를 위한 쿼리들
       const totalSaveQuery = db
         .collection('save')
         .where('userId', '==', userId);
 
-      const totalSaveSnapshot = await totalSaveQuery.get();
-      const allSavedNoticeIds = totalSaveSnapshot.docs.map(
-        (doc) => doc.data().noticeId,
-      );
-
-      // 2. 저장된 공고 ID들을 가져오기 (페이지네이션 적용)
-      const saveQuery = db
+      const shSaveQuery = db
         .collection('save')
         .where('userId', '==', userId)
+        .where('corporation', '==', 'sh');
+
+      const ghSaveQuery = db
+        .collection('save')
+        .where('userId', '==', userId)
+        .where('corporation', '==', 'gh');
+
+      // 병렬로 카운트 조회
+      const [totalSnapshot, shSnapshot, ghSnapshot] = await Promise.all([
+        totalSaveQuery.get(),
+        shSaveQuery.get(),
+        ghSaveQuery.get(),
+      ]);
+
+      const totalCount = totalSnapshot.size;
+      const shCount = shSnapshot.size;
+      const ghCount = ghSnapshot.size;
+
+      // 2. corporation 필터링에 따른 데이터 조회
+      let saveQuery = db.collection('save').where('userId', '==', userId);
+
+      // corporation 필터 적용
+      if (corporation) {
+        saveQuery = saveQuery.where('corporation', '==', corporation);
+      }
+
+      // 정렬 및 페이지네이션 적용
+      saveQuery = saveQuery
         .orderBy('createdAt', 'desc')
         .offset(offsetNum)
         .limit(limitNum);
 
       const saveSnapshot = await saveQuery.get();
-
-      // 3. 전체 저장된 공고의 sh/gh 분류를 위한 조회
-      const allNoticePromises = allSavedNoticeIds.map(async (noticeId) => {
-        const [shDoc, ghDoc] = await Promise.all([
-          db.collection('sh').doc(noticeId).get(),
-          db.collection('gh').doc(noticeId).get(),
-        ]);
-
-        if (shDoc.exists) {
-          return 'sh';
-        }
-        if (ghDoc.exists) {
-          return 'gh';
-        }
-        return null; // 공고가 삭제된 경우
-      });
-
-      const allNoticeTypes = await Promise.all(allNoticePromises);
-      const validNoticeTypes = allNoticeTypes.filter((type) => type !== null);
-
-      // 카운트 계산
-      const totalCount = validNoticeTypes.length;
-      const shCount = validNoticeTypes.filter((type) => type === 'sh').length;
-      const ghCount = validNoticeTypes.filter((type) => type === 'gh').length;
 
       if (saveSnapshot.empty) {
         return res.status(200).send({
@@ -601,31 +616,24 @@ exports.getSavedNotices = onRequest(
         });
       }
 
-      const noticeIds = saveSnapshot.docs.map((doc) => doc.data().noticeId);
+      const savedNotices = saveSnapshot.docs.map((doc) => doc.data());
 
-      // 4. 각 공고의 상세 정보를 병렬로 조회
-      const noticePromises = noticeIds.map(async (noticeId) => {
-        const [shDoc, ghDoc] = await Promise.all([
-          db.collection('sh').doc(noticeId).get(),
-          db.collection('gh').doc(noticeId).get(),
-        ]);
+      // 3. 각 공고의 상세 정보를 병렬로 조회
+      const noticePromises = savedNotices.map(async (saveData) => {
+        const { noticeId, corporation: savedCorporation } = saveData;
 
-        if (shDoc.exists) {
-          const data = { collection: 'sh', id: shDoc.id, ...shDoc.data() };
-          // corporation 필터 적용
-          if (corporation && data.collection !== corporation) {
-            return null;
-          }
-          return data;
-        }
+        // 저장된 corporation 정보를 이용해 직접 조회
+        const noticeDoc = await db
+          .collection(savedCorporation)
+          .doc(noticeId)
+          .get();
 
-        if (ghDoc.exists) {
-          const data = { collection: 'gh', id: ghDoc.id, ...ghDoc.data() };
-          // corporation 필터 적용
-          if (corporation && data.collection !== corporation) {
-            return null;
-          }
-          return data;
+        if (noticeDoc.exists) {
+          return {
+            collection: savedCorporation,
+            id: noticeDoc.id,
+            ...noticeDoc.data(),
+          };
         }
 
         return null; // 공고가 삭제된 경우
@@ -633,13 +641,17 @@ exports.getSavedNotices = onRequest(
 
       const noticeResults = await Promise.all(noticePromises);
 
-      // null 값 제거 및 corporation 필터링된 결과 처리
+      // null 값 제거 (삭제된 공고)
       const notices = noticeResults.filter((notice) => notice !== null);
 
-      // 다음 페이지 존재 여부 확인을 위한 추가 쿼리
-      const nextPageQuery = db
-        .collection('save')
-        .where('userId', '==', userId)
+      // 4. 다음 페이지 존재 여부 확인
+      let nextPageQuery = db.collection('save').where('userId', '==', userId);
+
+      if (corporation) {
+        nextPageQuery = nextPageQuery.where('corporation', '==', corporation);
+      }
+
+      nextPageQuery = nextPageQuery
         .orderBy('createdAt', 'desc')
         .offset(offsetNum + limitNum)
         .limit(1);
