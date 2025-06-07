@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:imdaesomun/src/core/services/dio_service.dart';
+import 'package:imdaesomun/src/core/providers/dio_provider.dart';
 import 'package:imdaesomun/src/data/providers/firebase_provider.dart';
 import 'package:imdaesomun/src/data/sources/remote/user_source.dart';
 

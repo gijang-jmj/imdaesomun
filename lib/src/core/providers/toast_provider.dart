@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:imdaesomun/src/core/services/toast.dart';
+import 'package:imdaesomun/src/data/models/toast.dart';
 
 class GlobalToastNotifier extends Notifier<Toast> {
   Timer? _timer;

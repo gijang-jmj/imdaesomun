@@ -14,7 +14,7 @@ import 'package:imdaesomun/src/ui/widgets/footer/copyright_footer.dart';
 import 'package:imdaesomun/src/ui/pages/home/home_page_view_model.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:imdaesomun/src/core/services/log_service.dart';
+import 'package:imdaesomun/src/core/providers/log_provider.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});

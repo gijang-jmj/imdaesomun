@@ -2,8 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:imdaesomun/src/core/enums/log_enum.dart';
 import 'package:imdaesomun/src/core/helpers/exception_helper.dart';
-import 'package:imdaesomun/src/core/services/loading_service.dart';
-import 'package:imdaesomun/src/core/services/log_service.dart';
+import 'package:imdaesomun/src/core/providers/loading_provider.dart';
+import 'package:imdaesomun/src/core/providers/log_provider.dart';
 import 'package:imdaesomun/src/core/services/permission_service.dart';
 import 'package:imdaesomun/src/core/utils/timing_util.dart';
 import 'package:imdaesomun/src/core/utils/validate_util.dart';
@@ -47,6 +47,7 @@ class ProfilePageViewModel extends AsyncNotifier<bool> {
   Future<bool> build() async {
     try {
       final permission = await PermissionService.requestPushPermission();
+      ref.read(pushPermissionProvider.notifier).state = permission;
 
       if (!permission) {
         return false;
@@ -285,3 +286,7 @@ class ProfilePageViewModel extends AsyncNotifier<bool> {
 
 final profilePageViewModelProvider =
     AsyncNotifierProvider<ProfilePageViewModel, bool>(ProfilePageViewModel.new);
+
+final pushPermissionProvider = StateProvider<bool>((ref) {
+  return false;
+});

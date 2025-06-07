@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:imdaesomun/src/core/helpers/dialog_helper.dart';
 import 'package:imdaesomun/src/core/helpers/user_helper.dart';
-import 'package:imdaesomun/src/core/services/toast_service.dart';
+import 'package:imdaesomun/src/core/providers/toast_provider.dart';
 import 'package:imdaesomun/src/core/theme/app_color.dart';
 import 'package:imdaesomun/src/core/theme/app_icon.dart';
 import 'package:imdaesomun/src/core/theme/app_size.dart';

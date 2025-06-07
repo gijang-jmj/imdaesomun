@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:imdaesomun/src/core/services/dio_service.dart';
+import 'package:imdaesomun/src/core/providers/dio_provider.dart';
 import 'package:imdaesomun/src/data/models/notice.dart';
 import 'package:imdaesomun/src/data/models/notice_pagination.dart';
 import 'package:imdaesomun/src/data/providers/user_provider.dart';

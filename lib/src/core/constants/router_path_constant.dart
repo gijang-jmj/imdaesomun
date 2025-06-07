@@ -15,13 +15,6 @@ class RouterPathConstant {
   /// description : 임대공고 리스트 페이지
   static const home = RouterPathConstant._('/');
 
-  /// page : onboarding
-  ///
-  /// path : /onboarding
-  ///
-  /// description : 온보딩 페이지
-  static const onboarding = RouterPathConstant._('/onboarding');
-
   /// page : notice
   ///
   /// path : /notice

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:imdaesomun/src/core/services/loading_service.dart';
+import 'package:imdaesomun/src/core/providers/loading_provider.dart';
 
 class GlobalLoading extends ConsumerWidget {
   final Widget child;
