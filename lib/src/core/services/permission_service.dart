@@ -5,10 +5,9 @@ import 'package:imdaesomun/src/core/services/log_service.dart';
 
 class PermissionService {
   /// 푸시 알림 권한을 요청
-  static Future<bool> requestPushPermission() async {
+  static Future<String?> requestPushPermission() async {
     try {
       final settings = await FirebaseMessaging.instance.requestPermission();
-
       final isGranted =
           settings.authorizationStatus == AuthorizationStatus.authorized;
 
@@ -17,7 +16,7 @@ class PermissionService {
           '[PermissionService]\n\nPush notification permission denied\n\nAuthorizationStatus:\n${settings.authorizationStatus}',
           type: LogType.warning,
         );
-        return false;
+        return null;
       }
 
       if (Platform.isIOS) {
@@ -27,21 +26,32 @@ class PermissionService {
             '[PermissionService]\n\nAPNs token is null',
             type: LogType.warning,
           );
-          return false;
+          return null;
         }
       }
 
-      LogService.log(
-        '[PermissionService]\n\nPush notification permission granted',
-        type: LogType.info,
-      );
-      return true;
+      final fcmToken = await FirebaseMessaging.instance.getToken();
+
+      if (fcmToken == null) {
+        LogService.log(
+          '[PermissionService]\n\nFCM token is null',
+          type: LogType.warning,
+        );
+        return null;
+      } else {
+        LogService.log(
+          '[PermissionService]\n\nFCM token:\n$fcmToken',
+          type: LogType.info,
+        );
+        return fcmToken;
+      }
     } catch (e) {
       LogService.log(
-        '[PermissionService]\n\nError requesting push notification permission: $e',
+        '[PermissionService]\n\nError requesting push notification permission',
+        error: e.toString(),
         type: LogType.error,
       );
-      return false;
+      return null;
     }
   }
 

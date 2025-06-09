@@ -17,36 +17,6 @@ import 'package:imdaesomun/src/data/repositories/user_repository.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class ProfilePageViewModel extends AsyncNotifier<bool> {
-  void setPushAllowed({required bool allowed}) {
-    Debounce.call(
-      'setPushAllowed',
-      const Duration(milliseconds: 500),
-      () async {
-        try {
-          final token = ref.read(fcmTokenProvider);
-
-          if (token == null) {
-            state = AsyncValue.data(false);
-            return;
-          }
-
-          await ref
-              .read(userRepositoryProvider)
-              .setPushAllowed(token: token, allowed: allowed);
-        } catch (e, st) {
-          ref
-              .read(logProvider.notifier)
-              .log(
-                '[ProfilePageViewModel]\n\nsetPushAllowed failed',
-                error: e.toString(),
-                stackTrace: st,
-              );
-          state = AsyncValue.data(false);
-        }
-      },
-    );
-  }
-
   @override
   Future<bool> build() async {
     try {
@@ -273,25 +243,53 @@ class ProfilePageViewModel extends AsyncNotifier<bool> {
     }
   }
 
+  void setPushAllowed({required bool allowed, required String token}) {
+    Debounce.call(
+      'setPushAllowed',
+      const Duration(milliseconds: 500),
+      () async {
+        try {
+          await ref
+              .read(userRepositoryProvider)
+              .setPushAllowed(token: token, allowed: allowed);
+        } catch (e, st) {
+          ref
+              .read(logProvider.notifier)
+              .log(
+                '[ProfilePageViewModel]\n\nsetPushAllowed failed',
+                error: e.toString(),
+                stackTrace: st,
+              );
+          state = AsyncValue.data(false);
+        }
+      },
+    );
+  }
+
   void togglePushAllowed({required bool allowed}) async {
     final status = await PermissionService.getPushStatus();
-    final permission = await PermissionService.requestPushPermission();
+    final token = await PermissionService.requestPushPermission();
 
     if (Platform.isIOS &&
         status == AuthorizationStatus.notDetermined &&
-        permission == false) {
+        token == null) {
       state = AsyncValue.data(false);
       ref.read(globalToastProvider.notifier).showToast('푸시 알림 권한을 허용해주세요');
       return;
     }
 
-    if (status == AuthorizationStatus.denied && permission == false) {
+    if (status == AuthorizationStatus.denied && token == null) {
       openAppSettings();
       return;
     }
 
+    if (token == null) {
+      state = AsyncValue.data(false);
+      return;
+    }
+
     state = AsyncValue.data(allowed);
-    setPushAllowed(allowed: allowed);
+    setPushAllowed(allowed: allowed, token: token);
   }
 }
 

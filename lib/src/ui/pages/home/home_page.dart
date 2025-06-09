@@ -24,20 +24,25 @@ class HomePage extends ConsumerStatefulWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
-  @override
-  void initState() {
-    super.initState();
+  Future<void> setupInteractedMessage() async {
+    final initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+
+    if (initialMessage != null) {
+      _handleMessage(initialMessage);
+
+      ref
+          .read(logProvider.notifier)
+          .log('[getInitialMessage]\n\nmessage:\n${initialMessage.data}');
+    }
 
     // 백그라운드 메시지 리스너 등록
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      if (mounted && message.data['noticeId'] != null) {
-        context.push(
-          '${RouterPathConstant.notice.path}/${message.data['noticeId']}',
-        );
+      // 중복 처리를 방지하기 위해 메시지 ID를 비교
+      if (message.messageId != initialMessage?.messageId) {
+        _handleMessage(message);
       }
 
-      ref.read(shNoticesProvider.notifier).getNotices(throttle: false);
-      ref.read(ghNoticesProvider.notifier).getNotices(throttle: false);
+      ref.read(homePageViewModelProvider.notifier).forceRefresh();
       ref
           .read(logProvider.notifier)
           .log('[onMessageOpenedApp]\n\nmessage:\n${message.data}');
@@ -45,12 +50,26 @@ class _HomePageState extends ConsumerState<HomePage> {
 
     // 포그라운드 메시지 리스너 등록
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      ref.read(shNoticesProvider.notifier).getNotices(throttle: false);
-      ref.read(ghNoticesProvider.notifier).getNotices(throttle: false);
+      ref.read(homePageViewModelProvider.notifier).forceRefresh();
       ref
           .read(logProvider.notifier)
           .log('[onMessage]\n\nmessage:\n${message.data}');
     });
+  }
+
+  void _handleMessage(RemoteMessage message) {
+    if (mounted && message.data['noticeId'] != null) {
+      context.push(
+        '${RouterPathConstant.notice.path}/${message.data['noticeId']}',
+      );
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    setupInteractedMessage();
   }
 
   @override

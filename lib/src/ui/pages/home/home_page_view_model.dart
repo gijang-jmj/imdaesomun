@@ -5,6 +5,22 @@ import 'package:imdaesomun/src/core/utils/timing_util.dart';
 import 'package:imdaesomun/src/data/models/notice.dart';
 import 'package:imdaesomun/src/data/repositories/notice_repository.dart';
 
+class HomePageViewModel extends Notifier<void> {
+  @override
+  void build() {
+    // void
+  }
+
+  void forceRefresh() {
+    ref.read(shNoticesProvider.notifier).getNotices(throttle: false);
+    ref.read(ghNoticesProvider.notifier).getNotices(throttle: false);
+  }
+}
+
+final homePageViewModelProvider = NotifierProvider<HomePageViewModel, void>(
+  HomePageViewModel.new,
+);
+
 class ShNotices extends AsyncNotifier<List<Notice>> {
   @override
   Future<List<Notice>> build() async {
