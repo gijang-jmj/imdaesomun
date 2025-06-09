@@ -18,16 +18,21 @@ class ShTitle extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Row(
-          spacing: AppMargin.extraSmall,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            AppIcon(AppIcons.sh, size: AppIconSize.extraLarge, special: true),
-            Text(
-              CorporationType.sh.korean,
-              style: AppTextStyle.title1.copyWith(color: AppColors.gray900),
-            ),
-          ],
+        Expanded(
+          child: Row(
+            spacing: AppMargin.extraSmall,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              AppIcon(AppIcons.sh, size: AppIconSize.extraLarge, special: true),
+              Expanded(
+                child: Text(
+                  CorporationType.sh.korean,
+                  style: AppTextStyle.title1.copyWith(color: AppColors.gray900),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
         ),
         AppIconButton(
           minimumSize: const Size(28, 28),

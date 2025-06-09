@@ -101,6 +101,7 @@ class ProfilePage extends ConsumerWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
+                                spacing: AppMargin.small,
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -111,27 +112,32 @@ class ProfilePage extends ConsumerWidget {
                                       color: AppColors.gray500,
                                     ),
                                   ),
-                                  RichText(
-                                    text: TextSpan(
-                                      children: [
-                                        TextSpan(
-                                          text: UserHelper.getNickName(user),
-                                          style: AppTextStyle.body2.copyWith(
-                                            color: AppColors.gray900,
+                                  Expanded(
+                                    child: RichText(
+                                      textAlign: TextAlign.end,
+                                      text: TextSpan(
+                                        children: [
+                                          TextSpan(
+                                            text: UserHelper.getNickName(user),
+                                            style: AppTextStyle.body2.copyWith(
+                                              color: AppColors.gray900,
+                                            ),
                                           ),
-                                        ),
-                                        TextSpan(
-                                          text: UserHelper.getUidShort(user),
-                                          style: AppTextStyle.caption2.copyWith(
-                                            color: AppColors.gray500,
+                                          TextSpan(
+                                            text: UserHelper.getUidShort(user),
+                                            style: AppTextStyle.caption2
+                                                .copyWith(
+                                                  color: AppColors.gray500,
+                                                ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],
                               ),
                               Row(
+                                spacing: AppMargin.small,
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -142,10 +148,13 @@ class ProfilePage extends ConsumerWidget {
                                       color: AppColors.gray500,
                                     ),
                                   ),
-                                  Text(
-                                    user?.email ?? 'guest@imdaesomun.com',
-                                    style: AppTextStyle.body2.copyWith(
-                                      color: AppColors.gray900,
+                                  Expanded(
+                                    child: Text(
+                                      user?.email ?? 'guest@imdaesomun.com',
+                                      style: AppTextStyle.body2.copyWith(
+                                        color: AppColors.gray900,
+                                      ),
+                                      textAlign: TextAlign.end,
                                     ),
                                   ),
                                 ],

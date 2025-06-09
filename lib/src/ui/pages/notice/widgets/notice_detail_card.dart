@@ -39,6 +39,7 @@ class _NoticeDetailCardState extends State<NoticeDetailCard> {
       child: Padding(
         padding: EdgeInsets.all(AppMargin.medium),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Padding(
               padding: EdgeInsets.only(bottom: AppMargin.medium),
@@ -58,11 +59,12 @@ class _NoticeDetailCardState extends State<NoticeDetailCard> {
                     ),
                   ),
                   SizedBox(height: AppMargin.small),
-                  Row(
+                  Wrap(
                     spacing: AppMargin.small,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
                       Row(
+                        mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           AppIcon(AppIcons.date, color: AppColors.gray500),
@@ -76,6 +78,7 @@ class _NoticeDetailCardState extends State<NoticeDetailCard> {
                         ],
                       ),
                       Row(
+                        mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           AppIcon(AppIcons.view, color: AppColors.gray500),
@@ -89,6 +92,7 @@ class _NoticeDetailCardState extends State<NoticeDetailCard> {
                         ],
                       ),
                       Row(
+                        mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           AppIcon(
@@ -119,9 +123,8 @@ class _NoticeDetailCardState extends State<NoticeDetailCard> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                  Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.end,
                     spacing: AppMargin.extraSmall,
                     children: [
                       Text(

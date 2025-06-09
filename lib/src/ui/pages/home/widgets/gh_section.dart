@@ -44,6 +44,7 @@ class GhSection extends ConsumerWidget {
                   loading:
                       () => Column(
                         spacing: AppMargin.small,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: List.generate(
                           10,
                           (index) => const NoticeCardSkeleton(),
@@ -53,6 +54,7 @@ class GhSection extends ConsumerWidget {
                   data:
                       (notices) => Column(
                         spacing: AppMargin.small,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children:
                             notices
                                 .map(

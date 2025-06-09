@@ -57,11 +57,12 @@ class NoticeCard extends StatelessWidget {
                   ),
                 ],
               ),
-              Row(
+              Wrap(
                 spacing: AppMargin.small,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
                   Row(
+                    mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       AppIcon(AppIcons.date, color: AppColors.gray500),
@@ -75,6 +76,7 @@ class NoticeCard extends StatelessWidget {
                     ],
                   ),
                   Row(
+                    mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       AppIcon(AppIcons.view, color: AppColors.gray500),
@@ -88,6 +90,7 @@ class NoticeCard extends StatelessWidget {
                     ],
                   ),
                   Row(
+                    mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       AppIcon(AppIcons.department, color: AppColors.gray500),
