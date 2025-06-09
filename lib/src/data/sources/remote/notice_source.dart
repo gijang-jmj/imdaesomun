@@ -21,15 +21,22 @@ class NoticeSource {
   Future<List<Notice>> getShNotices() async {
     final response = await _dio.get('/getShNotices');
     final results = response.data as List<dynamic>;
+    final notices = results.map((notice) => Notice.fromJson(notice)).toList();
 
-    return results.map((notice) => Notice.fromJson(notice)).toList();
+    // 정확한 순서 정렬을 위해 no 필드를 기준으로 내림차순 정렬
+    notices.sort((a, b) => b.no.compareTo(a.no));
+    return notices;
   }
 
   Future<List<Notice>> getGhNotices() async {
     final response = await _dio.get('/getGhNotices');
     final results = response.data as List<dynamic>;
+    final notices = results.map((notice) => Notice.fromJson(notice)).toList();
 
-    return results.map((notice) => Notice.fromJson(notice)).toList();
+    // 정확한 순서 정렬을 위해 no 필드를 기준으로 내림차순 정렬
+    notices.sort((a, b) => b.no.compareTo(a.no));
+
+    return notices;
   }
 
   Future<Notice> getNoticeById(String id) async {
