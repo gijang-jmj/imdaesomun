@@ -2,7 +2,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:imdaesomun/src/core/providers/dio_provider.dart';
 import 'package:imdaesomun/src/data/models/notice.dart';
 import 'package:imdaesomun/src/data/models/notice_pagination.dart';
-import 'package:imdaesomun/src/data/providers/user_provider.dart';
 import 'package:imdaesomun/src/data/sources/remote/notice_source.dart';
 import 'package:imdaesomun/src/data/sources/local/notice_local_source.dart';
 
@@ -10,10 +9,14 @@ abstract class NoticeRepository {
   Future<List<Notice>> getShNotices();
   Future<List<Notice>> getGhNotices();
   Future<Notice> getNoticeById(String id);
-  Future<void> saveNotice(String id);
-  Future<void> deleteNotice(String id);
-  Future<bool> getNoticeSaved(String id);
+  Future<void> saveNotice({required String noticeId, required String userId});
+  Future<void> deleteNotice({required String noticeId, required String userId});
+  Future<bool> getNoticeSaved({
+    required String noticeId,
+    required String userId,
+  });
   Future<NoticePagination> getSavedNotices({
+    required String userId,
     required int offset,
     int? limit,
     String? corporation,
@@ -66,27 +69,41 @@ class NoticeRepositoryImpl implements NoticeRepository {
   }
 
   @override
-  Future<void> saveNotice(String id) async {
-    await _noticeSource.saveNotice(id);
+  Future<void> saveNotice({
+    required String noticeId,
+    required String userId,
+  }) async {
+    await _noticeSource.saveNotice(noticeId: noticeId, userId: userId);
   }
 
   @override
-  Future<void> deleteNotice(String id) async {
-    await _noticeSource.deleteNotice(id);
+  Future<void> deleteNotice({
+    required String noticeId,
+    required String userId,
+  }) async {
+    await _noticeSource.deleteNotice(noticeId: noticeId, userId: userId);
   }
 
   @override
-  Future<bool> getNoticeSaved(String id) async {
-    return await _noticeSource.getNoticeSaved(id);
+  Future<bool> getNoticeSaved({
+    required String noticeId,
+    required String userId,
+  }) async {
+    return await _noticeSource.getNoticeSaved(
+      noticeId: noticeId,
+      userId: userId,
+    );
   }
 
   @override
   Future<NoticePagination> getSavedNotices({
+    required String userId,
     required int offset,
     int? limit,
     String? corporation,
   }) async {
     return await _noticeSource.getSavedNotices(
+      userId: userId,
       offset: offset,
       limit: limit,
       corporation: corporation,
@@ -96,9 +113,8 @@ class NoticeRepositoryImpl implements NoticeRepository {
 
 final noticeRepositoryProvider = Provider<NoticeRepository>((ref) {
   final dio = ref.watch(dioProvider);
-  final user = ref.watch(userProvider);
   return NoticeRepositoryImpl(
-    noticeSource: NoticeSource(dio, user),
+    noticeSource: NoticeSource(dio),
     localSource: NoticeLocalSource(),
   );
 });

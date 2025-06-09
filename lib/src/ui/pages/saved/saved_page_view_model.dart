@@ -1,9 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:imdaesomun/src/core/enums/log_enum.dart';
 import 'package:imdaesomun/src/core/providers/log_provider.dart';
 import 'package:imdaesomun/src/core/providers/toast_provider.dart';
 import 'package:imdaesomun/src/data/models/notice_pagination.dart';
+import 'package:imdaesomun/src/data/providers/user_provider.dart';
 import 'package:imdaesomun/src/data/repositories/notice_repository.dart';
-import 'package:imdaesomun/src/data/sources/remote/notice_source.dart';
 
 class SavedNotices extends AsyncNotifier<NoticePagination> {
   static final int _limit = 10;
@@ -20,15 +21,18 @@ class SavedNotices extends AsyncNotifier<NoticePagination> {
   @override
   Future<NoticePagination> build() async {
     try {
+      final user = ref.read(userProvider);
+
+      if (user == null) {
+        ref
+            .read(logProvider.notifier)
+            .log('SavedNotices.build\n\nUser is null', type: LogType.warning);
+        return _initialPagination;
+      }
+
       return await ref
           .read(noticeRepositoryProvider)
-          .getSavedNotices(offset: 0, limit: _limit);
-    } on NoticeException catch (e) {
-      ref
-          .read(logProvider.notifier)
-          .log('SavedNotices.build', error: e.toString());
-
-      return _initialPagination;
+          .getSavedNotices(userId: user.uid, offset: 0, limit: _limit);
     } catch (e, st) {
       ref
           .read(logProvider.notifier)
@@ -39,24 +43,36 @@ class SavedNotices extends AsyncNotifier<NoticePagination> {
     }
   }
 
-  Future<void> refreshSavedNotices({String? filter}) async {
+  void resetSavedNotices() {
+    state = AsyncValue.data(_initialPagination);
+  }
+
+  Future<void> refreshSavedNotices({String? userId, String? filter}) async {
     try {
+      userId = userId ?? ref.read(userProvider)?.uid;
+
+      if (userId == null) {
+        ref
+            .read(logProvider.notifier)
+            .log(
+              'SavedNotices.refreshSavedNotices\n\nUser is null',
+              type: LogType.warning,
+            );
+        resetSavedNotices();
+        return;
+      }
+
       state = AsyncValue.loading();
       filter = filter ?? ref.read(savedFilterProvider);
       final pagination = await ref
           .read(noticeRepositoryProvider)
           .getSavedNotices(
+            userId: userId,
             offset: 0,
             limit: _limit,
             corporation: filter == 'all' ? null : filter,
           );
       state = AsyncValue.data(pagination);
-    } on NoticeException catch (e) {
-      ref
-          .read(logProvider.notifier)
-          .log('SavedNotices.refreshSavedNotices', error: e.toString());
-
-      state = AsyncValue.data(_initialPagination);
     } catch (e, st) {
       ref
           .read(logProvider.notifier)
@@ -70,8 +86,21 @@ class SavedNotices extends AsyncNotifier<NoticePagination> {
     }
   }
 
-  Future<void> getMoreSavedNotices() async {
+  Future<void> getMoreSavedNotices({String? filter}) async {
     try {
+      final user = ref.read(userProvider);
+
+      if (user == null) {
+        ref
+            .read(logProvider.notifier)
+            .log(
+              'SavedNotices.getMoreSavedNotices\n\nUser is null',
+              type: LogType.warning,
+            );
+        resetSavedNotices();
+        return;
+      }
+
       final currentState = state.value;
       final hasMore = currentState?.hasMore ?? true;
 
@@ -79,12 +108,12 @@ class SavedNotices extends AsyncNotifier<NoticePagination> {
         return;
       }
 
-      final offset = currentState?.nextOffset ?? 0;
-      final filter = ref.read(savedFilterProvider);
+      filter = filter ?? ref.read(savedFilterProvider);
       final pagination = await ref
           .read(noticeRepositoryProvider)
           .getSavedNotices(
-            offset: offset,
+            userId: user.uid,
+            offset: currentState?.nextOffset ?? 0,
             limit: _limit,
             corporation: filter == 'all' ? null : filter,
           );

@@ -1,9 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:imdaesomun/src/core/enums/log_enum.dart';
 import 'package:imdaesomun/src/core/providers/log_provider.dart';
 import 'package:imdaesomun/src/core/utils/timing_util.dart';
 import 'package:imdaesomun/src/data/models/notice.dart';
+import 'package:imdaesomun/src/data/providers/user_provider.dart';
 import 'package:imdaesomun/src/data/repositories/notice_repository.dart';
-import 'package:imdaesomun/src/data/sources/remote/notice_source.dart';
 import 'package:imdaesomun/src/ui/pages/saved/saved_page_view_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -37,16 +38,19 @@ class NoticeSaved extends AutoDisposeFamilyAsyncNotifier<bool, String> {
   @override
   Future<bool> build(String id) async {
     try {
-      return await ref.read(noticeRepositoryProvider).getNoticeSaved(id);
-    } on NoticeException catch (e) {
-      ref
-          .read(logProvider.notifier)
-          .log(
-            '[NoticeSaved]\n\ngetNoticeSaved failed\n\nid:\n$id\n\nError:\n$e',
-          );
+      final user = ref.read(userProvider);
 
-      return false;
-    } on Exception catch (e) {
+      if (user == null) {
+        ref
+            .read(logProvider.notifier)
+            .log('[NoticeSaved]\n\nUser is null', type: LogType.warning);
+        return false;
+      }
+
+      return await ref
+          .read(noticeRepositoryProvider)
+          .getNoticeSaved(noticeId: id, userId: user.uid);
+    } catch (e) {
       ref
           .read(logProvider.notifier)
           .log(
@@ -57,17 +61,27 @@ class NoticeSaved extends AutoDisposeFamilyAsyncNotifier<bool, String> {
     }
   }
 
-  void setNoticeSaved({required bool isSaved, required String noticeId}) {
+  void setNoticeSaved({
+    required bool isSaved,
+    required String noticeId,
+    required String userId,
+  }) {
     Debounce.call(
       'setNoticeSaved',
       const Duration(milliseconds: 200),
       () async {
         if (isSaved) {
-          await ref.read(noticeRepositoryProvider).saveNotice(noticeId);
+          await ref
+              .read(noticeRepositoryProvider)
+              .saveNotice(noticeId: noticeId, userId: userId);
         } else {
-          await ref.read(noticeRepositoryProvider).deleteNotice(noticeId);
+          await ref
+              .read(noticeRepositoryProvider)
+              .deleteNotice(noticeId: noticeId, userId: userId);
         }
-        ref.read(savedNoticesProvider.notifier).refreshSavedNotices();
+        ref
+            .read(savedNoticesProvider.notifier)
+            .refreshSavedNotices(userId: userId);
       },
     );
   }
@@ -75,9 +89,10 @@ class NoticeSaved extends AutoDisposeFamilyAsyncNotifier<bool, String> {
   Future<void> toggleSave({
     required bool isSaved,
     required String noticeId,
+    required String userId,
   }) async {
     state = AsyncValue.data(isSaved);
-    setNoticeSaved(isSaved: isSaved, noticeId: noticeId);
+    setNoticeSaved(isSaved: isSaved, noticeId: noticeId, userId: userId);
   }
 }
 

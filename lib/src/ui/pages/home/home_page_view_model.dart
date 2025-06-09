@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:imdaesomun/src/core/enums/notice_enum.dart';
+import 'package:imdaesomun/src/core/providers/log_provider.dart';
 import 'package:imdaesomun/src/core/services/notice_order_service.dart';
 import 'package:imdaesomun/src/core/utils/timing_util.dart';
 import 'package:imdaesomun/src/data/models/notice.dart';
@@ -24,7 +25,25 @@ final homePageViewModelProvider = NotifierProvider<HomePageViewModel, void>(
 class ShNotices extends AsyncNotifier<List<Notice>> {
   @override
   Future<List<Notice>> build() async {
-    return await ref.read(noticeRepositoryProvider).getShNotices();
+    try {
+      final notices = await ref.read(noticeRepositoryProvider).getShNotices();
+
+      ref
+          .read(logProvider.notifier)
+          .log('[ShNotices.build]\n\nFetched ${notices.length} SH notices');
+
+      return notices;
+    } catch (e, st) {
+      ref
+          .read(logProvider.notifier)
+          .log(
+            '[ShNotices.build]\n\nFailed to fetch SH notices',
+            error: e.toString(),
+            stackTrace: st,
+          );
+
+      rethrow;
+    }
   }
 
   Future<void> getNotices({bool throttle = true}) async {
@@ -37,8 +56,22 @@ class ShNotices extends AsyncNotifier<List<Notice>> {
           final notices =
               await ref.read(noticeRepositoryProvider).getShNotices();
           state = AsyncValue.data(notices);
+
+          ref
+              .read(logProvider.notifier)
+              .log(
+                '[ShNotices.getNotices]\n\nFetched ${notices.length} SH notices',
+              );
         } catch (e, st) {
           state = AsyncValue.error(e, st);
+
+          ref
+              .read(logProvider.notifier)
+              .log(
+                '[ShNotices]\n\nFailed to fetch SH notices',
+                error: e.toString(),
+                stackTrace: st,
+              );
         }
       },
     );
@@ -52,7 +85,25 @@ final shNoticesProvider = AsyncNotifierProvider<ShNotices, List<Notice>>(
 class GhNotices extends AsyncNotifier<List<Notice>> {
   @override
   Future<List<Notice>> build() async {
-    return await ref.read(noticeRepositoryProvider).getGhNotices();
+    try {
+      final notices = await ref.read(noticeRepositoryProvider).getGhNotices();
+
+      ref
+          .read(logProvider.notifier)
+          .log('[GhNotices.build]\n\nFetched ${notices.length} GH notices');
+
+      return notices;
+    } catch (e, st) {
+      ref
+          .read(logProvider.notifier)
+          .log(
+            '[GhNotices.build]\n\nFailed to fetch GH notices',
+            error: e.toString(),
+            stackTrace: st,
+          );
+
+      rethrow;
+    }
   }
 
   Future<void> getNotices({bool throttle = true}) async {
@@ -65,8 +116,22 @@ class GhNotices extends AsyncNotifier<List<Notice>> {
           final notices =
               await ref.read(noticeRepositoryProvider).getGhNotices();
           state = AsyncValue.data(notices);
+
+          ref
+              .read(logProvider.notifier)
+              .log(
+                '[GhNotices.getNotices]\n\nFetched ${notices.length} GH notices',
+              );
         } catch (e, st) {
           state = AsyncValue.error(e, st);
+
+          ref
+              .read(logProvider.notifier)
+              .log(
+                '[GhNotices]\n\nFailed to fetch GH notices',
+                error: e.toString(),
+                stackTrace: st,
+              );
         }
       },
     );

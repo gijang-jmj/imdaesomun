@@ -68,8 +68,10 @@ class _SavedPageState extends ConsumerState<SavedPage> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen(userProvider, (previous, next) {
-      ref.read(savedNoticesProvider.notifier).refreshSavedNotices();
+    ref.listen(userProvider, (previous, user) {
+      ref
+          .read(savedNoticesProvider.notifier)
+          .refreshSavedNotices(userId: user?.uid);
     });
 
     final user = ref.watch(userProvider);

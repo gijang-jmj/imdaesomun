@@ -43,7 +43,11 @@ class NoticeSaveButton extends ConsumerWidget {
 
             ref
                 .read(noticeSavedProvider(noticeId).notifier)
-                .toggleSave(isSaved: !isSaved, noticeId: noticeId);
+                .toggleSave(
+                  isSaved: !isSaved,
+                  noticeId: noticeId,
+                  userId: user.uid,
+                );
           },
         );
       },

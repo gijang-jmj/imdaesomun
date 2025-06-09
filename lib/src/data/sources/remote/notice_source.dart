@@ -1,22 +1,13 @@
 import 'package:dio/dio.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:imdaesomun/src/core/enums/notice_enum.dart';
 import 'package:imdaesomun/src/data/models/notice.dart';
 import 'package:imdaesomun/src/data/models/notice_pagination.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class NoticeException implements Exception {
-  final String code;
-  final String message;
-
-  NoticeException({required this.code, required this.message});
-}
-
 class NoticeSource {
   final Dio _dio;
-  final User? _user;
 
-  const NoticeSource(this._dio, this._user);
+  const NoticeSource(this._dio);
 
   Future<List<Notice>> getShNotices() async {
     final response = await _dio.get('/getShNotices');
@@ -104,63 +95,48 @@ class NoticeSource {
     return true;
   }
 
-  Future<void> saveNotice(String id) async {
-    if (_user == null) {
-      throw NoticeException(
-        code: 'user-not-authenticated',
-        message: 'User not authenticated',
-      );
-    }
-
-    await _dio.post('/saveNotice', data: {'noticeId': id, 'userId': _user.uid});
-  }
-
-  Future<void> deleteNotice(String id) async {
-    if (_user == null) {
-      throw NoticeException(
-        code: 'user-not-authenticated',
-        message: 'User not authenticated',
-      );
-    }
-
+  Future<void> saveNotice({
+    required String noticeId,
+    required String userId,
+  }) async {
     await _dio.post(
-      '/deleteNotice',
-      data: {'noticeId': id, 'userId': _user.uid},
+      '/saveNotice',
+      data: {'noticeId': noticeId, 'userId': userId},
     );
   }
 
-  Future<bool> getNoticeSaved(String id) async {
-    if (_user == null) {
-      throw NoticeException(
-        code: 'user-not-authenticated',
-        message: 'User not authenticated',
-      );
-    }
+  Future<void> deleteNotice({
+    required String noticeId,
+    required String userId,
+  }) async {
+    await _dio.post(
+      '/deleteNotice',
+      data: {'noticeId': noticeId, 'userId': userId},
+    );
+  }
 
+  Future<bool> getNoticeSaved({
+    required String noticeId,
+    required String userId,
+  }) async {
     final response = await _dio.get(
       '/getNoticeSaved',
-      queryParameters: {'noticeId': id, 'userId': _user.uid},
+      queryParameters: {'noticeId': noticeId, 'userId': userId},
     );
 
     return response.data['saved'] as bool;
   }
 
   Future<NoticePagination> getSavedNotices({
+    required String userId,
     required int offset,
     int? limit,
     String? corporation,
   }) async {
-    if (_user == null) {
-      throw NoticeException(
-        code: 'user-not-authenticated',
-        message: 'User not authenticated',
-      );
-    }
-
     final response = await _dio.get(
       '/getSavedNotices',
       queryParameters: {
-        'userId': _user.uid,
+        'userId': userId,
         'offset': offset,
         'limit': limit,
         'corporation': corporation,
