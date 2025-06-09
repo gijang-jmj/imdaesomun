@@ -7,7 +7,7 @@ async function getShNoticesLogic() {
   const db = getFirestore();
   const snapshot = await db
     .collection('sh')
-    .orderBy('no', 'desc')
+    .orderBy('createdAt', 'desc')
     .limit(10)
     .get();
 
@@ -24,7 +24,7 @@ async function getGhNoticesLogic() {
   const db = getFirestore();
   const snapshot = await db
     .collection('gh')
-    .orderBy('no', 'desc')
+    .orderBy('createdAt', 'desc')
     .limit(10)
     .get();
 

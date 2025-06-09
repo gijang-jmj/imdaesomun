@@ -18,7 +18,7 @@ async function registerFcmTokenLogic({ token, userId, device }) {
     userId: userId || null,
     device: device || null,
     createdAt: FieldValue.serverTimestamp(),
-    ...((!docSnap.exists || docSnap.data().allowed === undefined) && {
+    ...(!docSnap.exists && {
       allowed: false,
     }),
   };
@@ -36,8 +36,9 @@ async function getPushAllowedLogic(token) {
   const doc = await db.collection('fcm').doc(token).get();
   let allowed = false;
 
-  if (doc.exists && doc.data().allowed !== undefined) {
-    allowed = doc.data().allowed;
+  if (doc.exists) {
+    const data = doc.data();
+    allowed = data.allowed === true;
   }
 
   return { allowed };
@@ -88,6 +89,8 @@ async function sendFcmToAllLogic({ title, body, data }) {
   }
 
   let numSent = 0;
+  const tokensToDelete = [];
+
   await Promise.all(
     messageBatches.map(async (batch) => {
       const message = {
@@ -100,13 +103,37 @@ async function sendFcmToAllLogic({ title, body, data }) {
       };
       const response = await messaging.sendEachForMulticast(message);
       numSent += response.successCount;
+
+      // 실패한 토큰들 수집
+      response.responses.forEach((resp, idx) => {
+        if (!resp.success) {
+          const errorCode = resp.error && resp.error.code;
+          // 영구적인 오류인 경우 토큰 삭제 대상에 추가
+          if (
+            errorCode === 'messaging/invalid-registration-token' ||
+            errorCode === 'messaging/registration-token-not-registered'
+          ) {
+            tokensToDelete.push(batch[idx]);
+          }
+        }
+      });
     }),
   );
+
+  // 실패한 토큰들 일괄 삭제
+  if (tokensToDelete.length > 0) {
+    const dbBatch = db.batch();
+    tokensToDelete.forEach((token) => {
+      dbBatch.delete(db.collection('fcm').doc(token));
+    });
+    await dbBatch.commit();
+  }
 
   return {
     message: 'FCM sent to all tokens.',
     successCount: numSent,
     failureCount: tokens.length - numSent,
+    deletedTokens: tokensToDelete.length,
   };
 }
 
