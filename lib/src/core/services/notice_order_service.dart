@@ -1,4 +1,5 @@
 import 'package:imdaesomun/src/core/enums/notice_enum.dart';
+import 'package:imdaesomun/src/core/services/log_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NoticeOrderService {
@@ -19,8 +20,11 @@ class NoticeOrderService {
 
       return orderString.map((e) => CorporationType.values.byName(e)).toList();
     } catch (e) {
+      LogService.log(
+        '[NoticeOrderService]\n\nError getting notice order',
+        error: e.toString(),
+      );
       // ignore: avoid_print
-      print('Error getting notice order: $e');
       return defaultOrder;
     }
   }
@@ -31,8 +35,10 @@ class NoticeOrderService {
       final orderString = order.map((e) => e.name).toList();
       await prefs.setStringList(_orderKey, orderString);
     } catch (e) {
-      // ignore: avoid_print
-      print('Error setting notice order: $e');
+      LogService.log(
+        '[NoticeOrderService]\n\nError setting notice order',
+        error: e.toString(),
+      );
     }
   }
 }
