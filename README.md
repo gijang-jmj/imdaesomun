@@ -18,11 +18,11 @@
 
 ## 📸 실행 화면
 
-<p align="center">
-  <img src="assets/screenshots/screen1.png" alt="앱 스크린샷 1" width="200" style="margin:8px;"/>
-  <img src="assets/screenshots/screen2.png" alt="앱 스크린샷 2" width="200" style="margin:8px;"/>
-  <img src="assets/screenshots/screen3.png" alt="앱 스크린샷 3" width="200" style="margin:8px;"/>
-  <img src="assets/screenshots/screen4.png" alt="앱 스크린샷 4" width="200" style="margin:8px;"/>
+<p align="left">
+  <img src="https://github.com/user-attachments/assets/defef96d-468e-4287-8e99-bdcb18aa9b4c" alt="앱 스크린샷 1" width="200" style="margin:8px;"/>
+  <img src="https://github.com/user-attachments/assets/e3727331-70b4-43ad-9461-2b3450715b63" alt="앱 스크린샷 2" width="200" style="margin:8px;"/>
+  <img src="https://github.com/user-attachments/assets/ecb67f32-3f0c-4adf-8466-bd325b43f6ef" alt="앱 스크린샷 3" width="200" style="margin:8px;"/>
+  <img src="https://github.com/user-attachments/assets/d0a34289-2bad-4d8b-87b1-f141e36865ab" alt="앱 스크린샷 4" width="200" style="margin:8px;"/>
 </p>
 
 ## 🚀 주요 기능
