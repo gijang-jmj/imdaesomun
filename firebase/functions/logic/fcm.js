@@ -8,7 +8,7 @@ const { getMessaging } = require('firebase-admin/messaging');
  * @param {string} params.userId - 사용자 ID (옵션)
  * @param {string} params.device - 디바이스 정보 (옵션)
  */
-async function registerFcmTokenLogic({ token, userId, device }) {
+async function registerFcmTokenLogic({ token, userId, device, allowed }) {
   const db = getFirestore();
   const tokenRef = db.collection('fcm').doc(token);
   const docSnap = await tokenRef.get();
@@ -22,6 +22,11 @@ async function registerFcmTokenLogic({ token, userId, device }) {
       allowed: false,
     }),
   };
+
+  // 허용 여부가 true이면 설정(shared preference)
+  if (allowed === true) {
+    dataToSet.allowed = allowed;
+  }
 
   await tokenRef.set(dataToSet, { merge: true });
 }

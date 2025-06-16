@@ -1,7 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 abstract class UserRepository {
-  Future<void> registerFcmToken({required String token, String? userId});
+  Future<void> registerFcmToken({
+    required String token,
+    String? userId,
+    bool? allowed,
+  });
   Future<UserCredential> signUp({
     required String email,
     required String password,

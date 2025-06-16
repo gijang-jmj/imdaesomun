@@ -4,6 +4,25 @@ import 'package:imdaesomun/src/core/enums/log_enum.dart';
 import 'package:imdaesomun/src/core/services/log_service.dart';
 
 class PermissionService {
+  /// iOS APNS 토큰 준비 (권한 요청 없이)
+  static Future<void> prepareAPNSToken() async {
+    if (!Platform.isIOS) return;
+
+    try {
+      final apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+      if (apnsToken != null) {
+        LogService.log('[PermissionService]\n\nAPNS token prepared');
+      } else {
+        LogService.log('[PermissionService]\n\nAPNS token not available yet');
+      }
+    } catch (e) {
+      LogService.log(
+        '[PermissionService]\n\nError preparing APNS token',
+        error: e.toString(),
+      );
+    }
+  }
+
   /// 푸시 알림 권한을 요청
   static Future<String?> requestPushPermission() async {
     try {
@@ -17,17 +36,6 @@ class PermissionService {
           type: LogType.warning,
         );
         return null;
-      }
-
-      if (Platform.isIOS) {
-        final apnsToken = await FirebaseMessaging.instance.getAPNSToken();
-        if (apnsToken == null) {
-          LogService.log(
-            '[PermissionService]\n\nAPNs token is null',
-            type: LogType.warning,
-          );
-          return null;
-        }
       }
 
       final fcmToken = await FirebaseMessaging.instance.getToken();

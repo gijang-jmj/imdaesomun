@@ -8,10 +8,14 @@ class UserSource {
   const UserSource(this._dio, this._firebaseAuth);
 
   /// FCM 토큰 등록
-  Future<void> registerFcmToken({required String token, String? userId}) async {
+  Future<void> registerFcmToken({
+    required String token,
+    String? userId,
+    bool? allowed,
+  }) async {
     await _dio.post(
       '/registerFcmToken',
-      data: {'token': token, 'userId': userId},
+      data: {'token': token, 'userId': userId, 'allowed': allowed},
     );
   }
 

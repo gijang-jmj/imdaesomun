@@ -26,8 +26,17 @@ class UserRepositoryImpl implements UserRepository {
        _userLocalSource = userLocalSource;
 
   @override
-  Future<void> registerFcmToken({required String token, String? userId}) async {
-    await _userSource.registerFcmToken(token: token, userId: userId);
+  Future<void> registerFcmToken({
+    required String token,
+    String? userId,
+    bool? allowed,
+  }) async {
+    final allowed = await _userLocalSource.getPushAllowedLocal();
+    await _userSource.registerFcmToken(
+      token: token,
+      userId: userId,
+      allowed: allowed,
+    );
   }
 
   @override

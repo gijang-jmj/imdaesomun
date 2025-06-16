@@ -7,6 +7,7 @@ import 'package:imdaesomun/firebase_options.dart';
 import 'package:imdaesomun/src/core/enums/log_enum.dart';
 import 'package:imdaesomun/src/core/providers/log_provider.dart';
 import 'package:imdaesomun/src/core/router/app_router.dart';
+import 'package:imdaesomun/src/core/services/permission_service.dart';
 import 'package:imdaesomun/src/core/theme/app_theme.dart';
 import 'package:imdaesomun/src/data/providers/firebase_provider.dart';
 import 'package:imdaesomun/src/data/providers/user_provider.dart';
@@ -34,6 +35,9 @@ void main() async {
 
   // init firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // iOS에서 APNS 토큰 미리 준비 (권한 요청 없이)
+  await PermissionService.prepareAPNSToken();
 
   runApp(ProviderScope(child: MyApp()));
 }
