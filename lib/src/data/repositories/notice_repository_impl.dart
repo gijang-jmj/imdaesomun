@@ -6,6 +6,14 @@ import 'package:imdaesomun/src/data/repositories/notice_repository.dart';
 import 'package:imdaesomun/src/data/sources/remote/notice_source.dart';
 import 'package:imdaesomun/src/data/sources/local/notice_local_source.dart';
 
+final noticeRepositoryProvider = Provider<NoticeRepository>((ref) {
+  final dio = ref.watch(dioProvider);
+  return NoticeRepositoryImpl(
+    noticeSource: NoticeSource(dio),
+    localSource: NoticeLocalSource(),
+  );
+});
+
 class NoticeRepositoryImpl implements NoticeRepository {
   final NoticeSource _noticeSource;
   final NoticeLocalSource _localSource;
@@ -93,11 +101,3 @@ class NoticeRepositoryImpl implements NoticeRepository {
     );
   }
 }
-
-final noticeRepositoryProvider = Provider<NoticeRepository>((ref) {
-  final dio = ref.watch(dioProvider);
-  return NoticeRepositoryImpl(
-    noticeSource: NoticeSource(dio),
-    localSource: NoticeLocalSource(),
-  );
-});

@@ -3,13 +3,27 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:imdaesomun/src/core/providers/dio_provider.dart';
 import 'package:imdaesomun/src/data/providers/firebase_provider.dart';
 import 'package:imdaesomun/src/data/repositories/user_repository.dart';
+import 'package:imdaesomun/src/data/sources/local/user_local_source.dart';
 import 'package:imdaesomun/src/data/sources/remote/user_source.dart';
+
+final userRepositoryProvider = Provider<UserRepository>((ref) {
+  final dio = ref.watch(dioProvider);
+  final firebaseAuth = ref.watch(firebaseAuthProvider);
+  return UserRepositoryImpl(
+    userSource: UserSource(dio, firebaseAuth),
+    userLocalSource: UserLocalSource(),
+  );
+});
 
 class UserRepositoryImpl implements UserRepository {
   final UserSource _userSource;
+  final UserLocalSource _userLocalSource;
 
-  const UserRepositoryImpl({required UserSource userSource})
-    : _userSource = userSource;
+  const UserRepositoryImpl({
+    required UserSource userSource,
+    required UserLocalSource userLocalSource,
+  }) : _userSource = userSource,
+       _userLocalSource = userLocalSource;
 
   @override
   Future<void> registerFcmToken({required String token, String? userId}) async {
@@ -69,7 +83,16 @@ class UserRepositoryImpl implements UserRepository {
 
   @override
   Future<bool> getPushAllowed({required String token}) async {
-    return await _userSource.getPushAllowed(token: token);
+    final localPushAllowed = await _userLocalSource.getPushAllowedLocal();
+
+    if (localPushAllowed != null) {
+      return localPushAllowed;
+    }
+
+    final remotePushAllowed = await _userSource.getPushAllowed(token: token);
+    await _userLocalSource.setPushAllowedLocal(allowed: remotePushAllowed);
+
+    return remotePushAllowed;
   }
 
   @override
@@ -78,11 +101,6 @@ class UserRepositoryImpl implements UserRepository {
     required bool allowed,
   }) async {
     await _userSource.setPushAllowed(token: token, allowed: allowed);
+    await _userLocalSource.setPushAllowedLocal(allowed: allowed);
   }
 }
-
-final userRepositoryProvider = Provider<UserRepository>((ref) {
-  final dio = ref.watch(dioProvider);
-  final firebaseAuth = ref.watch(firebaseAuthProvider);
-  return UserRepositoryImpl(userSource: UserSource(dio, firebaseAuth));
-});
