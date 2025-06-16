@@ -177,12 +177,12 @@ exports.registerFcmToken = onRequest(
         return;
       }
 
-      const { token, userId, device } = req.body;
+      const { token, userId, device, allowed } = req.body;
       if (!token) {
         return res.status(400).send({ error: 'Missing parameter.' });
       }
 
-      await registerFcmTokenLogic({ token, userId, device });
+      await registerFcmTokenLogic({ token, userId, device, allowed });
       return res.status(200).send({ message: 'Token registered/updated.' });
     } catch (error) {
       res.status(500).send({ error: 'Failed to register token.' });
