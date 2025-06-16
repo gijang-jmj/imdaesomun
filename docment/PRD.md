@@ -87,6 +87,7 @@
 * **기능**:
   * 저장된 공고 리시트 출력
   * 전체 / SH / GH 필터
+  * 인피니티 스크롤
 * **구현 방식**
   * Flutter - 데이터 출력
   * Firebase Cloud Functions - 관련 API
