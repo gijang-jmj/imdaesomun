@@ -5,7 +5,7 @@ import 'package:imdaesomun/src/core/helpers/exception_helper.dart';
 import 'package:imdaesomun/src/core/providers/loading_provider.dart';
 import 'package:imdaesomun/src/core/providers/log_provider.dart';
 import 'package:imdaesomun/src/core/utils/validate_util.dart';
-import 'package:imdaesomun/src/data/repositories/user_repository.dart';
+import 'package:imdaesomun/src/data/repositories/user_repository_impl.dart';
 import 'package:imdaesomun/src/ui/widgets/login/login_dialog_state.dart';
 
 class LoginDialogViewModel extends AutoDisposeNotifier<LoginDialogState> {

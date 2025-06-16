@@ -13,7 +13,7 @@ import 'package:imdaesomun/src/core/utils/timing_util.dart';
 import 'package:imdaesomun/src/core/utils/validate_util.dart';
 import 'package:imdaesomun/src/data/providers/firebase_provider.dart';
 import 'package:imdaesomun/src/data/providers/user_provider.dart';
-import 'package:imdaesomun/src/data/repositories/user_repository.dart';
+import 'package:imdaesomun/src/data/repositories/user_repository_impl.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class ProfilePageViewModel extends AsyncNotifier<bool> {

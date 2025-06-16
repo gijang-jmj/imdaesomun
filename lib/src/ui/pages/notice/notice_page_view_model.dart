@@ -4,7 +4,7 @@ import 'package:imdaesomun/src/core/providers/log_provider.dart';
 import 'package:imdaesomun/src/core/utils/timing_util.dart';
 import 'package:imdaesomun/src/data/models/notice.dart';
 import 'package:imdaesomun/src/data/providers/user_provider.dart';
-import 'package:imdaesomun/src/data/repositories/notice_repository.dart';
+import 'package:imdaesomun/src/data/repositories/notice_repository_impl.dart';
 import 'package:imdaesomun/src/ui/pages/saved/saved_page_view_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 

@@ -4,7 +4,7 @@ import 'package:imdaesomun/src/core/providers/log_provider.dart';
 import 'package:imdaesomun/src/core/providers/toast_provider.dart';
 import 'package:imdaesomun/src/data/models/notice_pagination.dart';
 import 'package:imdaesomun/src/data/providers/user_provider.dart';
-import 'package:imdaesomun/src/data/repositories/notice_repository.dart';
+import 'package:imdaesomun/src/data/repositories/notice_repository_impl.dart';
 
 class SavedNotices extends AsyncNotifier<NoticePagination> {
   static final int _limit = 10;

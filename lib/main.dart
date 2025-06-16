@@ -10,7 +10,7 @@ import 'package:imdaesomun/src/core/router/app_router.dart';
 import 'package:imdaesomun/src/core/theme/app_theme.dart';
 import 'package:imdaesomun/src/data/providers/firebase_provider.dart';
 import 'package:imdaesomun/src/data/providers/user_provider.dart';
-import 'package:imdaesomun/src/data/repositories/user_repository.dart';
+import 'package:imdaesomun/src/data/repositories/user_repository_impl.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

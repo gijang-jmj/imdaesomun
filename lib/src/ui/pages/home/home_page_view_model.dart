@@ -4,7 +4,7 @@ import 'package:imdaesomun/src/core/providers/log_provider.dart';
 import 'package:imdaesomun/src/core/services/notice_order_service.dart';
 import 'package:imdaesomun/src/core/utils/timing_util.dart';
 import 'package:imdaesomun/src/data/models/notice.dart';
-import 'package:imdaesomun/src/data/repositories/notice_repository.dart';
+import 'package:imdaesomun/src/data/repositories/notice_repository_impl.dart';
 
 class HomePageViewModel extends Notifier<void> {
   @override
