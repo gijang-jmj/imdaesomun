@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:imdaesomun/src/core/constants/router_path_constant.dart';
 import 'package:imdaesomun/src/core/enums/notice_enum.dart';
 import 'package:imdaesomun/src/core/theme/app_color.dart';
+import 'package:imdaesomun/src/core/theme/app_icon.dart';
 import 'package:imdaesomun/src/core/theme/app_size.dart';
 import 'package:imdaesomun/src/core/theme/app_style.dart';
 import 'package:imdaesomun/src/ui/pages/home/widgets/gh_section.dart';
@@ -81,94 +82,95 @@ class _HomePageState extends ConsumerState<HomePage> {
       child: Scaffold(
         backgroundColor: AppColors.gray50,
         body: SafeArea(
-          child: RefreshIndicator(
-            onRefresh: () async {
-              ref.read(shNoticesProvider.notifier).getNotices();
-              ref.read(ghNoticesProvider.notifier).getNotices();
-            },
-            child: CustomScrollView(
-              physics:
-                  isReorderMode
-                      ? const NeverScrollableScrollPhysics()
-                      : const AlwaysScrollableScrollPhysics(),
-              slivers: [
-                if (!isReorderMode)
-                  SliverToBoxAdapter(
-                    child: InformationCard(
-                      text:
-                          '최근 10개 공고만 제공되며, 과거 공고 및 검색·정렬 기능은 각 공사의 공식 홈페이지를 이용해주세요',
-                    ),
-                  ),
-                if (isReorderMode)
-                  SliverToBoxAdapter(
-                    child: InformationButtonCard(
-                      text: '항목을 드래그해서 순서를 변경할 수 있어요',
-                      leftText: '수정',
-                      rightText: '취소',
-                      onLeft: () {
-                        ref.read(noticeOrderListProvider.notifier).saveOrder();
-                        ref.read(reorderModeProvider.notifier).state = false;
-                      },
-                      onRight: () {
-                        ref
-                            .read(noticeOrderListProvider.notifier)
-                            .cancelOrder();
-                        ref.read(reorderModeProvider.notifier).state = false;
-                      },
-                    ),
-                  ),
-                SliverToBoxAdapter(
-                  child: Consumer(
-                    builder: (context, ref, child) {
-                      final noticeOrder = ref.watch(noticeOrderListProvider);
+          child: Column(
+            children: [
+              // 메인 콘텐츠 영역
+              Expanded(
+                child: RefreshIndicator(
+                  onRefresh: () async {
+                    ref.read(shNoticesProvider.notifier).getNotices();
+                    ref.read(ghNoticesProvider.notifier).getNotices();
+                  },
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        // 상단 정보 카드
+                        if (!isReorderMode)
+                          InformationCard(
+                            text:
+                                '최근 10개 공고만 제공되며, 과거 공고 및 검색·정렬 기능은 각 공사의 공식 홈페이지를 이용해주세요',
+                          ),
+                        if (isReorderMode)
+                          InformationCard(text: '항목을 드래그해서 순서를 변경할 수 있어요'),
+                        // 공고 섹션
+                        Consumer(
+                          builder: (context, ref, child) {
+                            final noticeOrder = ref.watch(
+                              noticeOrderListProvider,
+                            );
 
-                      return noticeOrder.when(
-                        data:
-                            (list) => ReorderableListView(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              buildDefaultDragHandles: false,
-                              children: [
-                                for (
-                                  int index = 0;
-                                  index < list.length;
-                                  index += 1
-                                )
-                                  _getNoticeSection(
-                                    corporationType: list[index],
-                                    index: index,
+                            return noticeOrder.when(
+                              data:
+                                  (list) => ReorderableListView(
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    buildDefaultDragHandles: false,
+                                    children: [
+                                      for (
+                                        int index = 0;
+                                        index < list.length;
+                                        index += 1
+                                      )
+                                        _getNoticeSection(
+                                          corporationType: list[index],
+                                          index: index,
+                                        ),
+                                    ],
+                                    onReorder: (oldIndex, newIndex) {
+                                      ref
+                                          .read(
+                                            noticeOrderListProvider.notifier,
+                                          )
+                                          .updateOrder(
+                                            oldIndex: oldIndex,
+                                            newIndex: newIndex,
+                                          );
+                                    },
                                   ),
-                              ],
-                              onReorder: (oldIndex, newIndex) {
-                                ref
-                                    .read(noticeOrderListProvider.notifier)
-                                    .updateOrder(
-                                      oldIndex: oldIndex,
-                                      newIndex: newIndex,
-                                    );
-                              },
-                            ),
-                        error: (e, st) => Center(child: Text('오류: $e')),
-                        loading:
-                            () => Center(
-                              child: const CircularProgressIndicator(),
-                            ),
-                      );
-                    },
+                              error: (e, st) => Center(child: Text('오류: $e')),
+                              loading:
+                                  () => const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                            );
+                          },
+                        ),
+                        const SizedBox(height: AppMargin.extraLarge),
+                        // 저작권 푸터
+                        if (!isReorderMode) const CopyrightFooter(),
+                      ],
+                    ),
                   ),
                 ),
-                SliverFillRemaining(
-                  hasScrollBody: false,
-                  child: Column(
-                    children: [
-                      const Spacer(),
-                      const SizedBox(height: AppMargin.extraLarge),
-                      const CopyrightFooter(),
-                    ],
-                  ),
+              ),
+              // 순서 변경 모드 안내 카드
+              if (isReorderMode)
+                InformationButtonCard(
+                  text: '순서 변경을 완료하려면 저장을 눌러주세요',
+                  leftText: '저장',
+                  rightText: '취소',
+                  icon: AppIcons.info,
+                  onLeft: () {
+                    ref.read(noticeOrderListProvider.notifier).saveOrder();
+                    ref.read(reorderModeProvider.notifier).state = false;
+                  },
+                  onRight: () {
+                    ref.read(noticeOrderListProvider.notifier).cancelOrder();
+                    ref.read(reorderModeProvider.notifier).state = false;
+                  },
                 ),
-              ],
-            ),
+            ],
           ),
         ),
       ),

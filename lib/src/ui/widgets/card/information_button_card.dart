@@ -11,6 +11,8 @@ class InformationButtonCard extends StatelessWidget {
   final String text;
   final String leftText;
   final String rightText;
+  final String? icon;
+  final Color? iconColor;
   final VoidCallback onLeft;
   final VoidCallback onRight;
 
@@ -21,6 +23,8 @@ class InformationButtonCard extends StatelessWidget {
     required this.rightText,
     required this.onLeft,
     required this.onRight,
+    this.icon,
+    this.iconColor = AppColors.teal500,
   });
 
   @override
@@ -43,10 +47,10 @@ class InformationButtonCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  const AppIcon(
-                    AppIcons.homeFill,
+                  AppIcon(
+                    icon ?? AppIcons.homeFill,
                     size: AppIconSize.medium,
-                    color: AppColors.teal500,
+                    color: iconColor,
                   ),
                   const SizedBox(width: AppMargin.small),
                   Expanded(
