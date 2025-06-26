@@ -13,7 +13,6 @@
     <img src="https://img.shields.io/badge/Google%20Play-414141?style=for-the-badge&logo=google-play&logoColor=white" alt="Get it on Google Play"/>
   </a>
   <br/>
-  <sub><b>※ 플레이스토어는 비공개 테스트 중이며, 추후 출시 예정입니다.</b></sub>
 </p>
 
 ## 📸 실행 화면
