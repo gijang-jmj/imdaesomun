@@ -20,7 +20,7 @@ void main() async {
   String env;
   try {
     env = await MethodChannel(
-      'com.example.imdaesomun/environment',
+      'com.jmj.imdaesomun/environment',
     ).invokeMethod('getEnvironment');
   } catch (e) {
     env = 'prod';

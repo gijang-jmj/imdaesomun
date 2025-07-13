@@ -7,7 +7,9 @@ import 'package:imdaesomun/src/core/theme/app_color.dart';
 import 'package:imdaesomun/src/core/theme/app_icon.dart';
 import 'package:imdaesomun/src/core/theme/app_size.dart';
 import 'package:imdaesomun/src/core/theme/app_style.dart';
+import 'package:imdaesomun/src/ui/pages/home/widgets/bmc_section.dart';
 import 'package:imdaesomun/src/ui/pages/home/widgets/gh_section.dart';
+import 'package:imdaesomun/src/ui/pages/home/widgets/ih_section.dart';
 import 'package:imdaesomun/src/ui/pages/home/widgets/sh_section.dart';
 import 'package:imdaesomun/src/ui/widgets/card/information_button_card.dart';
 import 'package:imdaesomun/src/ui/widgets/card/information_card.dart';
@@ -184,7 +186,11 @@ Widget _getNoticeSection({
 }) {
   if (corporationType == CorporationType.sh) {
     return ShSection(key: ValueKey(corporationType), index: index);
-  } else {
+  } else if (corporationType == CorporationType.gh) {
     return GhSection(key: ValueKey(corporationType), index: index);
+  } else if (corporationType == CorporationType.ih) {
+    return IhSection(key: ValueKey(corporationType), index: index);
+  } else {
+    return BmcSection(key: ValueKey(corporationType), index: index);
   }
 }

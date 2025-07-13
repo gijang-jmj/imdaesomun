@@ -53,6 +53,34 @@ class NoticeRepositoryImpl implements NoticeRepository {
   }
 
   @override
+  Future<List<Notice>> getIhNotices() async {
+    final isLatest = await _noticeSource.isLatestIhNotices();
+
+    if (isLatest) {
+      final local = await _localSource.getIhNotices();
+      if (local != null && local.isNotEmpty) return local;
+    }
+
+    final remote = await _noticeSource.getIhNotices();
+    await _localSource.saveIhNotices(remote);
+    return remote;
+  }
+
+  @override
+  Future<List<Notice>> getBmcNotices() async {
+    final isLatest = await _noticeSource.isLatestBmcNotices();
+
+    if (isLatest) {
+      final local = await _localSource.getBmcNotices();
+      if (local != null && local.isNotEmpty) return local;
+    }
+
+    final remote = await _noticeSource.getBmcNotices();
+    await _localSource.saveBmcNotices(remote);
+    return remote;
+  }
+
+  @override
   Future<Notice> getNoticeById(String id) async {
     final local = await _localSource.getNoticeById(id);
     if (local != null) return local;

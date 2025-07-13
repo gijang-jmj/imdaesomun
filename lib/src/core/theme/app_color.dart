@@ -74,4 +74,10 @@ class AppColors {
 
   /// gh color
   static const Color gh = Color(0xFF004a9d);
+
+  /// ih color
+  static const Color ih = Color(0xFF3333CC);
+
+  /// bmc color
+  static const Color bmc = Color(0xFF009CA6);
 }

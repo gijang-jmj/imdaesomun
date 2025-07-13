@@ -30,6 +30,28 @@ class NoticeSource {
     return notices;
   }
 
+  Future<List<Notice>> getIhNotices() async {
+    final response = await _dio.get('/getIhNotices');
+    final results = response.data as List<dynamic>;
+    final notices = results.map((notice) => Notice.fromJson(notice)).toList();
+
+    // 정확한 순서 정렬을 위해 no 필드를 기준으로 내림차순 정렬
+    notices.sort((a, b) => b.no.compareTo(a.no));
+
+    return notices;
+  }
+
+  Future<List<Notice>> getBmcNotices() async {
+    final response = await _dio.get('/getBmcNotices');
+    final results = response.data as List<dynamic>;
+    final notices = results.map((notice) => Notice.fromJson(notice)).toList();
+
+    // 정확한 순서 정렬을 위해 no 필드를 기준으로 내림차순 정렬
+    notices.sort((a, b) => b.no.compareTo(a.no));
+
+    return notices;
+  }
+
   Future<Notice> getNoticeById(String id) async {
     final response = await _dio.get('/getNoticeById?noticeId=$id');
     final results = response.data as Map<String, dynamic>;
@@ -85,6 +107,64 @@ class NoticeSource {
 
     final prefs = await SharedPreferences.getInstance();
     final latestScrapeTsKey = "latest_gh_scrape_ts";
+    final localTs = prefs.getString(latestScrapeTsKey);
+
+    if (serverTs != localTs) {
+      await prefs.setString(latestScrapeTsKey, serverTs);
+      return false;
+    }
+
+    return true;
+  }
+
+  Future<bool> isLatestBmcNotices() async {
+    final response = await _dio.get('/getLatestScrapeTs');
+    final results = response.data as Map<String, dynamic>;
+    final ts = results[CorporationType.bmc.name];
+
+    String? serverTs;
+
+    if (ts == null) return false;
+
+    if (ts is Map && ts.containsKey('_seconds')) {
+      serverTs = ts['_seconds'].toString();
+    } else if (ts is String) {
+      serverTs = ts;
+    }
+
+    if (serverTs == null) return false;
+
+    final prefs = await SharedPreferences.getInstance();
+    final latestScrapeTsKey = "latest_bmc_scrape_ts";
+    final localTs = prefs.getString(latestScrapeTsKey);
+
+    if (serverTs != localTs) {
+      await prefs.setString(latestScrapeTsKey, serverTs);
+      return false;
+    }
+
+    return true;
+  }
+
+  Future<bool> isLatestIhNotices() async {
+    final response = await _dio.get('/getLatestScrapeTs');
+    final results = response.data as Map<String, dynamic>;
+    final ts = results[CorporationType.ih.name];
+
+    String? serverTs;
+
+    if (ts == null) return false;
+
+    if (ts is Map && ts.containsKey('_seconds')) {
+      serverTs = ts['_seconds'].toString();
+    } else if (ts is String) {
+      serverTs = ts;
+    }
+
+    if (serverTs == null) return false;
+
+    final prefs = await SharedPreferences.getInstance();
+    final latestScrapeTsKey = "latest_ih_scrape_ts";
     final localTs = prefs.getString(latestScrapeTsKey);
 
     if (serverTs != localTs) {

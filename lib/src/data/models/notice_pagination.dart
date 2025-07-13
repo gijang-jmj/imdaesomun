@@ -14,6 +14,8 @@ abstract class NoticePagination with _$NoticePagination {
     required int totalCount,
     required int shCount,
     required int ghCount,
+    required int ihCount,
+    required int bmcCount,
   }) = _NoticePagination;
 
   factory NoticePagination.fromJson(Map<String, dynamic> json) =>

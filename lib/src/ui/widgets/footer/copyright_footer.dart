@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:imdaesomun/src/core/theme/app_color.dart';
 import 'package:imdaesomun/src/core/theme/app_size.dart';
 import 'package:imdaesomun/src/core/theme/app_text_style.dart';
-import 'package:imdaesomun/src/core/utils/text_util.dart';
 
 class CopyrightFooter extends StatelessWidget {
   const CopyrightFooter({super.key});
@@ -22,9 +21,7 @@ class CopyrightFooter extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              TextUtil.keepWord(
-                '임대소문은 서울주택도시공사(SH), 경기주택도시공사(GH)에서 제공하는 공고를 비상업적 목적에 따라 제공하며, 모든 공고의 저작권은 해당 공사에 귀속됩니다. 문의 : wnalsals1127@gmail.com',
-              ),
+              '임대소문은 서울주택도시공사(SH), 경기주택도시공사(GH), 인천도시공사(IH), 부산도시공사(BMC)에서 제공하는 공고를 비상업적 목적에 따라 제공하며, 모든 공고의 저작권은 해당 공사에 귀속됩니다. 문의 : wnalsals1127@gmail.com',
               style: AppTextStyle.caption2.copyWith(color: AppColors.gray500),
             ),
             Text(

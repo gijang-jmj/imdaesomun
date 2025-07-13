@@ -8,6 +8,10 @@ class NoticeHelper {
         return CorporationType.sh;
       case 'gh':
         return CorporationType.gh;
+      case 'ih':
+        return CorporationType.ih;
+      case 'bmc':
+        return CorporationType.bmc;
       default:
         return CorporationType.sh;
     }

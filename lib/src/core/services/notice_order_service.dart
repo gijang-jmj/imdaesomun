@@ -7,6 +7,8 @@ class NoticeOrderService {
   static const List<CorporationType> defaultOrder = [
     CorporationType.sh,
     CorporationType.gh,
+    CorporationType.ih,
+    CorporationType.bmc,
   ];
 
   static Future<List<CorporationType>> getNoticeOrder() async {
@@ -18,13 +20,23 @@ class NoticeOrderService {
         return defaultOrder;
       }
 
-      return orderString.map((e) => CorporationType.values.byName(e)).toList();
+      final userOrder =
+          orderString.map((e) => CorporationType.values.byName(e)).toList();
+
+      final missingCorps =
+          defaultOrder.where((corp) => !userOrder.contains(corp)).toList();
+
+      if (missingCorps.isNotEmpty) {
+        return [...userOrder, ...missingCorps];
+      }
+
+      return userOrder;
     } catch (e) {
       LogService.log(
         '[NoticeOrderService]\n\nError getting notice order',
         error: e.toString(),
       );
-      // ignore: avoid_print
+
       return defaultOrder;
     }
   }

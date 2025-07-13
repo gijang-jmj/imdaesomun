@@ -15,7 +15,7 @@ class DocumentViewer extends StatelessWidget {
     final WebViewController controller;
     final Uri uri = Uri.parse(file.fileLink);
     final String userAgent =
-        'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1';
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36';
 
     if (file.fileId != null && file.fileId!.isNotEmpty) {
       final Uint8List body = Uint8List.fromList(
@@ -25,6 +25,17 @@ class DocumentViewer extends StatelessWidget {
           WebViewController()
             ..setJavaScriptMode(JavaScriptMode.unrestricted)
             ..setUserAgent(userAgent)
+            ..setNavigationDelegate(
+              NavigationDelegate(
+                onSslAuthError: (request) {
+                  if (file.fileLink.contains('bmc.busan.kr')) {
+                    request.proceed();
+                  } else {
+                    request.cancel();
+                  }
+                },
+              ),
+            )
             ..loadRequest(
               uri,
               method: LoadRequestMethod.post,
@@ -38,6 +49,17 @@ class DocumentViewer extends StatelessWidget {
           WebViewController()
             ..setJavaScriptMode(JavaScriptMode.unrestricted)
             ..setUserAgent(userAgent)
+            ..setNavigationDelegate(
+              NavigationDelegate(
+                onSslAuthError: (request) {
+                  if (file.fileLink.contains('bmc.busan.kr')) {
+                    request.proceed();
+                  } else {
+                    request.cancel();
+                  }
+                },
+              ),
+            )
             ..loadRequest(uri);
     }
 

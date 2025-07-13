@@ -16,6 +16,8 @@ class SavedNotices extends AsyncNotifier<NoticePagination> {
     totalCount: 0,
     shCount: 0,
     ghCount: 0,
+    ihCount: 0,
+    bmcCount: 0,
   );
 
   @override

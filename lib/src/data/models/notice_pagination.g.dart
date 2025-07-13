@@ -18,6 +18,8 @@ _NoticePagination _$NoticePaginationFromJson(Map<String, dynamic> json) =>
       totalCount: (json['totalCount'] as num).toInt(),
       shCount: (json['shCount'] as num).toInt(),
       ghCount: (json['ghCount'] as num).toInt(),
+      ihCount: (json['ihCount'] as num).toInt(),
+      bmcCount: (json['bmcCount'] as num).toInt(),
     );
 
 Map<String, dynamic> _$NoticePaginationToJson(_NoticePagination instance) =>
@@ -29,4 +31,6 @@ Map<String, dynamic> _$NoticePaginationToJson(_NoticePagination instance) =>
       'totalCount': instance.totalCount,
       'shCount': instance.shCount,
       'ghCount': instance.ghCount,
+      'ihCount': instance.ihCount,
+      'bmcCount': instance.bmcCount,
     };

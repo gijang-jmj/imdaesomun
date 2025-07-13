@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$NoticePagination {
 
- List<Notice> get notices; bool get hasMore; int get nextOffset; int get totalFetched; int get totalCount; int get shCount; int get ghCount;
+ List<Notice> get notices; bool get hasMore; int get nextOffset; int get totalFetched; int get totalCount; int get shCount; int get ghCount; int get ihCount; int get bmcCount;
 /// Create a copy of NoticePagination
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $NoticePaginationCopyWith<NoticePagination> get copyWith => _$NoticePaginationCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is NoticePagination&&const DeepCollectionEquality().equals(other.notices, notices)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore)&&(identical(other.nextOffset, nextOffset) || other.nextOffset == nextOffset)&&(identical(other.totalFetched, totalFetched) || other.totalFetched == totalFetched)&&(identical(other.totalCount, totalCount) || other.totalCount == totalCount)&&(identical(other.shCount, shCount) || other.shCount == shCount)&&(identical(other.ghCount, ghCount) || other.ghCount == ghCount));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is NoticePagination&&const DeepCollectionEquality().equals(other.notices, notices)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore)&&(identical(other.nextOffset, nextOffset) || other.nextOffset == nextOffset)&&(identical(other.totalFetched, totalFetched) || other.totalFetched == totalFetched)&&(identical(other.totalCount, totalCount) || other.totalCount == totalCount)&&(identical(other.shCount, shCount) || other.shCount == shCount)&&(identical(other.ghCount, ghCount) || other.ghCount == ghCount)&&(identical(other.ihCount, ihCount) || other.ihCount == ihCount)&&(identical(other.bmcCount, bmcCount) || other.bmcCount == bmcCount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(notices),hasMore,nextOffset,totalFetched,totalCount,shCount,ghCount);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(notices),hasMore,nextOffset,totalFetched,totalCount,shCount,ghCount,ihCount,bmcCount);
 
 @override
 String toString() {
-  return 'NoticePagination(notices: $notices, hasMore: $hasMore, nextOffset: $nextOffset, totalFetched: $totalFetched, totalCount: $totalCount, shCount: $shCount, ghCount: $ghCount)';
+  return 'NoticePagination(notices: $notices, hasMore: $hasMore, nextOffset: $nextOffset, totalFetched: $totalFetched, totalCount: $totalCount, shCount: $shCount, ghCount: $ghCount, ihCount: $ihCount, bmcCount: $bmcCount)';
 }
 
 
@@ -49,7 +49,7 @@ abstract mixin class $NoticePaginationCopyWith<$Res>  {
   factory $NoticePaginationCopyWith(NoticePagination value, $Res Function(NoticePagination) _then) = _$NoticePaginationCopyWithImpl;
 @useResult
 $Res call({
- List<Notice> notices, bool hasMore, int nextOffset, int totalFetched, int totalCount, int shCount, int ghCount
+ List<Notice> notices, bool hasMore, int nextOffset, int totalFetched, int totalCount, int shCount, int ghCount, int ihCount, int bmcCount
 });
 
 
@@ -66,7 +66,7 @@ class _$NoticePaginationCopyWithImpl<$Res>
 
 /// Create a copy of NoticePagination
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? notices = null,Object? hasMore = null,Object? nextOffset = null,Object? totalFetched = null,Object? totalCount = null,Object? shCount = null,Object? ghCount = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? notices = null,Object? hasMore = null,Object? nextOffset = null,Object? totalFetched = null,Object? totalCount = null,Object? shCount = null,Object? ghCount = null,Object? ihCount = null,Object? bmcCount = null,}) {
   return _then(_self.copyWith(
 notices: null == notices ? _self.notices : notices // ignore: cast_nullable_to_non_nullable
 as List<Notice>,hasMore: null == hasMore ? _self.hasMore : hasMore // ignore: cast_nullable_to_non_nullable
@@ -75,6 +75,8 @@ as int,totalFetched: null == totalFetched ? _self.totalFetched : totalFetched //
 as int,totalCount: null == totalCount ? _self.totalCount : totalCount // ignore: cast_nullable_to_non_nullable
 as int,shCount: null == shCount ? _self.shCount : shCount // ignore: cast_nullable_to_non_nullable
 as int,ghCount: null == ghCount ? _self.ghCount : ghCount // ignore: cast_nullable_to_non_nullable
+as int,ihCount: null == ihCount ? _self.ihCount : ihCount // ignore: cast_nullable_to_non_nullable
+as int,bmcCount: null == bmcCount ? _self.bmcCount : bmcCount // ignore: cast_nullable_to_non_nullable
 as int,
   ));
 }
@@ -86,7 +88,7 @@ as int,
 @JsonSerializable()
 
 class _NoticePagination implements NoticePagination {
-  const _NoticePagination({required final  List<Notice> notices, required this.hasMore, required this.nextOffset, required this.totalFetched, required this.totalCount, required this.shCount, required this.ghCount}): _notices = notices;
+  const _NoticePagination({required final  List<Notice> notices, required this.hasMore, required this.nextOffset, required this.totalFetched, required this.totalCount, required this.shCount, required this.ghCount, required this.ihCount, required this.bmcCount}): _notices = notices;
   factory _NoticePagination.fromJson(Map<String, dynamic> json) => _$NoticePaginationFromJson(json);
 
  final  List<Notice> _notices;
@@ -102,6 +104,8 @@ class _NoticePagination implements NoticePagination {
 @override final  int totalCount;
 @override final  int shCount;
 @override final  int ghCount;
+@override final  int ihCount;
+@override final  int bmcCount;
 
 /// Create a copy of NoticePagination
 /// with the given fields replaced by the non-null parameter values.
@@ -116,16 +120,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NoticePagination&&const DeepCollectionEquality().equals(other._notices, _notices)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore)&&(identical(other.nextOffset, nextOffset) || other.nextOffset == nextOffset)&&(identical(other.totalFetched, totalFetched) || other.totalFetched == totalFetched)&&(identical(other.totalCount, totalCount) || other.totalCount == totalCount)&&(identical(other.shCount, shCount) || other.shCount == shCount)&&(identical(other.ghCount, ghCount) || other.ghCount == ghCount));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NoticePagination&&const DeepCollectionEquality().equals(other._notices, _notices)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore)&&(identical(other.nextOffset, nextOffset) || other.nextOffset == nextOffset)&&(identical(other.totalFetched, totalFetched) || other.totalFetched == totalFetched)&&(identical(other.totalCount, totalCount) || other.totalCount == totalCount)&&(identical(other.shCount, shCount) || other.shCount == shCount)&&(identical(other.ghCount, ghCount) || other.ghCount == ghCount)&&(identical(other.ihCount, ihCount) || other.ihCount == ihCount)&&(identical(other.bmcCount, bmcCount) || other.bmcCount == bmcCount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_notices),hasMore,nextOffset,totalFetched,totalCount,shCount,ghCount);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_notices),hasMore,nextOffset,totalFetched,totalCount,shCount,ghCount,ihCount,bmcCount);
 
 @override
 String toString() {
-  return 'NoticePagination(notices: $notices, hasMore: $hasMore, nextOffset: $nextOffset, totalFetched: $totalFetched, totalCount: $totalCount, shCount: $shCount, ghCount: $ghCount)';
+  return 'NoticePagination(notices: $notices, hasMore: $hasMore, nextOffset: $nextOffset, totalFetched: $totalFetched, totalCount: $totalCount, shCount: $shCount, ghCount: $ghCount, ihCount: $ihCount, bmcCount: $bmcCount)';
 }
 
 
@@ -136,7 +140,7 @@ abstract mixin class _$NoticePaginationCopyWith<$Res> implements $NoticePaginati
   factory _$NoticePaginationCopyWith(_NoticePagination value, $Res Function(_NoticePagination) _then) = __$NoticePaginationCopyWithImpl;
 @override @useResult
 $Res call({
- List<Notice> notices, bool hasMore, int nextOffset, int totalFetched, int totalCount, int shCount, int ghCount
+ List<Notice> notices, bool hasMore, int nextOffset, int totalFetched, int totalCount, int shCount, int ghCount, int ihCount, int bmcCount
 });
 
 
@@ -153,7 +157,7 @@ class __$NoticePaginationCopyWithImpl<$Res>
 
 /// Create a copy of NoticePagination
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? notices = null,Object? hasMore = null,Object? nextOffset = null,Object? totalFetched = null,Object? totalCount = null,Object? shCount = null,Object? ghCount = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? notices = null,Object? hasMore = null,Object? nextOffset = null,Object? totalFetched = null,Object? totalCount = null,Object? shCount = null,Object? ghCount = null,Object? ihCount = null,Object? bmcCount = null,}) {
   return _then(_NoticePagination(
 notices: null == notices ? _self._notices : notices // ignore: cast_nullable_to_non_nullable
 as List<Notice>,hasMore: null == hasMore ? _self.hasMore : hasMore // ignore: cast_nullable_to_non_nullable
@@ -162,6 +166,8 @@ as int,totalFetched: null == totalFetched ? _self.totalFetched : totalFetched //
 as int,totalCount: null == totalCount ? _self.totalCount : totalCount // ignore: cast_nullable_to_non_nullable
 as int,shCount: null == shCount ? _self.shCount : shCount // ignore: cast_nullable_to_non_nullable
 as int,ghCount: null == ghCount ? _self.ghCount : ghCount // ignore: cast_nullable_to_non_nullable
+as int,ihCount: null == ihCount ? _self.ihCount : ihCount // ignore: cast_nullable_to_non_nullable
+as int,bmcCount: null == bmcCount ? _self.bmcCount : bmcCount // ignore: cast_nullable_to_non_nullable
 as int,
   ));
 }
