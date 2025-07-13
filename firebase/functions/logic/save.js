@@ -10,9 +10,11 @@ async function saveNoticeLogic({ noticeId, userId }) {
   const db = getFirestore();
 
   // 공고가 어느 컬렉션에 속하는지 확인
-  const [shDoc, ghDoc] = await Promise.all([
+  const [shDoc, ghDoc, bmcDoc, ihDoc] = await Promise.all([
     db.collection('sh').doc(noticeId).get(),
     db.collection('gh').doc(noticeId).get(),
+    db.collection('bmc').doc(noticeId).get(),
+    db.collection('ih').doc(noticeId).get(),
   ]);
 
   let corporation = null;
@@ -20,6 +22,10 @@ async function saveNoticeLogic({ noticeId, userId }) {
     corporation = 'sh';
   } else if (ghDoc.exists) {
     corporation = 'gh';
+  } else if (bmcDoc.exists) {
+    corporation = 'bmc';
+  } else if (ihDoc.exists) {
+    corporation = 'ih';
   } else {
     throw new Error('Notice not found');
   }
@@ -96,16 +102,31 @@ async function getSavedNoticesLogic({
     .where('userId', '==', userId)
     .where('corporation', '==', 'gh');
 
+  const bmcSaveQuery = db
+    .collection('save')
+    .where('userId', '==', userId)
+    .where('corporation', '==', 'bmc');
+
+  const ihSaveQuery = db
+    .collection('save')
+    .where('userId', '==', userId)
+    .where('corporation', '==', 'ih');
+
   // 병렬로 카운트 조회
-  const [totalSnapshot, shSnapshot, ghSnapshot] = await Promise.all([
-    totalSaveQuery.get(),
-    shSaveQuery.get(),
-    ghSaveQuery.get(),
-  ]);
+  const [totalSnapshot, shSnapshot, ghSnapshot, bmcSnapshot, ihSnapshot] =
+    await Promise.all([
+      totalSaveQuery.get(),
+      shSaveQuery.get(),
+      ghSaveQuery.get(),
+      bmcSaveQuery.get(),
+      ihSaveQuery.get(),
+    ]);
 
   const totalCount = totalSnapshot.size;
   const shCount = shSnapshot.size;
   const ghCount = ghSnapshot.size;
+  const bmcCount = bmcSnapshot.size;
+  const ihCount = ihSnapshot.size;
 
   // 2. corporation 필터링에 따른 데이터 조회
   let saveQuery = db.collection('save').where('userId', '==', userId);
@@ -132,6 +153,8 @@ async function getSavedNoticesLogic({
       totalCount,
       shCount,
       ghCount,
+      bmcCount,
+      ihCount,
     };
   }
 
@@ -183,6 +206,8 @@ async function getSavedNoticesLogic({
     totalCount,
     shCount,
     ghCount,
+    bmcCount,
+    ihCount,
   };
 }
 

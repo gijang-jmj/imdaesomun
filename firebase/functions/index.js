@@ -2,7 +2,12 @@
 const { logger } = require('firebase-functions');
 const { onRequest } = require('firebase-functions/v2/https');
 const { initializeApp } = require('firebase-admin/app');
-const { scrapeShNotices, scrapeGhNotices } = require('./logic/scrape');
+const {
+  scrapeShNotices,
+  scrapeGhNotices,
+  scrapeBmcNotices,
+  scrapeIhNotices,
+} = require('./logic/scrape');
 const {
   validateApiKey,
   validatePostMethod,
@@ -17,6 +22,8 @@ const {
 const {
   getShNoticesLogic,
   getGhNoticesLogic,
+  getBmcNoticesLogic,
+  getIhNoticesLogic,
   getNoticeByIdLogic,
   getLatestScrapeTsLogic,
 } = require('./logic/notice');
@@ -40,10 +47,13 @@ exports.scrapeNotices = onRequest(
         return;
       }
 
-      const [newShNotices, newGhNotices] = await Promise.all([
-        scrapeShNotices(),
-        scrapeGhNotices(),
-      ]);
+      const [newShNotices, newGhNotices, newBmcNotices, newIhNotices] =
+        await Promise.all([
+          scrapeShNotices(),
+          scrapeGhNotices(),
+          scrapeBmcNotices(),
+          scrapeIhNotices(),
+        ]);
 
       // Send FCM for new SH notices
       if (newShNotices && newShNotices.length > 0) {
@@ -87,6 +97,8 @@ exports.scrapeNotices = onRequest(
         message: 'Notices scraped and saved successfully.',
         newShNotices: newShNotices ? newShNotices.length : 0,
         newGhNotices: newGhNotices ? newGhNotices.length : 0,
+        newBmcNotices: newBmcNotices ? newBmcNotices.length : 0,
+        newIhNotices: newIhNotices ? newIhNotices.length : 0,
       });
     } catch (error) {
       res.status(500).send({ error: 'Failed to scrape notices.' });
@@ -136,7 +148,47 @@ exports.getGhNotices = onRequest(
 );
 
 /**
- * SH/GH 공고 조회
+ * BMC 공고 가져오기
+ */
+exports.getBmcNotices = onRequest(
+  { region: 'asia-northeast1', secrets: ['IMDAESOMUN_API_KEY'] },
+  async (req, res) => {
+    try {
+      if (!validateApiKey(req, res)) {
+        return;
+      }
+
+      const notices = await getBmcNoticesLogic();
+      res.status(200).send(notices);
+    } catch (error) {
+      res.status(500).send({ error: 'Failed to fetch BMC notices.' });
+      logger.error('[BMC] Error fetching notices:', error);
+    }
+  },
+);
+
+/**
+ * IH 공고 가져오기
+ */
+exports.getIhNotices = onRequest(
+  { region: 'asia-northeast1', secrets: ['IMDAESOMUN_API_KEY'] },
+  async (req, res) => {
+    try {
+      if (!validateApiKey(req, res)) {
+        return;
+      }
+
+      const notices = await getIhNoticesLogic();
+      res.status(200).send(notices);
+    } catch (error) {
+      res.status(500).send({ error: 'Failed to fetch IH notices.' });
+      logger.error('[IH] Error fetching notices:', error);
+    }
+  },
+);
+
+/**
+ * 공고 조회
  */
 exports.getNoticeById = onRequest(
   { region: 'asia-northeast1', secrets: ['IMDAESOMUN_API_KEY'] },
