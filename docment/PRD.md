@@ -75,8 +75,8 @@
 * **표시 항목**: 임대공고 상세 내용, 공고 열기 버튼, 저장 버튼
 * **기능**:
   * 임대공고 상세 페이지 내용 출력
-  * 첨부파일 미리보기 웹뷰
-  * 공고보기 원본링크 웹뷰
+  * 첨부파일 미리보기 웹뷰(내부)
+  * 공고보기 원본링크 웹뷰(외부)
   * 공고 저장하기 (회원 기능)
 * **구현 방식**
   * Flutter - 데이터 출력
@@ -125,7 +125,7 @@
 - Riverpod (상태 관리)
 - MVVM (Model-View-ViewModel)
 - Firebase 연동 (Auth, Firestore, Remote Config, Messaging)
-- 주요 패키지: go_router, freezed, dio, shared_preferences, flutter_secure_storage, flutter_svg, intl, shimmer 등
+- 주요 패키지: firebase, go_router, freezed, dio, shared_preferences, flutter_secure_storage, flutter_svg, intl, shimmer, webview_flutter
 - Pretendard 폰트 적용
 
 ### 4.2 디렉토리
