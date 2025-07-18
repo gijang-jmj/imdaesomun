@@ -60,7 +60,7 @@
 
 - Firebase Cloud Functions
 - Google Cloud Scheduler (주기적 공고 크롤링)
-- Firebase Hosting (콘솔 운영용)
+- Google Secret Manager 키 관리
 - Firestore 보안 규칙 적용
 
 ## 📬 문의
