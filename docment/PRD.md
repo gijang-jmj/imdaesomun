@@ -265,9 +265,11 @@ FCM 토큰 정보는 `/fcm/{token}` 문서에 저장됩니다.
 5. 크롤링/저장 로그를 Firestore log 컬렉션에 기록
 6. 응답: 신규 SH/GH 공고 개수 반환
 
-> 참고: 상세 로직 구조는 `firebase/functions` 참고
+## 7. 🔗 API 명세
 
-## 7. 🧪 보안 사항
+- API 목록은 [api_spec.md](https://github.com/gijang-jmj/imdaesomun/blob/main/doc) 참조
+
+## 8. 🧪 보안 사항
 
 1. **API Key 관리**
    - 모든 서버 API는 Google Secret Manager에 저장된 API Key로 보호됨.
@@ -289,10 +291,6 @@ FCM 토큰 정보는 `/fcm/{token}` 문서에 저장됩니다.
 5. **보안 흐름 요약**
    - 키 노출 시: Secret Manager에서 키 폐기 및 신규 발급 → Remote Config 업데이트 → 클라이언트 자동 갱신 및 재시도
    - 키는 클라이언트에 직접 하드코딩하지 않으며, 항상 Remote Config와 Secure Storage를 통해 관리
-
-> 관련 파일:  
-> - 서버: `firebase/functions/index.js`  
-> - 클라이언트: `lib/src/core/services/dio_service.dart` (ApiKeyInterceptor)
 
 ## ✅ 프로젝트 단계별 우선순위
 

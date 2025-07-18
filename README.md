@@ -72,7 +72,10 @@
 - Google Secret Manager 키 관리
 - Firestore 보안 규칙 적용
 
+## 📄 PRD
+
+[**제품 요구사항 명세서 (PRD) - 임대소문 모바일**](https://github.com/gijang-jmj/imdaesomun/blob/main/docment/PRD.md)
+
 ## 📬 문의
 
-이 프로젝트에 대한 개선 제안이나 문의는 **Issues** 또는 **Pull Request**로 자유롭게 남겨주세요.  
-자세한 **프로젝트 요구사항(PRD)은** 👉 [**여기**](https://github.com/gijang-jmj/imdaesomun/blob/main/docment/PRD.md)에서 확인하실 수 있어요.
+이 프로젝트에 대한 개선 제안이나 문의는 **Issues** 또는 **Pull Request**로 자유롭게 남겨주세요.
