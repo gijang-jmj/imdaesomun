@@ -1,6 +1,6 @@
 # 🏠 임대소문 - 임대주택 공고 알리미
 
-여러 공사의 임대주택 공고 정보를 간편하게 확인하고, 공고 저장 및 푸시 알림 기능을 제공하는 비영리 모바일 애플리케이션입니다.
+여러 공사의 임대주택 공고 정보를 간편하게 확인하고, 공고 저장 및 푸시 알림 기능을 제공하는 **비영리 모바일 애플리케이션**입니다.
 
 ## 📱 앱 다운로드
 
@@ -26,22 +26,42 @@
 
 ## 🚀 주요 기능
 
-### 🔍 임대 공고 조회
+- 임대 공고 조회
+  - 서울주택공사(SH)
+  - 경기주택공사(GH)
+  - 인천도시공사(IH) **`new`**
+  - 부산도시공사(BMC) **`new`**
+- 공고 상세 확인 및 첨부파일 뷰어
+- 공고 저장 기능
+- 저장된 공고 업데이트 시 푸시 알림
+- Firebase 기반 회원 로그인/탈퇴 기능
 
-- 여러 공사의 임대 공고를 빠르고 쉽게 확인할 수 있어요.
-- 지원 목록
-  * 서울주택공사(SH)
-  * 경기주택공사(GH)
-  * 인천도시공사(IH) **`new`**
-  * 부산도시공사(BMC) **`new`**
+---
 
-### 🔔 푸시 알림
+## 🛠️ 기술 스택 (Flutter)
 
-- 새로운 공고가 등록되면 푸시 알림으로 알려드려요.
+| 항목         | 내용 |
+|--------------|------|
+| 프레임워크   | Flutter 3.29.2 |
+| 언어         | Dart 3.7.2 |
+| 아키텍처     | MVVM + Riverpod |
+| 라우팅       | go_router |
+| 네트워크     | dio |
+| 상태 관리    | Riverpod |
+| 인증         | Firebase Auth |
+| DB           | Firebase Firestore |
+| 푸시 알림    | Firebase Cloud Messaging (FCM) |
+| 보안         | Google Secret Manager, App Check, Remote Config |
+| 저장소       | flutter_secure_storage, shared_preferences |
+| 기타         | webview_flutter, intl, shimmer |
+| 디자인       | Figma, Pretendard 폰트 |
 
-### 💾 공고 저장
+## 📦 백엔드 및 인프라
 
-- 관심 있는 공고를 저장하고 언제든 다시 확인할 수 있어요.
+- Firebase Cloud Functions
+- Google Cloud Scheduler (주기적 공고 크롤링)
+- Firebase Hosting (콘솔 운영용)
+- Firestore 보안 규칙 적용
 
 ## 📬 문의
 
