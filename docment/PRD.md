@@ -218,8 +218,6 @@ SH, GH 임대공고는 각각 `/sh/{noticeId}`, `/gh/{noticeId}` 컬렉션에 �
   - link: string         // 원본 상세 페이지 링크
 ```
 
-> 참고: 상세 필드 구조는 `firebase/functions/logic/scrape.js` 참고
-
 ### log (크롤링 로그)
 
 SH, GH 크롤링 작업의 실행 로그는 각각 `/log/sh`, `/log/gh` 문서에 저장됩니다.
@@ -229,8 +227,6 @@ SH, GH 크롤링 작업의 실행 로그는 각각 `/log/sh`, `/log/gh` 문서�
   - timestamp: timestamp   // 크롤링 실행 시각 (Firestore serverTimestamp)
   - message: string        // 로그 메시지 (예: 'SH notices scraped successfully')
 ```
-
-> 참고: 크롤링 성공/실패 시점에 기록됨. 신규 공고 등 상세 내역은 별도 notice 컬렉션 참조.
 
 ### fcm (푸시 토큰)
 
@@ -245,9 +241,6 @@ FCM 토큰 정보는 `/fcm/{token}` 문서에 저장됩니다.
   - createdAt: timestamp  // 등록/갱신 시각 (Firestore serverTimestamp)
 ```
 
-> 참고: allowed=true인 토큰에만 전체 푸시 발송. 불량 토큰은 자동 삭제됨.  
-> 상세 로직은 `firebase/functions/logic/fcm.js` 참고
-
 ### save (저장된 공고)
 
 사용자가 저장한 공고 정보는 `/save/{userId_noticeId}` 문서에 저장됩니다.
@@ -259,9 +252,6 @@ FCM 토큰 정보는 `/fcm/{token}` 문서에 저장됩니다.
   - corporation: "sh" | "gh" // 공사 구분
   - createdAt: timestamp   // 저장 시각 (Firestore serverTimestamp)
 ```
-
-> 참고: 저장된 공고 목록 조회 시, 실제 공고 상세 정보는 sh/gh 컬렉션에서 병합 조회  
-> 상세 로직은 `firebase/functions/logic/save.js` 참고
 
 ## 6. 🔁 Google Cloud Scheduler 흐름 예시
 
@@ -311,3 +301,4 @@ FCM 토큰 정보는 `/fcm/{token}` 문서에 저장됩니다.
 4. 저장된 공고 관련 기능
 5. API 보안 및 앱 로그
 6. 테스트 완료 후 배포
+7. 앱 심사 및 출시
