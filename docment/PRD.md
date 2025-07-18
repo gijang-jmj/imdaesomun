@@ -267,7 +267,7 @@ FCM 토큰 정보는 `/fcm/{token}` 문서에 저장됩니다.
 
 ## 7. 🔗 API 명세
 
-- API 목록은 [api_spec.md](https://github.com/gijang-jmj/imdaesomun/blob/main/doc) 참조
+- API 목록은 [api_spec.md](https://github.com/gijang-jmj/imdaesomun/blob/main/docment/api_spec.md) 참조
 
 ## 8. 🧪 보안 사항
 
