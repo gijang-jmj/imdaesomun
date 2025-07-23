@@ -260,7 +260,7 @@ FCM 토큰 정보는 `/fcm/{token}` 문서에 저장됩니다.
 
 1. Google Cloud Scheduler가 30분마다 HTTP POST로 scrapeNotices 함수를 호출
 2. scrapeNotices 함수에서 SH, GH 공사별 공고 목록을 각각 크롤링 (scrapeShNotices, scrapeGhNotices)
-3. 각 공고별로 Firestore에 저장 (신규 공고만 newNotices로 분류)
+3. 각 공고별로 Firestore에 저장 (신규 공고만 별도 분류)
 4. 신규 공고가 있으면 FCM 전체 푸시 발송 (sendFcmToAllLogic)
 5. 크롤링/저장 로그를 Firestore log 컬렉션에 기록
 6. 응답: 신규 SH/GH 공고 개수 반환
