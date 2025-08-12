@@ -43,21 +43,19 @@
 
 ## 🛠️ 기술 스택
 
-| 항목       | 내용                                            |
-| ---------- | ----------------------------------------------- |
-| 프레임워크 | Flutter 3.29.2                                  |
-| 언어       | Dart 3.7.2                                      |
-| 아키텍처   | MVVM + Riverpod                                 |
-| 라우팅     | go_router                                       |
-| 네트워크   | dio                                             |
-| 상태 관리  | Riverpod                                        |
-| 인증       | Firebase Auth                                   |
-| DB         | Firebase Firestore                              |
-| 푸시 알림  | Firebase Cloud Messaging (FCM)                  |
-| 보안       | Google Secret Manager, App Check, Remote Config |
-| 저장소     | flutter_secure_storage, shared_preferences      |
-| 기타       | webview_flutter, intl, shimmer                  |
-| 디자인     | Figma, Pretendard 폰트                          |
+| 항목        | 내용                                                |
+| ----------- | --------------------------------------------------- |
+| 프레임워크  | Flutter 3.29.2                                      |
+| 언어        | Dart 3.7.2                                          |
+| 아키텍처    | MVVM + Riverpod                                     |
+| 라우팅      | go_router                                           |
+| 네트워크    | dio                                                 |
+| 상태 관리   | Riverpod                                            |
+| 인증        | Firebase Auth                                       |
+| 푸시 알림   | Firebase Cloud Messaging (FCM)                      |
+| 인증/보안   | Firebase Auth, Google Secret Manager, Remote Config |
+| 로컬 저장소 | flutter_secure_storage, shared_preferences          |
+| 기타        | webview_flutter, intl, shimmer                      |
 
 ## 📂 디렉토리 구조
 
